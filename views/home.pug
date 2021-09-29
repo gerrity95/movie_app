@@ -1,0 +1,39 @@
+extends layout
+
+block content
+  
+  // Full Page Image Header with Vertically Centered Content
+  header.masthead
+    .container-fluid.h-100.align-items-center(style="display: flex")
+      .row.header_text.shadow-lg.mx-auto
+        .col-xl-6.col-lg-6.col-md-8.col-sm-10.offset-sm-1.offset-md-2.offset-xl-0.offset-lg-0.text-center
+          h1.fw-light Welcome to FMovies
+          img(src='/images/small_logo.png' alt="FMovies Icon")
+          p.lead A great starter layout for a landing page
+        .col-xl-6.col-lg-6.col-md-8.col-sm-10.offset-sm-1.offset-md-2.offset-xl-0.offset-lg-0.text-center
+          h3.title_colors.text-center
+            | Sign in to FMovies
+          div.message.alert.alert-danger(style="display:none;")
+            | #{message}
+          form(action='/login' method='POST')
+            div.form-group.form-registration
+              label(for="username") Username
+              input.form-control.username(type="text", name="username", autocomplete="username" required)
+            div.form-group.form-registration
+              label(for="password") Password
+              input.form-control.password(type="password", name="password", autocomplete="current-password" required)
+            span.forgot_password
+              a(href='#') Forgot Password?
+            div.form-group.form-registration
+              button.submit.btn.alt_button(type="submit") Login
+            p#bad_login.password_error
+
+  // Page Content
+  section.py-5
+    .container
+      h2.fw-light Page Content
+      p
+        | Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repellendus ab nulla dolorum autem nisi officiis
+        | blanditiis voluptatem hic, assumenda aspernatur facere ipsam nemo ratione cumque magnam enim fugiat
+        | reprehenderit expedita.
+

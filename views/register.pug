@@ -1,0 +1,56 @@
+extends layout
+
+block content
+  
+  // Full Page Image Header with Vertically Centered Content
+  header.masthead(style="background-image: url('/images/register_background.jpg')")
+    .container.h-100
+      .row.h-100.align-items-center
+        .col-6.offset-3.text-center.header_text.shadow-lg
+          img.form_logo(src='/images/small_logo_cropped.png' alt="FMovies Icon")
+          h5.title_colors(style="padding-top:20px").text-center
+            | Create Your Account 
+
+          form(action='/register' method='POST')
+
+            div.form-registration
+              input.form-control.username(type="text", name="username", 
+                                            placeholder="Username", required)
+            
+            div.form-registration
+              input.form-control.first_name(type="text", name="first_name", 
+                                            placeholder="First Name", required)
+
+            div.form-registration
+              input.form-control.first_name(type="text", name="last_name",
+                                            placeholder="Last Name", required)
+
+            div.form-group.form-registration
+              input.form-control.email(type="email", name="email", aria-describedby="emailHelp",
+                                      placeholder="Email Address", autocomplete="email" required)
+              if already_exists
+                p#bad_email.password_error
+                  | Error: Email address already exists
+
+              small#emailHelp.form-text.text-muted(style="margin-top:0px") We'll never share your email with anyone else.
+              p#bad_email
+
+            div.form-group.form-registration
+              input.form-control.password(type="password", id="password" name="password",
+                                          placeholder='Password',
+                                          aria-describedby="passwordHelp",
+                                          autocomplete="current-password" required)
+
+              small#passwordHelp.form-text.text-muted(style="margin-top:0px") Password must be 8 characters or more.
+              
+              if bad_pword
+                p#bad_password.password_error
+                  | Error: Password must be at least 8 characters.
+              
+            div.form-group.form-registration
+              button.submit.btn.alt_button(type="submit") Register
+
+          div.col-md-12.col-lg-11.col-xl-11.mx-auto
+            p(style="padding-top:20px")
+              | Already a member? 
+              a(href='/login') Login here.

@@ -1,0 +1,185 @@
+html {
+    position: relative;
+    min-height: 100%;
+  }
+  
+  body {
+    background-color: #ffffff;
+    font-family: 'Montserrat', sans-serif;
+    min-height: 100vh;
+    height: 100%;
+    /* Margin bottom by footer height */
+    display: flex;
+    flex-direction: column;
+  }
+
+  .title_colors {
+    color: #111B47;
+  }
+  
+  .text_colors {
+      color: #505F98;
+  }
+
+  /* Sticky footer styles
+-------------------------------------------------- */
+
+.footer {
+    margin-top: auto;
+  }
+
+  .container {
+    width: auto;
+    padding: 0 15px;
+  }
+  .container .text-muted {
+    margin: 20px 0;
+  }
+
+.sm_images {
+  width: 30px;
+  height: 30px;
+}
+
+.masthead {
+  height: 100vh;
+  min-height: 500px;
+  background-image: url('/images/movie_background.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.header_text {
+  background-color: #ffffff;
+  border-radius: 10px;
+  padding-top: 5%;
+  padding-bottom: 5%;
+  padding-left: 10%;
+  padding-right: 10%;
+  width: 70%
+}
+
+@media screen and (max-width: 768px) {
+
+  .header_text {
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding-top: 0%;
+    padding-bottom: 5%;
+    padding-left: 10%;
+    padding-right: 10%;
+    width: 90%;
+    margin-top: 250px;
+  }
+}
+
+/* button style */
+
+.custom_button {
+  background-color: #A178CF;
+  color: #ffffff;
+}
+
+.custom_button:hover {
+  background-color: #505F98;
+  color: #ffffff;
+}
+
+.alt_button {
+  background-color: #FFD166;
+  color: #505F98;
+  font-weight: bold
+}
+
+.alt_button:hover {
+  background-color: #A178CF;
+  color: #ffffff;
+}
+
+/* CSS for login form */
+
+.login_form {
+  padding-top: 50px;
+  padding-bottom: 50px;
+  margin-bottom: 50px;
+  border-radius: 5px;
+}
+
+.login_form img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media screen and (max-width: 768px) {
+
+  .login_form {
+    margin-top: 0%;
+  }
+
+  .form_row {
+    padding-top: 20px;
+  }
+
+}
+
+/* css for registration form and errors*/
+
+.form-registration {
+  max-width: 330px;
+  padding-top: 5px;
+  margin: 0 auto;
+}
+.form-registration {
+  display: flex;
+  flex-wrap: wrap;
+}
+.form-registration input {
+  width: 100%;
+  margin: 0px 0 10px;
+}
+.form-registration .btn {
+  flex: 1 0 100%;
+}
+.my-errors {
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+  color: #333;
+  font-size: 1.2rem;
+  display: table;
+}
+.my-errors li {
+  margin: 0 0 1rem;
+}
+.my-errors li:before {
+  content: "! Error : ";
+  color: #f00;
+  font-weight: bold;
+}
+
+.password_error {
+  position:relative;
+  top:10px;
+  color: #eb4034;
+  font-size: 0.9rem;
+  font-weight: bold;
+  text-align:center;
+}
+
+.success_message {
+  position:relative;
+  top:10px;
+  color: green;
+  font-size: 0.9rem;
+  font-weight: bold;
+  text-align:center;
+}
+
+
+.forgot_password{
+   text-align:center;
+   display:block;
+
+}

@@ -1,0 +1,16 @@
+- var logo = '/images/ri_logo2.png'
+
+#swup.transition-fade.nav.navbar.navbar-expand-md.navbar-light.bg-light.mb-3.fixed-top.shadow
+  .container-fluid
+    button.navbar-toggler(type='button' data-toggle='collapse' data-target='#navbarCollapse')
+      span.navbar-toggler-icon
+    #navbarCollapse.collapse.navbar-collapse
+      .navbar-nav
+        if !user_info
+          a.nav-item.nav-link.active(href='/') Home
+          a.nav-item.nav-link(href='/login') Login
+          a.nav-item.nav-link(href='/register') Register
+      .navbar-nav.ml-auto
+        if user_info
+          a.nav-item.nav-link(href="/user_profile") Dashboard
+          a.nav-item.nav-link(href="/logout") Logout
