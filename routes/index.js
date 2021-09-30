@@ -83,6 +83,11 @@ router.get("/register",(req,res)=>{
 });
 
 router.post("/register",(req,res)=>{
+  var url = req.get('referer').split('?')[0];
+  if (!isValidPassword(req.body.password)) {
+    console.log("Password does not meet requirements.");
+    return res.redirect(url + "?bad_password=True")
+  }
     
   User.register(new User({
     username: req.body.username, 
@@ -91,11 +96,18 @@ router.post("/register",(req,res)=>{
     last_name: req.body.last_name}),
     req.body.password, function(err,user){
       if(err){
-          console.log(err);
-          res.render("register");
+        if (err.name == 'UserExistsError') {
+          console.log("Cannot create user as they already exist.");
+          return res.redirect(url + "?user_exists=True");
+        }
+        console.log("Unknown error when attempting to register")
+        console.log(err);
+        return res.redirect(url + "?error=True");
       }
-  passport.authenticate("lodcal")(req, res, function(){
-      res.redirect("/login");
+  passport.authenticate("local")(req, res, function(){
+    console.log("User successfully registered...");
+    console.log(req.sessionID);
+    return res.redirect('/userprofile')
   })    
   })
 })
@@ -104,6 +116,13 @@ router.get("/logout",(req,res)=>{
   req.logout();
   res.redirect("/");
 });
+
+function isValidPassword(password) {
+  if (password.length >= 8) {
+    return true;
+  }
+  return false;
+};
 
 function isLoggedIn(req,res,next) {
   if(req.isAuthenticated()){

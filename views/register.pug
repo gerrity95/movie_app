@@ -16,6 +16,7 @@ block content
             div.form-registration
               input.form-control.username(type="text", name="username", 
                                             placeholder="Username", required)
+              p#bad_email.password_error
             
             div.form-registration
               input.form-control.first_name(type="text", name="first_name", 
@@ -28,13 +29,9 @@ block content
             div.form-group.form-registration
               input.form-control.email(type="email", name="email", aria-describedby="emailHelp",
                                       placeholder="Email Address", autocomplete="email" required)
-              if already_exists
-                p#bad_email.password_error
-                  | Error: Email address already exists
-
+              
               small#emailHelp.form-text.text-muted(style="margin-top:0px") We'll never share your email with anyone else.
-              p#bad_email
-
+              
             div.form-group.form-registration
               input.form-control.password(type="password", id="password" name="password",
                                           placeholder='Password',
@@ -43,10 +40,9 @@ block content
 
               small#passwordHelp.form-text.text-muted(style="margin-top:0px") Password must be 8 characters or more.
               
-              if bad_pword
-                p#bad_password.password_error
-                  | Error: Password must be at least 8 characters.
-              
+              p#bad_password.password_error
+              p#unknown_error.password_error
+                              
             div.form-group.form-registration
               button.submit.btn.alt_button(type="submit") Register
 
@@ -56,6 +52,14 @@ block content
               a(href='/login') Login here.
 
   script.
-    if (getQueryVariable('failed_login')) {
-      document.getElementById("bad_login").innerHTML = '*Username or password is incorrect.';
+    if (getQueryVariable('user_exists')) {
+      document.getElementById("bad_email").innerHTML = 'Username already exists. Please choose another.';
+    }
+
+    if (getQueryVariable('error')) {
+      document.getElementById("unknown_error").innerHTML = 'Unknown Error occurred. Please try again later.';
+    }
+
+    if (getQueryVariable('bad_password')) {
+      document.getElementById("bad_password").innerHTML = 'Password does not meet requirements.';
     }
