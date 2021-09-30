@@ -7,7 +7,7 @@ block content
     .container.h-100
       .row.h-100.align-items-center
         .col-10.col-sm-10.col-md-8.col-lg-4.col-xl-4.login_form.shadow-sm.bg-white.rounded.mx-auto
-          img(src='/images/small_logo.png' alt="FMovies Icon")
+          img(src='/images/small_logo_cropped.png' alt="FMovies Icon")
           div.message.alert.alert-danger(style="display:none;")
             | #{message}
           form(action='/login' method='POST')
@@ -22,3 +22,8 @@ block content
             div.form-group.form-registration
               button.submit.btn.alt_button(type="submit") Login
             p#bad_login.password_error
+
+  script.
+    if (getQueryVariable('failed_login')) {
+      document.getElementById("bad_login").innerHTML = '*Username or password is incorrect.';
+    }

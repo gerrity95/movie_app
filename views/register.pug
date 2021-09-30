@@ -6,7 +6,7 @@ block content
   header.masthead(style="background-image: url('/images/register_background.jpg')")
     .container.h-100
       .row.h-100.align-items-center
-        .col-6.offset-3.text-center.header_text.shadow-lg
+        .col-10.col-sm-10.col-md-8.col-lg-5.col-xl-4.register_form.shadow-sm.bg-white.rounded.mx-auto
           img.form_logo(src='/images/small_logo_cropped.png' alt="FMovies Icon")
           h5.title_colors(style="padding-top:20px").text-center
             | Create Your Account 
@@ -54,3 +54,8 @@ block content
             p(style="padding-top:20px")
               | Already a member? 
               a(href='/login') Login here.
+
+  script.
+    if (getQueryVariable('failed_login')) {
+      document.getElementById("bad_login").innerHTML = '*Username or password is incorrect.';
+    }

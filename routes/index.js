@@ -23,11 +23,60 @@ router.get("/login",(req,res)=>{
   res.render("login");
 });
 
-router.post("/login",passport.authenticate("local",{
-  successRedirect:"/userprofile",
-  failureRedirect:"/login"
-}),function (req, res){
-});
+router.post('/login', function(req, res, next) {
+  passport.authenticate('local', function(err, user, info) {
+    var url = req.get('referer').split('?')[0];
+    console.log("Attempted login from: " + url);
+    if (err) {
+      console.log("Error: " + err + " when attempting to login");
+      return res.redirect(url + "?failed_login=True");
+    }
+
+    if (!user) {
+
+      console.log("Authentication problem. Email/Password is incorrect");
+      return res.redirect(url + "?failed_login=True");
+    }
+
+    req.logIn(user, function(err) {
+         if (err) { return next(err); }
+         console.log("Successfully logged in for user: " + req.user.email);
+         console.log(res)
+         return res.redirect('/userprofile')
+       });
+
+     })(req, res, next);
+
+   });
+
+router.post('/api/login', function(req, res, next) {
+  passport.authenticate('local', function(err, user, info) {
+
+    if (err) {
+      console.log("Error: " + err + " when attempting to login");
+      return next(err);
+    }
+
+    if (!user) {
+
+      console.log("Authentication problem. Email/Password is incorrect");
+      return res.json({'error': true});
+    }
+
+    req.logIn(user, function(err) {
+         if (err) { return next(err); }
+         console.log("Successfully logged in for user: " + req.user.email);
+         console.log(res)
+         return res.json({'success': true});
+       });
+
+     })(req, res, next);
+
+   });
+
+router.get("/api/test", isLoggedIn, (req,res) =>{
+  res.json({user_info: req.user});
+  })
 
 router.get("/register",(req,res)=>{
   res.render("register");
@@ -45,7 +94,7 @@ router.post("/register",(req,res)=>{
           console.log(err);
           res.render("register");
       }
-  passport.authenticate("local")(req, res, function(){
+  passport.authenticate("lodcal")(req, res, function(){
       res.redirect("/login");
   })    
   })
@@ -58,9 +107,9 @@ router.get("/logout",(req,res)=>{
 
 function isLoggedIn(req,res,next) {
   if(req.isAuthenticated()){
+      console.log(req)
       return next();
   }
-  res.redirect("/login");
 }
 
 

@@ -7,9 +7,9 @@ block content
     .container-fluid.h-100.align-items-center(style="display: flex")
       .row.header_text.shadow-lg.mx-auto
         .col-xl-6.col-lg-6.col-md-8.col-sm-10.offset-sm-1.offset-md-2.offset-xl-0.offset-lg-0.text-center
-          h1.fw-light Welcome to FMovies
-          img(src='/images/small_logo.png' alt="FMovies Icon")
-          p.lead A great starter layout for a landing page
+          h1.fw-light.home_title Welcome to FMovies
+          img(src='/images/small_logo_cropped.png' alt="FMovies Icon")
+          p.lead(style="margin-top: 20px") A great starter layout for a landing page
         .col-xl-6.col-lg-6.col-md-8.col-sm-10.offset-sm-1.offset-md-2.offset-xl-0.offset-lg-0.text-center
           h3.title_colors.text-center
             | Sign in to FMovies
@@ -37,3 +37,7 @@ block content
         | blanditiis voluptatem hic, assumenda aspernatur facere ipsam nemo ratione cumque magnam enim fugiat
         | reprehenderit expedita.
 
+  script.
+    if (getQueryVariable('failed_login')) {
+      document.getElementById("bad_login").innerHTML = '*Username or password is incorrect.';
+    }

@@ -23,7 +23,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(require("express-session")({
   secret:"markgerrity",       //decode or encode session
   resave: false,          
-  saveUninitialized:false    
+  saveUninitialized:false,
+  cookie: { maxAge: 87000000 }    
 }));
 app.use(passport.initialize());
 app.use(passport.session());

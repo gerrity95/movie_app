@@ -62,15 +62,27 @@ html {
 
 @media screen and (max-width: 768px) {
 
+  .masthead {
+    min-height: 100vh;
+    background-image: url('/images/movie_background.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
   .header_text {
     background-color: #ffffff;
     border-radius: 10px;
     padding-top: 0%;
-    padding-bottom: 5%;
+    padding-bottom: 0%;
     padding-left: 10%;
     padding-right: 10%;
     width: 90%;
-    margin-top: 250px;
+    margin-top: 50px;
+  }
+
+  .home_title {
+    display: none;
   }
 }
 
@@ -112,10 +124,27 @@ html {
   margin-right: auto;
 }
 
+.register_form {
+  padding-top: 20px;
+  padding-bottom: 10px;
+  margin-bottom: 50px;
+  border-radius: 5px;
+}
+
+.register_form img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 @media screen and (max-width: 768px) {
 
   .login_form {
-    margin-top: 0%;
+    margin-top: 5%;
+  }
+
+  .register_form {
+    margin-top: 75px;
   }
 
   .form_row {
@@ -182,4 +211,13 @@ html {
    text-align:center;
    display:block;
 
+}
+
+.password_error {
+  position:relative;
+  top:10px;
+  color: #eb4034;
+  font-size: 0.9rem;
+  font-weight: bold;
+  text-align:center;
 }
