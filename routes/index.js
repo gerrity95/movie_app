@@ -75,6 +75,7 @@ router.post('/api/login', function(req, res, next) {
    });
 
 router.get("/api/test", isLoggedIn, (req,res) =>{
+  console.log("User is logged in");
   res.json({user_info: req.user});
   })
 
