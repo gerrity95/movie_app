@@ -14,6 +14,7 @@ const ratedSchema = new Schema({
   tmdb_rating: { type: Number, default: null },
   networks: { type: Array, default: null},
   creator: { type: Array, default: null},
+  keywords: { type: Array, default: null}
 });
 
 // Compile model from schema

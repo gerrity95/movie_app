@@ -7,6 +7,7 @@ const passportLocalMongoose = require("passport-local-mongoose");
 const dotenv = require('dotenv');
 const async = require("async");
 const https = require('https');
+const flask_api = require('./helpers/flask_api');
 dotenv.config();
 
 const {
@@ -27,6 +28,12 @@ router.post("/user/submit_rating", async (req, res, next) => {
         return res.json({'user': req.user, 'response': show_details}); 
       };
 
+      var show_keywords = await get_tvshow_keywords(req.body.show_id);
+      if (show_keywords.status != 200) {
+        console.log("Unable to fulfill request to add show to DB.");
+        return res.json({'user': req.user, 'response': show_details}); 
+      };
+
     } catch (e) {
       console.log("Error attempting to talk to TMDB. Error: ");
       console.log(e)
@@ -42,7 +49,9 @@ router.post("/user/submit_rating", async (req, res, next) => {
         languages: show_details.body.languages,
         tmdb_rating: show_details.body.vote_average,
         networks: show_details.body.networks,
-        creator: show_details.body.creator});
+        creator: show_details.body.creator,
+        keywords: show_keywords.body.results
+      });
 
       let add_show = await rater.create(new_show);
       
@@ -62,6 +71,15 @@ router.post("/user/submit_rating", async (req, res, next) => {
  
 });
 
+router.get('/user/recommended_shows', async (req, res, next) => {
+
+  shows = await flask_api.flask_test()
+  console.log("GOT A RESULT FROM FLASK");
+
+  return res.json({"result": shows});
+
+});
+
 async function get_tvshow_details(show_id) {
   var options = {
     host: 'api.themoviedb.org',
@@ -75,6 +93,40 @@ async function get_tvshow_details(show_id) {
   return new Promise((resolve, reject) => {
     const req = https.request(options, (res) => {
       console.log("Request made to TMDB");
+      console.log('statusCode:', res.statusCode);
+      console.log('headers:', res.headers);
+    
+      res.on('data', (chunk) => {
+        body += chunk;
+      });
+      res.on('end', () => {
+        response_body = JSON.parse(body);
+        resolve({"status": res.statusCode, "body": response_body});
+      })
+    });
+    
+    req.on('error', (e) => {
+      console.error("Error querying TMDB: " + e);
+      reject(e)
+    });
+    
+    req.end();
+  });
+}
+
+async function get_tvshow_keywords(show_id) {
+  var options = {
+    host: 'api.themoviedb.org',
+    path: '/3/tv/' + show_id + '/keywords',
+    port: 443,
+    method: 'GET',
+    headers: {'Authorization': 'Bearer ' + TMDB_READ_TOKEN}
+  };
+  
+  var body = ""
+  return new Promise((resolve, reject) => {
+    const req = https.request(options, (res) => {
+      console.log("Request made to TMDB to get Keywords");
       console.log('statusCode:', res.statusCode);
       console.log('headers:', res.headers);
     
