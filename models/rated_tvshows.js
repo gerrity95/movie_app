@@ -6,20 +6,17 @@ const passportLocalMongoose = require("passport-local-mongoose");
 var Schema = mongoose.Schema;
 
 const ratedSchema = new Schema({
-  username: { type: String, default: null },
+  user_id: { type: String, default: null },
   rating: { type: Number, default: null },
-  movie_id: { type: String, unique: true },
+  show_id: { type: Number, default: null },
   genres: { type: Array, default: null},
   languages: { type: Array, default: null},
   tmdb_rating: { type: Number, default: null },
   networks: { type: Array, default: null},
   creator: { type: Array, default: null},
-  last_name: { type: String, default: null}
 });
 
-ratedSchema.plugin(passportLocalMongoose);
-
 // Compile model from schema
-var ratedModel = mongoose.model('ratedSchema', ratedSchema );
+var ratedModel = mongoose.model('rated_shows', ratedSchema );
 
 module.exports = ratedModel
