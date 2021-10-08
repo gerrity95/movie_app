@@ -1,1 +1,6 @@
 flask
+motor
+requests
+asyncio
+python-dotenv
+flask[async]
