@@ -1,13 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const path = require('path');
-const rater = require("../models/rated_tvshows")
+const rater = require("../models/rated_movies")
 const passport = require("passport");
 const passportLocalMongoose = require("passport-local-mongoose");
 const dotenv = require('dotenv');
 const async = require("async");
 const https = require('https');
 const flask_api = require('./helpers/flask_api');
+const { response } = require('express');
 dotenv.config();
 
 const {
@@ -20,18 +21,26 @@ router.post("/user/submit_rating", async (req, res, next) => {
   //var url = req.get('referer').split('?')[0];
   if (req.user) {
     console.log("Submitted rating: " + req.body.rating);
-    console.log("Attempting to get show details for: " + req.body.show_id);
+    console.log("Attempting to get movie details for: " + req.body.movie_id);
     try {
-      var show_details = await get_tvshow_details(req.body.show_id);
-      if (show_details.status != 200) {
-        console.log("Unable to fulfill request to add show to DB.");
-        return res.json({'user': req.user, 'response': show_details}); 
+      var movie_details = await get_movie_details(req.body.movie_id);
+      if (movie_details.status != 200) {
+        console.log("Unable to fulfill request to add movie to DB.");
+        return res.json({'user': req.user, 'response': movie_details}); 
       };
 
-      var show_keywords = await get_tvshow_keywords(req.body.show_id);
-      if (show_keywords.status != 200) {
-        console.log("Unable to fulfill request to add show to DB.");
-        return res.json({'user': req.user, 'response': show_details}); 
+      var movie_cast = await generic_tmdb_query(req.body.movie_id, 'credits');
+      director_name = "";
+      for (var member in movie_cast.body.cast) {
+        if (movie_cast.body.crew[member]['job'] == 'Director') {
+          director_name = movie_cast.body.crew[member].name;
+          break;
+        }
+      }
+      var movie_keywords = await generic_tmdb_query(req.body.movie_id, 'keywords');
+      if (movie_keywords.status != 200) {
+        console.log("Unable to fulfill request to add movie to DB.");
+        return res.json({'user': req.user, 'response': movie_details}); 
       };
 
     } catch (e) {
@@ -44,13 +53,13 @@ router.post("/user/submit_rating", async (req, res, next) => {
       const new_show = new rater({
         user_id: req.user._id, 
         rating: req.body.rating,
-        show_id: req.body.show_id,
-        genres: show_details.body.genres,
-        languages: show_details.body.languages,
-        tmdb_rating: show_details.body.vote_average,
-        networks: show_details.body.networks,
-        creator: show_details.body.creator,
-        keywords: show_keywords.body.results
+        movie_id: req.body.movie_id,
+        genres: movie_details.body.genres,
+        languages: movie_details.body.original_language,
+        tmdb_rating: movie_details.body.vote_average,
+        production_companies: movie_details.body.production_companies,
+        director: director_name,
+        keywords: movie_keywords.body.results
       });
 
       let add_show = await rater.create(new_show);
@@ -80,10 +89,10 @@ router.get('/user/recommended_shows', async (req, res, next) => {
 
 });
 
-async function get_tvshow_details(show_id) {
+async function get_movie_details(movie_id) {
   var options = {
     host: 'api.themoviedb.org',
-    path: '/3/tv/' + show_id,
+    path: '/3/movie/' + movie_id,
     port: 443,
     method: 'GET',
     headers: {'Authorization': 'Bearer ' + TMDB_READ_TOKEN}
@@ -114,10 +123,10 @@ async function get_tvshow_details(show_id) {
   });
 }
 
-async function get_tvshow_keywords(show_id) {
+async function generic_tmdb_query(movie_id, query_path) {
   var options = {
     host: 'api.themoviedb.org',
-    path: '/3/tv/' + show_id + '/keywords',
+    path: '/3/movie/' + movie_id + '/' + query_path,
     port: 443,
     method: 'GET',
     headers: {'Authorization': 'Bearer ' + TMDB_READ_TOKEN}

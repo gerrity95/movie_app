@@ -8,16 +8,16 @@ var Schema = mongoose.Schema;
 const ratedSchema = new Schema({
   user_id: { type: String, default: null },
   rating: { type: Number, default: null },
-  show_id: { type: Number, default: null },
+  movie_id: { type: Number, default: null },
   genres: { type: Array, default: null},
   languages: { type: Array, default: null},
   tmdb_rating: { type: Number, default: null },
-  networks: { type: Array, default: null},
-  creator: { type: Array, default: null},
+  production_companies: { type: Array, default: null},
+  director: { type: Array, default: null},
   keywords: { type: Array, default: null}
 });
 
 // Compile model from schema
-var ratedModel = mongoose.model('rated_shows', ratedSchema );
+var ratedModel = mongoose.model('rated_movies', ratedSchema );
 
 module.exports = ratedModel
