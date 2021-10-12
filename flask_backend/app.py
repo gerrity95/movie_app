@@ -1,6 +1,8 @@
 import os
 import asyncio
 from flask import Flask, jsonify
+
+from base.tmdbclient import TmdbClient
 app = Flask(__name__)
 from base.mongoclient import MongoClient
 from recommendations import Recommendations
@@ -14,16 +16,24 @@ def welcome():
     return jsonify({'status': 'api is working'})
 
 #we define the route /
-@app.route('/mongo_test')
+@app.route('/mongo_ping')
 async def mongo_test():
-    ping_result = await MongoClient().ping_mongo()
+    ping_result = await MongoClient().ping()
     # return a json
     return jsonify({'status': ping_result})
 
 #we define the route /
+@app.route('/tmdb_ping')
+async def tmdb_test():
+    ping_result = await TmdbClient().ping()
+    # return a json
+    return jsonify({'status': ping_result})
+
+
+#we define the route /
 @app.route('/get_reccomendations')
 async def get_reccs():
-    result, error = await Recommendations().get_rated_movies('615d66a4919768001afad6af')
+    result, error = await Recommendations().get_similar_movies()
     # return a json
     if error:
         return {'status': str(error)}

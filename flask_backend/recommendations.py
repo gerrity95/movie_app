@@ -1,10 +1,17 @@
 import asyncio
 from base.mongoclient import MongoClient
+from base.tmdbclient import TmdbClient
 
 class Recommendations:
     
     def __init__(self) -> None:
         self.mongo_client = MongoClient()
+        self.tmdb_client = TmdbClient()
+        
+    async def get_similar_movies(self):
+        result, error = await self.tmdb_client.make_movie_request(path='similar', movie_id=769)
+        
+        return result, error
     
     async def get_rated_movies(self, user_id):
         """
