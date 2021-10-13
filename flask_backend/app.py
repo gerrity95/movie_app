@@ -33,12 +33,13 @@ async def tmdb_test():
 #we define the route /
 @app.route('/get_reccomendations')
 async def get_reccs():
-    result, error = await Recommendations().get_similar_movies()
+    result, error = await Recommendations().calculate_reccs(user_id='615d66a4919768001afad6af')
     # return a json
     if error:
         return {'status': str(error)}
     
-    return {'status': str(result)}
+    return result
+
 
 if __name__ == '__main__':
     #define the localhost ip and the cport that is going to be used

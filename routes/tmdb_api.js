@@ -30,10 +30,11 @@ router.post("/user/submit_rating", async (req, res, next) => {
       };
 
       var movie_cast = await generic_tmdb_query(req.body.movie_id, 'credits');
-      director_name = "";
+      director_id = "";
       for (var member in movie_cast.body.cast) {
         if (movie_cast.body.crew[member]['job'] == 'Director') {
-          director_name = movie_cast.body.crew[member].name;
+          console.log(movie_cast.body.crew[member]);
+          director_id = movie_cast.body.crew[member].id;
           break;
         }
       }
@@ -58,7 +59,7 @@ router.post("/user/submit_rating", async (req, res, next) => {
         languages: movie_details.body.original_language,
         tmdb_rating: movie_details.body.vote_average,
         production_companies: movie_details.body.production_companies,
-        director: director_name,
+        director: director_id,
         keywords: movie_keywords.body.results
       });
 

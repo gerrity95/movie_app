@@ -54,3 +54,40 @@ class TmdbClient():
         else:
             print(f"Unexpected response from TMDB. Status: {result.status_code}, content: {result.content}")
             return None, Exception
+        
+    async def make_discover_request(self, type: str, unique_id: str):
+        """
+        Function to make request against TMDB discover API
+        """
+        try:
+            params = {
+                'sort_by': 'vote_average.desc',
+                'vote_count.gte': 1000,
+                'with_original_language': 'en',
+                'page': '1',
+                
+            }
+            if type == 'director':
+                params['with_crew'] = unique_id
+            else:
+                params['with_genres'] = unique_id
+                
+            headers = {
+                    'Authorization': f"Bearer {self.read_token}"
+                }
+            result = requests.get(url=f"{self.api_endpoint}/discover/movie/",
+                                headers=headers, params=params)
+        except Exception as error:
+            print(f"Error attempting to make request against tmdb: {error}")
+            return None, error
+        
+        if result.status_code == 200:
+            print("Successfully got a response...")
+            try:
+                return result.json(), None
+            except json.decoder.JSONDecodeError as err:
+                print("Error with the response returned TMDB. Cleaning up")
+                return None, err
+        else:
+            print(f"Unexpected response from TMDB. Status: {result.status_code}, content: {result.content}")
+            return None, Exception

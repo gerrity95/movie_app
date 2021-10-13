@@ -13,7 +13,7 @@ const ratedSchema = new Schema({
   languages: { type: Array, default: null},
   tmdb_rating: { type: Number, default: null },
   production_companies: { type: Array, default: null},
-  director: { type: Array, default: null},
+  director: { type: String, default: null},
   keywords: { type: Array, default: null}
 });
 
