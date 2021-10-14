@@ -1,6 +1,7 @@
 import asyncio
 from base.mongoclient import MongoClient
 from base.tmdbclient import TmdbClient
+from base.recc_calculator import ReccCalculator
 from collections import Counter
 import json
 from bson import ObjectId
@@ -21,13 +22,33 @@ class Recommendations:
     def __init__(self) -> None:
         self.mongo_client = MongoClient()
         self.tmdb_client = TmdbClient()
+        self.recc_calculator = ReccCalculator()
         
     async def calculate_reccs(self, user_id: str):
+        reccs_data, error = await self.gather_reccs_data(user_id)
+        
+        if error:
+            print("Error attempting to get rated movies")
+            return None, RecommendationException("Error attempting to gather recommendation data")
+        
+        try:
+            sorted_reccomendations = self.recc_calculator.do_calculate(tmdb_data=json.loads(reccs_data))
+            return sorted_reccomendations, None
+        except Exception as err:
+            print(f"Error {err} seen when attempting to calculate reccommendations")
+            return None, Exception(str(err))
+        
+        
+    async def gather_reccs_data(self, user_id: str):
         rated_movies, error = await self.get_rated_movies(user_id)
         if error:
             print("Error attempting to get rated movies")
             return None, RecommendationException
-        directors, genres = self.extract_details_for_discover(rated_movies)
+        keywords = []
+        for item in rated_movies:
+            keywords.append(item['keywords'])
+        directors, genres, keywords = self.extract_details_for_discover(rated_movies)
+        
         discover_directors = []
         for direc in directors:
             disc_direc, error = await self.tmdb_client.make_discover_request(type='director', unique_id=direc[0])
@@ -42,6 +63,14 @@ class Recommendations:
                 print("Error attempting to get query discover")
                 return None, RecommendationException
             discover_genres.extend(disc_direc['results'])
+        
+        discover_keywords = []
+        for keyword in keywords:
+            disc_direc, error = await self.tmdb_client.make_discover_request(type='keywords', unique_id=keyword[0])
+            if error:
+                print("Error attempting to get query discover")
+                return None, RecommendationException
+            discover_keywords.extend(disc_direc['results'])
             
         top_movies = self.get_top_rated_movies(rated_movies)
         similar_movie_collection = []
@@ -62,11 +91,12 @@ class Recommendations:
             
         
         full_response = {'discover_directors': discover_directors, 'discover_genres': discover_genres,
-                'similar_movies': similar_movie_collection,
-                'recommeded_movies': recommended_movie_collection,
-                'rated_movies': rated_movies,
-                'directors': directors,
-                'genres': genres}
+                         'discover_keywords': discover_keywords,
+                         'similar_movies': similar_movie_collection,
+                         'recommeded_movies': recommended_movie_collection,
+                         'rated_movies': rated_movies,
+                         'directors': directors,
+                         'genres': genres}
             
         
         return JSONEncoder().encode(full_response), error
@@ -77,7 +107,7 @@ class Recommendations:
         """
         movie_list = []
         for movie in rated_movie:
-            if movie['rating'] > 3:
+            if movie['rating'] > 6:
                 simple_movie = {'movie_id': movie['movie_id'], 'rating': movie['rating']}
                 movie_list.append(simple_movie)
 
@@ -93,10 +123,11 @@ class Recommendations:
         
         genres = []
         directors = []
+        keywords = []
         for item in rated_movie:
             genres.append(item['genres'])
             directors.append(item['director'])
-            # TODO KEYWORDS
+            keywords.append(item['keywords'])
 
         direc_counts = Counter(directors)
         most_common_direcs = direc_counts.most_common(6)
@@ -111,9 +142,18 @@ class Recommendations:
             list_of_g_ids.append(genre_string)
 
         genre_counts = Counter(list_of_g_ids)
-        most_common_genres = genre_counts.most_common(6)
+        
+        list_of_keyword_sets = []
+        for keyword_set in keywords:
+            for keyword in keyword_set:
+                list_of_keyword_sets.append(keyword['id'])
 
-        return most_common_direcs, most_common_genres
+        keyword_counts = Counter(list_of_keyword_sets)
+        
+        most_common_genres = genre_counts.most_common(6)
+        most_common_keywords = keyword_counts.most_common(6)
+
+        return most_common_direcs, most_common_genres, most_common_keywords
     
     async def get_rated_movies(self, user_id):
         """

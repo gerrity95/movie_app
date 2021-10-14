@@ -69,8 +69,10 @@ class TmdbClient():
             }
             if type == 'director':
                 params['with_crew'] = unique_id
-            else:
+            elif type == 'genre':
                 params['with_genres'] = unique_id
+            else:
+                params['with_keywords'] = unique_id
                 
             headers = {
                     'Authorization': f"Bearer {self.read_token}"

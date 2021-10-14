@@ -39,6 +39,7 @@ router.post("/user/submit_rating", async (req, res, next) => {
         }
       }
       var movie_keywords = await generic_tmdb_query(req.body.movie_id, 'keywords');
+      console.log(movie_keywords.body.keywords);
       if (movie_keywords.status != 200) {
         console.log("Unable to fulfill request to add movie to DB.");
         return res.json({'user': req.user, 'response': movie_details}); 
@@ -60,7 +61,7 @@ router.post("/user/submit_rating", async (req, res, next) => {
         tmdb_rating: movie_details.body.vote_average,
         production_companies: movie_details.body.production_companies,
         director: director_id,
-        keywords: movie_keywords.body.results
+        keywords: movie_keywords.body.keywords
       });
 
       let add_show = await rater.create(new_show);

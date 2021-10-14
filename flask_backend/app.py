@@ -38,7 +38,7 @@ async def get_reccs():
     if error:
         return {'status': str(error)}
     
-    return result
+    return {'result': result}
 
 
 if __name__ == '__main__':
