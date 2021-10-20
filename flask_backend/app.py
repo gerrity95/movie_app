@@ -30,21 +30,11 @@ async def tmdb_test():
     # return a json
     return jsonify({'status': ping_result})
 
-#we define the route /
-@app.route('/param_test', methods=['GET', 'POST'])
-async def param_test():
-    print("TESTING OUT SOME LOGGING")
-    user_id = request.json.get('user_id')
-    # return a json
-    if user_id:
-        return jsonify({'status': user_id})
-    else:
-        return jsonify({'status': False})
-
 
 #we define the route /
 @app.route('/get_reccomendations', methods=['GET', 'POST'])
 async def get_reccs():
+    print("Request received to get recommendations...")
     user_id = request.json.get('user_id')
     if user_id:
             result, error = await Recommendations().calculate_reccs(user_id=user_id)

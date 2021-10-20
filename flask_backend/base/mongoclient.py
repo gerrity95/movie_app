@@ -47,6 +47,7 @@ class MongoClient():
             events: AgnosticCollection = getattr(db, collection)
             async for doc in events.aggregate(query):
                 result.append(doc)
+            print("Successfully got a response from Mongo. Processing")
             return result, None
         except Exception as error:
             print(f"Error attempting to make request against mongo: {error}")

@@ -45,7 +45,7 @@ class TmdbClient():
             return None, error
         
         if result.status_code == 200:
-            print("Successfully got a response...")
+            print("Successfully got a response from generic movie endpoint...")
             try:
                 return result.json(), None
             except json.decoder.JSONDecodeError as err:
@@ -84,7 +84,7 @@ class TmdbClient():
             return None, error
         
         if result.status_code == 200:
-            print("Successfully got a response...")
+            print("Successfully got a response from discover endpoint...")
             try:
                 return result.json(), None
             except json.decoder.JSONDecodeError as err:

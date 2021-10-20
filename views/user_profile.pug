@@ -1,12 +1,10 @@
 extends layout
 
 block content
+  title FMovies Home
+  - var reccs = movie_info
   h1
     | User Profile
-  p
-    | After Login the user will reach here.
-  ul
-    li
-      a(href='/') Home
-    li
-      a(href='/logout') Logout
+  for movie in reccs
+    p 
+      | #{movie.movie_info.title}

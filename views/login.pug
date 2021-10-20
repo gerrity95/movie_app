@@ -3,20 +3,21 @@ extends layout
 block content
   
   // Full Page Image Header with Vertically Centered Content
-  header.masthead(style="background-image: url('/images/login_background.jpg')")
+  #loader(style="display:none")
+  header.masthead#masthead_load(style="background-image: url('/images/login_background.jpg')")
     .container.h-100
-      .row.h-100.align-items-center
+      .row.h-100.align-items-center#form_background
         .col-10.col-sm-10.col-md-8.col-lg-4.col-xl-4.login_form.shadow-sm.bg-white.rounded.mx-auto
           img(src='/images/small_logo_cropped.png' alt="FMovies Icon")
           div.message.alert.alert-danger(style="display:none;")
             | #{message}
-          form(action='/login' method='POST')
+          form#login_form(action='/login' method='POST')
             div.form-group.form-registration
               label(for="username") Username
-              input.form-control.username(type="text", name="username", autocomplete="username" required)
+              input#username.form-control.username(type="text", name="username", autocomplete="username" required)
             div.form-group.form-registration
               label(for="password") Password
-              input.form-control.password(type="password", name="password", autocomplete="current-password" required)
+              input#password.form-control.password(type="password", name="password", autocomplete="current-password" required)
             span.forgot_password
               a(href='#') Forgot Password?
             div.form-group.form-registration
@@ -27,3 +28,11 @@ block content
     if (getQueryVariable('failed_login')) {
       document.getElementById("bad_login").innerHTML = '*Username or password is incorrect.';
     }
+
+    $(document).ready(function(){
+      $("form#login_form").on('submit', function(e){
+          document.getElementById("loader").style.display = 'block';
+          document.getElementById("form_background").style.display = 'none';
+          document.getElementById("masthead_load").style.filter = 'blur(25px)';
+      });
+    });

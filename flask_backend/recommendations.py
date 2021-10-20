@@ -32,6 +32,7 @@ class Recommendations:
             return None, RecommendationException("Error attempting to gather recommendation data")
         
         try:
+            print("Attempting to process recommendation data...")
             sorted_reccomendations = self.recc_calculator.do_calculate(tmdb_data=json.loads(reccs_data))
             return sorted_reccomendations, None
         except Exception as err:
@@ -40,6 +41,7 @@ class Recommendations:
         
         
     async def gather_reccs_data(self, user_id: str):
+        print("Attempting to gather all recommendation data...")
         rated_movies, error = await self.get_rated_movies(user_id)
         if error:
             print("Error attempting to get rated movies")

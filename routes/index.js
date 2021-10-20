@@ -4,6 +4,7 @@ const path = require('path');
 const User = require("../models/user");
 const passport = require("passport");
 const passportLocalMongoose = require("passport-local-mongoose");
+const flask_api = require('./helpers/flask_api');
 
 router.use (function (req, res, next) {
   console.log('/' + req.method);
@@ -14,8 +15,20 @@ router.get("/", (req,res) =>{
   res.render("home");
 })
 
-router.get("/userprofile", isLoggedIn, (req,res) =>{
-  res.render("user_profile", {user_info: req.user});
+router.get("/userprofile", isLoggedIn, async (req,res) =>{
+  
+  console.log("Attempting to get movie data...");
+  //shows = await flask_api.get_reccomendations(req.user._id)
+  shows = flask_api.sample_movies()
+  console.log(shows)
+  if (shows.status == 200) {
+    console.log(shows.body.result);
+    res.render("user_profile", {user_info: req.user, movie_info: shows.body.result});
+  }
+  else {
+    res.render("user_profile", {user_info: req.user, movie_info: 'Bad'});
+  }
+
 })
 
 //Auth Routes
@@ -41,7 +54,6 @@ router.post('/login', function(req, res, next) {
     req.logIn(user, function(err) {
          if (err) { return next(err); }
          console.log("Successfully logged in for user: " + req.user.email);
-         console.log(res)
          return res.redirect('/userprofile')
        });
 
