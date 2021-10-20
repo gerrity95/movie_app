@@ -84,10 +84,13 @@ router.post("/user/submit_rating", async (req, res, next) => {
 
 router.get('/user/recommended_shows', async (req, res, next) => {
 
-  shows = await flask_api.flask_test()
-  console.log("GOT A RESULT FROM FLASK");
-
-  return res.json({"result": shows});
+  if (req.user) {
+    shows = await flask_api.get_reccomendations(req.user._id)
+    console.log("GOT A RESULT FROM FLASK");
+  
+    return res.json({"result": shows});
+  
+  }
 
 });
 

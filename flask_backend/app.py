@@ -1,6 +1,7 @@
+from logging import fatal
 import os
 import asyncio
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 
 from base.tmdbclient import TmdbClient
 app = Flask(__name__)
@@ -29,16 +30,32 @@ async def tmdb_test():
     # return a json
     return jsonify({'status': ping_result})
 
+#we define the route /
+@app.route('/param_test', methods=['GET', 'POST'])
+async def param_test():
+    print("TESTING OUT SOME LOGGING")
+    user_id = request.json.get('user_id')
+    # return a json
+    if user_id:
+        return jsonify({'status': user_id})
+    else:
+        return jsonify({'status': False})
+
 
 #we define the route /
-@app.route('/get_reccomendations')
+@app.route('/get_reccomendations', methods=['GET', 'POST'])
 async def get_reccs():
-    result, error = await Recommendations().calculate_reccs(user_id='615d66a4919768001afad6af')
-    # return a json
-    if error:
-        return {'status': str(error)}
-    
-    return {'result': result}
+    user_id = request.json.get('user_id')
+    if user_id:
+            result, error = await Recommendations().calculate_reccs(user_id=user_id)
+            # return a json
+            if error:
+                return {'status': str(error)}
+            
+            return {'result': result}
+
+    else:
+        return jsonify({'status': False})
 
 
 if __name__ == '__main__':
