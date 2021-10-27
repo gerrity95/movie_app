@@ -8,3 +8,11 @@ function getQueryVariable(variable)
        }
        return(false);
 }
+
+$(document).ready(function () {
+
+        $('#sidebarCollapse').on('click', function () {
+            $('#sidebar').toggleClass('active');
+        });
+    
+    });

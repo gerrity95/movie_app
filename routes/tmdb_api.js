@@ -164,4 +164,8 @@ async function generic_tmdb_query(movie_id, query_path) {
 
 
 
-module.exports = router;
+module.exports = {
+  router: router,
+  get_movie_details: get_movie_details,
+  generic_tmdb_query: generic_tmdb_query
+}

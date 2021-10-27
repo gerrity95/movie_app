@@ -4,7 +4,9 @@ const router = express.Router();
 const db = require('./config/database');
 const path = require('path');
 const indexRouter = require('./routes/index');
+const movieRouter = require('./routes/movies');
 const tmdbRouter = require('./routes/tmdb_api');
+const errorRouter = require('./routes/error');
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const User = require("./models/user");
@@ -47,7 +49,19 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use('/', indexRouter);
-app.use('/', tmdbRouter);
+app.use('/', movieRouter);
+app.use('/', tmdbRouter.router);
+app.use('/', errorRouter);
+
+app.use(function(err, req, res, next){
+  //TODO add some monitoring/alerting framework so if we hit this we get alerted
+  console.log("We have hit an error...")
+  console.log(err);
+  console.error(err.name);
+  console.log(err.message)
+  res.status(500);
+  res.render('error', {'error': err});
+});
 
 app.listen(port, function () {
   console.log(`Example app listening on ${port}!`)

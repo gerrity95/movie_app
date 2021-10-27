@@ -1,0 +1,53 @@
+extends layout
+
+block content
+  title FMovies Home
+  - var movie_info = movie_info
+  - var movie_cast = movie_credits
+  - var header_src = `https://image.tmdb.org/t/p/original/${movie_info.backdrop_path}`
+  - var poster_src = `https://image.tmdb.org/t/p/w500/${movie_info.poster_path}`
+  - var percent_rating = movie_info.vote_average * 10 
+
+  .container-fluid(style=`background-image:url(${header_src})`).movie_header_image
+    .row.movie_darken
+      .col-10.col-sm-8.col-md-5.col-lg-3.col-xl-3.offset-lg-1.offset-xl-1.offset-md-1.offset-sm-2.offset-1.align-self-center.d-flex.justify-content-center
+        img(src=poster_src).movie_poster_image
+      .col-10.col-sm-8.col-md-5.col-lg-7.col-xl-7.offset-lg-0.offset-xl-0.offset-md-1.offset-sm-2.offset-1.align-self-center
+        .c100.p25.blue
+          span #{percent_rating}%
+          .slice
+            .bar
+            .fill
+        h2.movie_text
+          | #{movie_info.original_title}
+        for genre in movie_info.genres
+          h5.movie_text(style="display: inline")
+            |  #{genre.name},
+        h5.movie_text
+          br
+          | Overview
+        p.movie_text
+          | #{movie_info.overview}
+        
+        table.table.table-borderless.movie_text
+          thead
+            tr
+              th(style="width: 25%") Release Date
+              th(style="width: 25%") Runtime
+          tbody
+            tr
+              td #{movie_info.release_date}
+              td #{movie_info.runtime} minutes
+        
+        table.table.table-borderless.movie_text
+          thead
+            tr
+              th(style="width: 25%") Director
+              th(style="width: 25%") Screenplay
+          tbody
+            tr
+              td #{director}
+              td #{screenplay}
+
+  .container-fluid
+    .row 
