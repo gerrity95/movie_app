@@ -21,14 +21,20 @@ router.get("/movies/:movie_id", isLoggedIn, async (req,res) =>{
         console.log(err);
         return next(err);
        }));
-    movie_cast.body.crew.forEach(function(value){
-        if (value.job == "Director") {
-            director = value.name
-        }
-        if (value.job == "Screenplay") {
-            screenplay = value.name
-        }
-      });
+    try {
+        movie_cast.body.crew.forEach(function(value){
+            if (value.job == "Director") {
+                director = value.name
+            }
+            if (value.job == "Screenplay") {
+                screenplay = value.name
+            }
+          });
+    
+    } catch (e) {
+        console.log("Error: " + e + " attempting to get movie details")
+        return res.render('error', {'error': e})
+    }
     return res.render("movie_profile", {'movie_info': movie_info.body, 'movie_credits': movie_cast.body,
                                         'director': director, 'screenplay': screenplay});
   })
