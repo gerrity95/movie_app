@@ -582,6 +582,15 @@ a.article:hover {
   background-size: cover;
 }
 
+@media (max-width: 768px) {
+  .movie_poster_image {
+    max-height: 75%;
+    max-width: 75%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+}
+
 .movie_darken {
   border-radius: 10px;
   max-height: 60%;
