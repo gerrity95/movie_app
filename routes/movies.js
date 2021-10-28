@@ -2,15 +2,9 @@ const express = require('express');
 const router = express.Router();
 const https = require('https');
 const tmdb_api = require('./tmdb_api');
+const helpers = require('./helpers/generic_helpers');
 
-function isLoggedIn(req,res,next) {
-    if(req.isAuthenticated()){
-        console.log(req)
-        return next();
-    }
-  }
-
-router.get("/movies/:movie_id", isLoggedIn, async (req,res) =>{
+router.get("/movies/:movie_id", helpers.is_logged_in, async (req,res) =>{
     console.log("PARAMS");
     console.log("Attempting to get movie detail for " + req.params.movie_id)
     let [movie_info, movie_cast] = await Promise.all([

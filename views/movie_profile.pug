@@ -27,13 +27,13 @@ block content
           br
           | #{movie_info.tagline}
         
-        p(style="vertical-align: middle;")
-          span.fa-stack.fa-2x
-            i.fa.fa-circle.fa-stack-2x.icon-background
+        .social-icons
+          a(href="#").social-icon.social-icon--codepen
             i.far.fa-bookmark.fa-stack-1x(style="color: white")
-          span.fa-stack.fa-2x 
-            i.fa.fa-circle.fa-stack-2x.icon-background
+            .tooltip Add To Watchlist
+          a(href="#").social-icon.social-icon--codepen
             i.far.fa-trash-alt.fa-stack-1x(style="color: white")
+            .tooltip Add To Blocklist
 
         table.table.table-borderless.movie_text
           thead
@@ -61,25 +61,25 @@ block content
         .feedback
           h5 Submit Rating
           .rating
-            input#rating-10(type='radio' name='rating')
+            input#rating-10(type='radio' name='rating' value="10")
             label(for='rating-10')
-            input#rating-9(type='radio' name='rating')
+            input#rating-9(type='radio' name='rating' value="9")
             label(for='rating-9')
-            input#rating-8(type='radio' name='rating')
+            input#rating-8(type='radio' name='rating' value="8")
             label(for='rating-8')
-            input#rating-7(type='radio' name='rating')
+            input#rating-7(type='radio' name='rating' value="7")
             label(for='rating-7')
-            input#rating-6(type='radio' name='rating')
+            input#rating-6(type='radio' name='rating' value="6")
             label(for='rating-6')
-            input#rating-5(type='radio' name='rating')
+            input#rating-5(type='radio' name='rating' value="5")
             label(for='rating-5')
-            input#rating-4(type='radio' name='rating')
+            input#rating-4(type='radio' name='rating' value="4")
             label(for='rating-4')
-            input#rating-3(type='radio' name='rating')
+            input#rating-3(type='radio' name='rating' value="3")
             label(for='rating-3')
-            input#rating-2(type='radio' name='rating')
+            input#rating-2(type='radio' name='rating' value="2")
             label(for='rating-2')
-            input#rating-1(type='radio' name='rating')
+            input#rating-1(type='radio' name='rating' value="1")
             label(for='rating-1')
             .emoji-wrapper
               .emoji
@@ -155,10 +155,52 @@ block content
                     path(d='M256 476.2a70 70 0 0 0 53.3-25.5 34.6 34.6 0 0 0-58-25 34.4 34.4 0 0 0-47.8 26 69.9 69.9 0 0 0 52.6 24.5z' fill='#e24b4b')
                     path(d='M290.3 434.8c-1 3.4-5.8 5.2-11 3.9s-8.4-5.1-7.4-8.7c.8-3.3 5.7-5 10.7-3.8 5.1 1.4 8.5 5.3 7.7 8.6z' fill='#fff' opacity='.2')
 
-          button.submit.btn.custom_button(type="submit") Submit
+          button#rating_button.submit.btn.custom_button(type="submit") Submit
     
-      .col-10.col-sm-10.col-md-10.col-lg-6.col-xl-6.offset-lg-0.offset-xl-2.offset-md-1.offset-sm-2.offset-1.align-self-center.rating_column
+      .col-12.col-sm-10.col-md-10.col-lg-6.col-xl-6.offset-lg-0.offset-xl-2.offset-md-1.offset-sm-2.align-self-center.rating_column
         .additional_options
           h3.title_style Overview
           p
-            | #{movie_info.overview}          
+            | #{movie_info.overview}   
+  
+  #module.container-fluid
+    h2
+      | Top Billed Cast
+    .row#collapseExample.collapse(aria-expanded='false')
+      each val in [0, 1, 2, 3, 4, 5, 6, 7]
+        .col-xl-2.col-lg-2.col-md-4.col-sm-4.col-6.credit_details.text-center.shadow-lg
+          - var profile_src = `https://image.tmdb.org/t/p/w500/${movie_cast.cast[val].profile_path}`
+          img.card-img-top(src=profile_src alt='Card image cap').profile_photo
+          .details
+            p #{movie_cast.cast[val].name}
+              br
+              b
+                | #{movie_cast.cast[val].character}
+          
+    a.collapsed.btn.custom_button(style="margin-top: 20px;" data-toggle='collapse' href='#collapseExample' role='button' aria-expanded='false' aria-controls='collapseExample')
+      | View Cast
+
+
+      
+
+
+  script.
+    $('button[id="rating_button"]').prop("disabled", true);
+    $('input[name="rating"]').on("click", function() {
+      if($('input[name="rating"]:checked').length){
+        $('button[id="rating_button"]').prop("disabled", false);
+      }
+    }); 
+    const btn = document.querySelector('#rating_button');
+        // handle button click
+        btn.onclick = function () {
+            const rbs = document.querySelectorAll('input[name="rating"]');
+            let selectedValue;
+            for (const rb of rbs) {
+                if (rb.checked) {
+                    selectedValue = rb.value;
+                    break;
+                }
+            }
+            alert(selectedValue);
+        };

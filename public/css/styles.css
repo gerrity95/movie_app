@@ -101,7 +101,6 @@ html {
 .alt_button {
   background-color: #FFD166;
   color: #505F98;
-  font-weight: bold
 }
 
 .alt_button:hover {
@@ -274,10 +273,9 @@ html {
     DEMO STYLE
 */
 
-a,
-a:hover,
-a:focus {
-    color: inherit;
+#sidebar a,
+#sidebar a:hover,
+#sidebar a:focus {
     text-decoration: none;
     transition: all 0.3s;
 }
@@ -339,29 +337,30 @@ a:focus {
 }
 
 #sidebar ul p {
-    color: #fff;
-    padding: 10px;
+  color: #fff;
+  padding: 10px;
 }
 
 #sidebar ul li a {
-    padding: 10px;
-    font-size: 1.1em;
-    display: block;
+  padding: 10px;
+  font-size: 1.1em;
+  display: block;
+  color:rgba(0, 0, 0, 0.8);
 }
 
 #sidebar ul li a:hover {
-    color: #7386D5;
-    background: #fff;
+  color: #7386D5;
+  background: #fff;
 }
 
 #sidebar ul li.active>a,
 a[aria-expanded="true"] {
-    color: #fff;
-    background: #6d7fcc;
+  color: #fff;
+  background: #6d7fcc;
 }
 
 a[data-toggle="collapse"] {
-    position: relative;
+  position: relative;
 }
 
 .dropdown-toggle::after {
@@ -638,10 +637,96 @@ a.article:hover {
 }
 
 
+/* Color Variables */
+/* Social Icon Mixin */
+/* Social Icons */
+.social-icons {
+  display: flex;
+}
+.social-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 70px;
+  height: 70px;
+  margin: 0 0.5rem;
+  border-radius: 50%;
+  cursor: pointer;
+  font-family: "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+  font-size: 2rem;
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+
+
+.social-icon:hover {
+  color: #fff;
+  text-decoration: none;
+}
+.social-icon:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
+  transform: translate(-50%, -150%);
+}
+.social-icon:active {
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.5) inset;
+}
+
+.social-icon--codepen {
+  background: #111B47;
+  color: #fff;
+}
+.social-icon--codepen .tooltip {
+  background: #111B47;
+  color: currentColor;
+}
+.social-icon--codepen .tooltip:after {
+  border-top-color: #111B47;
+}
+
+.social-icon i {
+  position: relative;
+  top: 1px;
+}
+/* Tooltips */
+.tooltip {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  padding: 0.8rem 1rem;
+  border-radius: 30px;
+  font-size: 0.7rem;
+  font-weight: bold;
+  opacity: 0;
+  pointer-events: none;
+  text-transform: uppercase;
+  transform: translate(-50%, -100%);
+  transition: all 0.3s ease;
+  z-index: 1;
+}
+.tooltip:after {
+  display: block;
+  position: absolute;
+  bottom: 1px;
+  left: 50%;
+  width: 0;
+  height: 0;
+  content: "";
+  border: solid;
+  border-width: 10px 10px 0 10px;
+  border-color: transparent;
+  transform: translate(-50%, 100%);
+}
+
+
 /* Style for animated titles */
 
 
 .title_style {
+  margin-left: auto;
+  margin-right: auto;
   color: #111B47;
   text-transform: uppercase;
   text-decoration: none;
@@ -665,4 +750,54 @@ a.article:hover {
 .title_style:hover:after {
   width: 20%;
   left: 40%;
+}
+
+
+/* Movie Cast Styling */
+
+/* The heart of the matter */
+.testimonial-group > .row {
+  display: block;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+.testimonial-group > .row > .col-2 {
+  display: inline-block;
+}
+
+/* Decorations */
+
+.profile_photo {
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 5px;
+  margin-bottom: 20px
+}
+
+.details {
+  padding-top: 10px;
+}
+
+.credit_details {
+  color:#111B47;
+  padding-top: 20px;
+  padding-bottom: 0px;
+  margin: 10px;
+  border-radius: 10px;
+}
+
+#module {
+  width: 100%;
+}
+
+
+#module #collapseExample.collapse:not(.show) {
+  display: flex;
+  /* height = lineheight * no of lines to display */
+  height: 4.5em;
+  overflow: hidden;
+}
+
+#module #collapseExample.collapsing {
+  height: 4.5em;
 }
