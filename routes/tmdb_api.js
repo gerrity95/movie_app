@@ -9,6 +9,7 @@ const async = require("async");
 const https = require('https');
 const flask_api = require('./helpers/flask_api');
 const { response } = require('express');
+
 dotenv.config();
 
 const {
@@ -18,15 +19,20 @@ const {
 
 
 router.post("/user/submit_rating", async (req, res, next) => {
-  //var url = req.get('referer').split('?')[0];
   if (req.user) {
+    console.log("Checking to see if already rated...")
+    is_rated = await rater.findOne({
+      'movie_id': req.body.movie_id
+    })
+    console.log('is_rated: ' + is_rated);
     console.log("Submitted rating: " + req.body.rating);
     console.log("Attempting to get movie details for: " + req.body.movie_id);
+    return res.send({'success': false});
     try {
       var movie_details = await get_movie_details(req.body.movie_id);
       if (movie_details.status != 200) {
-        console.log("Unable to fulfill request to add movie to DB.");
-        return res.json({'user': req.user, 'response': movie_details}); 
+        console.log("Unable to fulfill request to add movie to DB. Cannot get movie details");
+        return res.send({'success': false}); 
       };
 
       var movie_cast = await generic_tmdb_query(req.body.movie_id, 'credits');
@@ -41,14 +47,14 @@ router.post("/user/submit_rating", async (req, res, next) => {
       var movie_keywords = await generic_tmdb_query(req.body.movie_id, 'keywords');
       console.log(movie_keywords.body.keywords);
       if (movie_keywords.status != 200) {
-        console.log("Unable to fulfill request to add movie to DB.");
-        return res.json({'user': req.user, 'response': movie_details}); 
+        console.log("Unable to fulfill request to add movie to DB. Cannot get movie keywords");
+        return res.send({'success': false});
       };
 
     } catch (e) {
       console.log("Error attempting to talk to TMDB. Error: ");
       console.log(e)
-      return res.json({'user': req.user, 'response': false});
+      return res.send({'success': false});
     }
     try {
       console.log("Attempting to add show to DB...")
@@ -67,20 +73,16 @@ router.post("/user/submit_rating", async (req, res, next) => {
       let add_show = await rater.create(new_show);
       
       console.log(add_show);
-      return res.json({'user': req.user, 'response': add_show});
+      return res.send({'success': true});
     } catch (e) {
       console.log("Error attempting to add show to the DB.")
       console.log("Error: " + e)
       return res.json({'response': 'bad'});
     }
   }
-  else
-  {
-    console.log("No user currently logged in. Cannot fulfil request...")
-    return res.json({'user': false});
-  }
- 
-});
+  console.log("No user, no bueno.")
+  return res.send({'success': false})
+})
 
 router.get('/user/recommended_shows', async (req, res, next) => {
 

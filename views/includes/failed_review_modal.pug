@@ -1,0 +1,16 @@
+// The Modal
+#failedReview.modal
+  .modal-dialog
+    .modal-content
+      // Modal Header
+      .modal-header
+        h5.modal-title.mx-auto Error Processing Review
+        button.close(type='button' data-dismiss='modal') &times;
+      // Modal body
+      .modal-body
+        img(src='/images/red-cross.png', width='120px' height='120px' style="display: block; margin-left: auto; margin-right: auto;")
+        p(style="margin-top:20px")
+          | Issue attempting to submit your review. Please try again later.
+      // Modal footer
+      .modal-footer
+        button.btn.btn-danger(type='button' data-dismiss='modal') Close

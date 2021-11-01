@@ -2,6 +2,8 @@ extends layout
 
 block content
   title FMovies Home
+  include includes/success_review_modal.pug
+  include includes/failed_review_modal.pug
   - var movie_info = movie_info
   - var movie_cast = movie_credits
   - var header_src = `https://image.tmdb.org/t/p/original/${movie_info.backdrop_path}`
@@ -168,7 +170,7 @@ block content
       | Top Billed Cast
     .row#collapseExample.collapse(aria-expanded='false')
       each val in [0, 1, 2, 3, 4, 5, 6, 7]
-        .col-xl-2.col-lg-2.col-md-4.col-sm-4.col-6.credit_details.text-center.shadow-lg
+        .col-xl-2.col-lg-2.col-md-4.col-sm-4.col-6.offset-0.offset-sm-2.credit_details.text-center.shadow-lg
           - var profile_src = `https://image.tmdb.org/t/p/w500/${movie_cast.cast[val].profile_path}`
           img.card-img-top(src=profile_src alt='Card image cap').profile_photo
           .details
@@ -185,6 +187,9 @@ block content
 
 
   script.
+    var movie_details = !{JSON.stringify(movie_info)};
+    console.log(movie_details.id);
+
     $('button[id="rating_button"]').prop("disabled", true);
     $('input[name="rating"]').on("click", function() {
       if($('input[name="rating"]:checked').length){
@@ -202,5 +207,22 @@ block content
                     break;
                 }
             }
-            alert(selectedValue);
+            $.ajax({
+                type: "POST",
+                url: '/user/submit_rating',
+                dataType: "json",
+                data: {input: selectedValue, movie_id: movie_details.id},
+                success: function(data){
+                  console.log(data);
+                  if (data.success) {
+                    $("#successReview").modal('show');
+                  }
+                  else if (!data.success) {
+                    $("#failedReview").modal('show');                        
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown){
+                  $("#failedReview").modal('show');
+                }              
+            });
         };

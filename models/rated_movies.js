@@ -14,8 +14,11 @@ const ratedSchema = new Schema({
   tmdb_rating: { type: Number, default: null },
   production_companies: { type: Array, default: null},
   director: { type: String, default: null},
-  keywords: { type: Array, default: null}
-});
+  keywords: { type: Array, default: null},
+  
+},
+{ timestamps: true }
+);
 
 // Compile model from schema
 var ratedModel = mongoose.model('rated_movies', ratedSchema );
