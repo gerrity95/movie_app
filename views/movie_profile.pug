@@ -211,7 +211,7 @@ block content
                 type: "POST",
                 url: '/user/submit_rating',
                 dataType: "json",
-                data: {input: selectedValue, movie_id: movie_details.id},
+                data: {rating: selectedValue, movie_id: movie_details.id},
                 success: function(data){
                   console.log(data);
                   if (data.success) {

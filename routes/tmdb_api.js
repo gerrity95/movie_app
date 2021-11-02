@@ -20,14 +20,19 @@ const {
 
 router.post("/user/submit_rating", async (req, res, next) => {
   if (req.user) {
-    console.log("Checking to see if already rated...")
+    console.log("Checking to see if already rated...");
+    console.log("Submitted rating: " + req.body.rating + " for movie: " + req.body.movie_id);
     is_rated = await rater.findOne({
       'movie_id': req.body.movie_id
     })
-    console.log('is_rated: ' + is_rated);
-    console.log("Submitted rating: " + req.body.rating);
+    if (is_rated) {
+      console.log("Movie has already been rated. Updating the rating.");
+      is_rated.rating = req.body.rating; 
+      await is_rated.save();
+      return res.send({'success': true});
+    }
+    console.log("Movie has not already been rated. Appending to movie ratings.")
     console.log("Attempting to get movie details for: " + req.body.movie_id);
-    return res.send({'success': false});
     try {
       var movie_details = await get_movie_details(req.body.movie_id);
       if (movie_details.status != 200) {
