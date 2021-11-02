@@ -3,9 +3,10 @@ extends home_layout
 block content
   
   // Full Page Image Header with Vertically Centered Content
-  header.masthead
+  #loader(style="display:none")
+  header.masthead#masthead_load(style="background-image: url('/images/movie_background.png')")
     .container-fluid.h-100.align-items-center(style="display: flex")
-      .row.header_text.shadow-lg.mx-auto
+      .row.header_text.shadow-lg.mx-auto#form_background
         .col-xl-6.col-lg-6.col-md-8.col-sm-10.offset-sm-1.offset-md-2.offset-xl-0.offset-lg-0.text-center
           h1.fw-light.home_title Welcome to FMovies
           img(src='/images/small_logo_cropped.png' alt="FMovies Icon")
@@ -15,7 +16,7 @@ block content
             | Sign in to FMovies
           div.message.alert.alert-danger(style="display:none;")
             | #{message}
-          form(action='/login' method='POST')
+          form#home_login_form(action='/login' method='POST')
             div.form-group.form-registration
               label(for="username") Username
               input.form-control.username(type="text", name="username", autocomplete="username" required)
@@ -41,3 +42,11 @@ block content
     if (getQueryVariable('failed_login')) {
       document.getElementById("bad_login").innerHTML = '*Username or password is incorrect.';
     }
+
+    $(document).ready(function(){
+      $("form#home_login_form").on('submit', function(e){
+          document.getElementById("loader").style.display = 'block';
+          document.getElementById("form_background").style.display = 'none';
+          document.getElementById("masthead_load").style.filter = 'blur(25px)';
+      });
+    });

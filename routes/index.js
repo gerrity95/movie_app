@@ -6,6 +6,7 @@ const passport = require("passport");
 const passportLocalMongoose = require("passport-local-mongoose");
 const flask_api = require('./helpers/flask_api');
 const helpers = require('./helpers/generic_helpers');
+const reccs_model = require('../models/recommended_movies')
 
 router.use (function (req, res, next) {
   console.log('/' + req.method);
@@ -19,8 +20,8 @@ router.get("/", (req,res) =>{
 router.get("/userprofile", helpers.is_logged_in, async (req,res) =>{
   
   console.log("Attempting to get movie data...");
-  //shows = await flask_api.get_reccomendations(req.user._id)
-  shows = flask_api.sample_movies()
+  shows = await flask_api.get_reccomendations(req.user._id)
+  //shows = flask_api.sample_movies()
   console.log(shows)
   if (shows.status == 200) {
     console.log(shows.body.result);

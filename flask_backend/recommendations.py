@@ -4,11 +4,12 @@ from base.tmdbclient import TmdbClient
 from base.recc_calculator import ReccCalculator
 from collections import Counter
 import json
+import datetime
 from bson import ObjectId
 
 class JSONEncoder(json.JSONEncoder):
     def default(self, o):
-        if isinstance(o, ObjectId):
+        if isinstance(o, (ObjectId, datetime.datetime)):
             return str(o)
         return json.JSONEncoder.default(self, o)
 
@@ -25,6 +26,22 @@ class Recommendations:
         self.recc_calculator = ReccCalculator()
         
     async def calculate_reccs(self, user_id: str):
+        """
+        Check if there are currently reccs stored for the given user_id
+        if no reccs:
+            gather_reccs_data
+            store_reccs_data
+            return reccs_data
+        else if reccs:
+            recent_reviewed = Get timestamp for most recent rated movie (stored)
+            if recent_reviewed is more recent than reccs_data updated:
+                gather_reccs_data
+                store_reccs_data
+                return reccs_data
+            else:
+                return reccs_data
+        """
+        #return 'hello', None
         reccs_data, error = await self.gather_reccs_data(user_id)
         
         if error:
