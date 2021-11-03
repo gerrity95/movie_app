@@ -5,7 +5,7 @@ from base.recc_calculator import ReccCalculator
 from collections import Counter
 import json
 import datetime
-from bson import ObjectId
+from bson import ObjectId, encode
 
 class JSONEncoder(json.JSONEncoder):
     def default(self, o):
@@ -42,8 +42,40 @@ class Recommendations:
                 return reccs_data
         """
         #return 'hello', None
-        reccs_data, error = await self.gather_reccs_data(user_id)
+        stored_reccs, error = await self.query_mongo_for_user(user_id, 'recommended_movies')
+        if error:
+            print(f"Error {error} attempting to get reccommended movies")
+            return None, RecommendationException
+        if stored_reccs:
+            try:
+                encoded_reccs = JSONEncoder().encode(stored_reccs[0])
+                encoded_reccs = json.loads(encoded_reccs)
+                need_new_reccs, error = await self.compare_reccs_with_rated(user_id=user_id, encoded_reccs=encoded_reccs)
+                if error:
+                    print(f"Error {error} seen attempting to compare recommendations with rated movies")
+                    return None, RecommendationException    
+            except Exception as e:
+                print(f"Error {e} seen attempting to compare recommendations with rated movies")
+                return None, RecommendationException
+        else:
+            print("No recommendations have been generated. Attempting to populate now....")
+            recommendations, error = await self.process_recommendations(user_id=user_id, is_new=True)
+            return recommendations, error
         
+        if need_new_reccs:
+            print(f"Recommendations have expired for user {user_id}. Attempting to update...")
+            recommendations, error = await self.process_recommendations(user_id=user_id, is_new=False, existing_reccs_id=stored_reccs[0]['_id'])
+            return recommendations, error
+        else:
+            print(f"Recommendations are up to date for user {user_id}. Will not attempt to update")
+            return encoded_reccs['recommendations'], None
+        
+    async def process_recommendations(self, user_id: str, is_new: bool, existing_reccs_id: str = None):
+        """
+        A function to gather and process all recommendations for the given user
+        """
+        rec_collection = self.mongo_client.recommended_collection()
+        reccs_data, error = await self.gather_reccs_data(user_id)
         if error:
             print("Error attempting to get rated movies")
             return None, RecommendationException("Error attempting to gather recommendation data")
@@ -51,15 +83,45 @@ class Recommendations:
         try:
             print("Attempting to process recommendation data...")
             sorted_reccomendations = self.recc_calculator.do_calculate(tmdb_data=json.loads(reccs_data))
+            if is_new:
+                print("First time generating recommendations. Appending to Mongo...")
+                document = {'user_id': user_id, 'recommendations': sorted_reccomendations,
+                            'createdAt': datetime.datetime.now(), 'updatedAt': datetime.datetime.now()}
+                result = await rec_collection.insert_one(document)
+                print(result)
+            else:
+                print("Updating recommendations in Mongo...")
+                result = await rec_collection.update_one({'_id': existing_reccs_id}, {'$set': {'recommendations': sorted_reccomendations}, '$currentDate': { 'updatedAt': True }})
+                print(result)
             return sorted_reccomendations, None
         except Exception as err:
             print(f"Error {err} seen when attempting to calculate reccommendations")
             return None, Exception(str(err))
+    
+    async def compare_reccs_with_rated(self, user_id, encoded_reccs: dict):
+        """
+        Function to compare the stored reccs with the most recent rated movie to see if the reccs need to be updated
+        Will return True if we need to update the reccomendations
+        """
+        print(f"Recommendations stored for user {user_id}, checking to see if they're up to date.")
+        reccs_updated = datetime.datetime.fromisoformat(encoded_reccs['updatedAt'])
         
-        
+        # Getting rated movies
+        recent_movie, error = await self.most_recent_rated_movie(user_id)
+        if error:
+            print(f"Error {error} attempting to get rated movies")
+            return None, RecommendationException
+        encoded_recent = JSONEncoder().encode(recent_movie[0])
+        encoded_recent = json.loads(encoded_recent)
+        recent_updated = datetime.datetime.fromisoformat(encoded_recent['updatedAt'])
+        if reccs_updated < recent_updated:
+            return True, None
+        else:
+            return False, None
+                
     async def gather_reccs_data(self, user_id: str):
         print("Attempting to gather all recommendation data...")
-        rated_movies, error = await self.get_rated_movies(user_id)
+        rated_movies, error = await self.query_mongo_for_user(user_id, 'rated_movies')
         if error:
             print("Error attempting to get rated movies")
             return None, RecommendationException
@@ -174,20 +236,53 @@ class Recommendations:
 
         return most_common_direcs, most_common_genres, most_common_keywords
     
-    async def get_rated_movies(self, user_id):
+    async def query_mongo_for_user(self, user_id, collection):
         """
-        Function to get all rated movies for a given user 
+        Function to get info from a given collection from a given user
         """
         try:
-            query = self.rated_movies_query_build(user_id)
-            rated_movies, error = await self.mongo_client.make_request(collection='rated_movies', query=query)
+            query = self.movies_query_build(user_id)
+            rated_movies, error = await self.mongo_client.make_request(collection=collection, query=query)
         except Exception as err:
-            print(f"Error: {err} when attempting to get rated movies")
+            print(f"Error: {err} when attempting to get query Mongo for collection: {collection}")
             return None, err
         
         return rated_movies, error
     
-    def rated_movies_query_build(self, user_id) -> list:
+    async def most_recent_rated_movie(self, user_id):
+        """
+        Function to query mongo to get the most recent rated movie
+        """
+        try:
+            query = self.recent_movie_query(user_id)
+            rated_movies, error = await self.mongo_client.make_request(collection='rated_movies', query=query)
+        except Exception as err:
+            print(f"Error: {err} when attempting to get query Mongo for collection: rated_mvoies")
+            return None, err
+        
+        return rated_movies, error
+    
+    def recent_movie_query(self, user_id) -> list:
+        """
+        Function to build out the query to get most recent rated movie
+        """
+        
+        pipeline = [
+            {
+                "$match": {
+                    "user_id": user_id
+                }
+            },
+            {
+                "$sort": {
+                    "updatedAt": -1
+                }
+            }
+        ]
+        
+        return pipeline
+    
+    def movies_query_build(self, user_id) -> list:
         """
         Function to build out the query to get rated movies
         """

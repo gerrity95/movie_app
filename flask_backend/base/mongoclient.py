@@ -28,6 +28,9 @@ class MongoClient():
 
     def rated_collection(self) -> AgnosticCollection:
         return self.client.nodejs_db.rated_movies
+    
+    def recommended_collection(self) -> AgnosticCollection:
+        return self.client.nodejs_db.recommended_movies
 
     async def ping(self) -> bool:
         try:
