@@ -224,6 +224,29 @@ html {
 
 /* Loading Spinner */
 
+#loader_base {
+  position: absolute;
+  left: 50%;
+  top: 1%;
+  z-index: 1;
+  width: 120px;
+  height: 120px;
+  margin: -76px 0 0 -76px;
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #3498db;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+}
+
+@media screen and (max-width: 768px) {
+
+  #loader_base {
+    top: 10%;
+    }
+
+}
+
 #loader {
   position: absolute;
   left: 50%;
@@ -449,6 +472,9 @@ a.article:hover {
   bottom: 20px;
 }
 
+@media (max-width: 768px) {
+}
+
 
 /* ------------------------------ */
 
@@ -482,10 +508,6 @@ a.article:hover {
   padding: 10px;
   box-sizing: border-box;
   transition: .5s
-}
-
-.product:hover .specifies {
-  bottom: 0
 }
 
 .specifies h2 {
@@ -540,27 +562,6 @@ a.article:hover {
   height: 15px
 }
 
-/*
-.product ul.colors li:nth-child(1) {
-  background: #4A148C
-}
-*/
-.product ul.colors li:nth-child(2) {
-  background: #F50057
-}
-
-.product ul.colors li:nth-child(3) {
-  background: #536DFE
-}
-
-.product ul.colors li:nth-child(4) {
-  background: #388E3C
-}
-
-.product ul.colors li:nth-child(5) {
-  background: #FF6D00
-}
-
 .product .btn {
   display: block;
   margin-top: 20px;
@@ -572,6 +573,62 @@ a.article:hover {
   border-radius: 2px
 }
 
+#product-desktop {display: block;}
+#product-mobile {display: none;}
+
+@media (min-width: 768px) {
+  .product:hover .specifies {
+    bottom: 0
+  }
+}
+
+a#product-mobile {
+  text-decoration: none !important;
+  color: #111B47;
+}
+
+#product-mobile a:hover {
+  text-decoration: none !important;
+}
+
+#product-mobile a:visited {
+  text-decoration: none !important;
+}
+
+@media (max-width: 768px) {
+
+  #product-desktop {display: none;}
+  #product-mobile {display: block;}
+
+  .product {
+    margin-bottom: 25px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, .2);
+    border-radius: 5px;
+    background: #0e0e0f;
+  }
+
+  .specifies {
+    position: absolute;
+    width: 100%;
+    bottom: 0px;
+    background: #fff;
+    padding: 10px;
+    box-sizing: border-box;
+  }
+
+  .specifies h2 {
+    margin: 0;
+    padding: 0;
+    font-size: 16px;
+    width: 100%
+  }
+  
+  .specifies h2 span {
+    font-size: 13px;
+    color: #111B47;
+    font-weight: bold
+  }
+}
 
 /* MOVIE PAGE STYLING */
 

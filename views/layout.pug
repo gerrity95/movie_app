@@ -18,16 +18,17 @@ html(lang="en")
     script(src='/js/helpers.js')
 
   body
-    .wrapper
+    #loader_base(style="display:none")
+    .wrapper#main_wrapper
       // Sidebar
       nav#sidebar
         .sidebar-header
-          a(href='/userprofile')
+          a.home_click(href='/userprofile')
             img(src='/images/small_logo_cropped.png' alt="FMovies Icon")
         ul.list-unstyled.components
           p
           li
-            a(href='/userprofile') Home
+            a.home_click(href='/userprofile') Home
           li
             a(href='#') About
           li
@@ -52,9 +53,22 @@ html(lang="en")
             #navbarSupportedContent.collapse.navbar-collapse
               ul.nav.navbar-nav.ml-auto
                 li.nav-item.active
-                  a.nav-link(href="/userprofile") Dashboard
+                  a.home_click.nav-link(href="/userprofile") Dashboard
                 li.nav-item
                   a.nav-link(href="/logout") Logout
 
         // We'll fill this with dummy content
         block content
+
+  
+  script.
+    if (getQueryVariable('failed_login')) {
+      document.getElementById("bad_login").innerHTML = '*Username or password is incorrect.';
+    }
+
+    $(document).ready(function(){
+      $(".home_click").on('click', function(e){
+          document.getElementById("loader_base").style.display = 'block';
+          document.getElementById("main_wrapper").style.filter = 'blur(25px)';
+      });
+    });
