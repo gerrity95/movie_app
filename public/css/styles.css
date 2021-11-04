@@ -438,7 +438,7 @@ a.article:hover {
     MEDIAQUERIES
 ----------------------------------------------------- */
 
-@media (max-width: 768px) {
+@media (max-width: 1018px) {
     #sidebar {
         margin-left: -250px;
     }
@@ -632,6 +632,9 @@ a#product-mobile {
 
 /* MOVIE PAGE STYLING */
 
+#movie-desktop {display: flex;}
+#movie-mobile {display: none;}
+
 .movie_header_image {
   border-radius: 10px;
   min-height: 600px;
@@ -640,6 +643,10 @@ a#product-mobile {
 }
 
 @media (max-width: 768px) {
+
+  #movie-desktop {display: none;}
+  #movie-mobile {display: flex;}
+
   .movie_poster_image {
     max-height: 75%;
     max-width: 75%;

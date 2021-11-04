@@ -11,7 +11,7 @@ block content
   - var percent_rating = movie_info.vote_average * 10 
 
   .container-fluid(style=`background-image:url(${header_src})`).movie_header_image
-    .row.movie_darken
+    .row.movie_darken#movie-desktop
       .col-10.col-sm-8.col-md-5.col-lg-3.col-xl-3.offset-lg-1.offset-xl-1.offset-md-1.offset-sm-2.offset-1.align-self-center.d-flex.justify-content-center
         img(src=poster_src).movie_poster_image
       .col-10.col-sm-8.col-md-5.col-lg-7.col-xl-7.offset-lg-0.offset-xl-0.offset-md-1.offset-sm-2.offset-1.align-self-center
@@ -56,10 +56,57 @@ block content
             tr
               td #{director}
               td #{screenplay}
+    
+    .row.movie_darken#movie-mobile
+      .col-6.col-sm-6.col-md-5.col-lg-3.col-xl-3.offset-lg-1.offset-xl-1.offset-md-1.offset-sm-0.offset-0.align-self-center.d-flex.justify-content-center
+        img(src=poster_src).movie_poster_image
+      .col-5.col-sm-5.col-md-5.col-lg-7.col-xl-7.offset-lg-0.offset-xl-0.offset-md-1.offset-sm-0.offset-0.align-self-center
+        .c100.p0.blue
+          span #{percent_rating}%
+          .slice
+            .bar
+            .fill
+      .col-12.col-sm-10.col-md-5.col-lg-7.col-xl-7.offset-lg-0.offset-xl-0.offset-md-1.offset-sm-1.offset-0.align-self-center
+        h2.movie_text
+          | #{movie_info.original_title}
+        for genre in movie_info.genres
+          h5.movie_text(style="display: inline")
+            |  #{genre.name},
+        p.movie_text
+          br
+          | #{movie_info.tagline}
+        
+        .social-icons
+          a(href="#").social-icon.social-icon--codepen
+            i.far.fa-bookmark.fa-stack-1x(style="color: white")
+            .tooltip Add To Watchlist
+          a(href="#").social-icon.social-icon--codepen
+            i.far.fa-trash-alt.fa-stack-1x(style="color: white")
+            .tooltip Add To Blocklist
+
+        table.table.table-borderless.movie_text
+          thead
+            tr
+              th(style="width: 25%") Release Date
+              th(style="width: 25%") Runtime
+          tbody
+            tr
+              td #{movie_info.release_date}
+              td #{movie_info.runtime} minutes
+        
+        table.table.table-borderless.movie_text
+          thead
+            tr
+              th(style="width: 25%") Director
+              th(style="width: 25%") Screenplay
+          tbody
+            tr
+              td #{director}
+              td #{screenplay}
 
   .container-fluid.movie_interact_container
     .row.movie_interact_box
-      .col-10.col-sm-8.col-md-6.col-lg-6.col-xl-4.offset-lg-0.offset-xl-0.offset-md-1.offset-sm-2.offset-1.align-self-center.rating_column
+      .col-12.col-sm-8.col-md-6.col-lg-6.col-xl-4.offset-lg-0.offset-xl-0.offset-md-1.offset-sm-2.offset-0.align-self-center.rating_column
         .feedback
           h5 Submit Rating
           .rating
@@ -170,7 +217,7 @@ block content
       | Top Billed Cast
     .row#collapseExample.collapse(aria-expanded='false')
       each val in [0, 1, 2, 3, 4, 5, 6, 7]
-        .col-xl-2.col-lg-2.col-md-4.col-sm-4.col-6.offset-0.offset-sm-2.credit_details.text-center.shadow-lg
+        .col-xl-2.col-lg-2.col-md-3.col-sm-5.col-5.offset-0.offset-sm-2.credit_details.text-center.shadow-lg
           - var profile_src = `https://image.tmdb.org/t/p/w500/${movie_cast.cast[val].profile_path}`
           img.card-img-top(src=profile_src alt='Card image cap').profile_photo
           .details
