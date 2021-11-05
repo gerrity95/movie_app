@@ -169,10 +169,46 @@ async function generic_tmdb_query(movie_id, query_path) {
   });
 }
 
+async function tmdb_search(search_query) {
+  parsed_query = encodeURI(search_query);
+  var options = {
+    host: 'api.themoviedb.org',
+    path: '/3/search/movie?include_adult=false&page=1&query=' + parsed_query,
+    port: 443,
+    method: 'GET',
+    headers: {'Authorization': 'Bearer ' + TMDB_READ_TOKEN}
+  };
+  
+  var body = ""
+  return new Promise((resolve, reject) => {
+    const req = https.request(options, (res) => {
+      console.log("Request made to TMDB");
+      console.log('statusCode:', res.statusCode);
+      console.log('headers:', res.headers);
+    
+      res.on('data', (chunk) => {
+        body += chunk;
+      });
+      res.on('end', () => {
+        response_body = JSON.parse(body);
+        resolve({"status": res.statusCode, "body": response_body});
+      })
+    });
+    
+    req.on('error', (e) => {
+      console.error("Error querying TMDB: " + e);
+      reject(e)
+    });
+    
+    req.end();
+  });
+}
+
 
 
 module.exports = {
   router: router,
   get_movie_details: get_movie_details,
-  generic_tmdb_query: generic_tmdb_query
+  generic_tmdb_query: generic_tmdb_query,
+  search_query: tmdb_search
 }

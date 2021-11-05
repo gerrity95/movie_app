@@ -33,5 +33,14 @@ router.get("/movies/:movie_id", helpers.is_logged_in, async (req,res) =>{
                                         'director': director, 'screenplay': screenplay});
   })
 
+router.post('/search', helpers.is_logged_in, async (req,res) =>{
+    console.log("Attempting to search...");
+    console.log(req.body);
+    let search_result = await tmdb_api.search_query(req.body.search)
+    console.log(search_result.body.results)
+    return res.render('search')
+
+})
+
 
 module.exports = router;

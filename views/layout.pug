@@ -51,7 +51,13 @@ html(lang="en")
             button.btn.btn-dark.d-inline-block.d-lg-none.ml-auto(type='button' data-toggle='collapse' data-target='#navbarSupportedContent' aria-controls='navbarSupportedContent' aria-expanded='false' aria-label='Toggle navigation')
               i.fas.fa-align-justify
             #navbarSupportedContent.collapse.navbar-collapse
+
               ul.nav.navbar-nav.ml-auto
+                form.form-inline.my-2.my-lg-0(action='/search' method='POST')
+                  input.form-control.mr-sm-2(type='search' name="search" placeholder='Search' aria-label='Search' required)
+                  button.btn.btn-default(type='submit').search_button
+                    i.fas.fa-search
+
                 li.nav-item.active
                   a.home_click.nav-link(href="/userprofile") Dashboard
                 li.nav-item

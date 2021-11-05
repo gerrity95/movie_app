@@ -329,6 +329,16 @@ html {
     SIDEBAR STYLE
 ----------------------------------------------------- */
 
+.search_button {
+  border: 1px solid #c5c5c5
+}
+
+.search_button:hover {
+  border: 1px solid #c5c5c5;
+  background-color: #A178CF;
+  color: white
+}
+
 .wrapper {
     display: flex;
     width: 100%;
