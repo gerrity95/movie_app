@@ -2,9 +2,37 @@ extends layout
 
 block content
   title FMovies Search
+  - var search_results = results
 
 
   .container-fluid
     .row
-      .col-6.col-sm-4.col-md-4.col-lg-4.col-xl-3.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0
-        h2 Hello Search
+      if search_results.length == 0
+        .col-10.col-sm-10.col-md-8.col-lg-8.col-xl-8.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0.shadow-lg.no_results
+          img(src="/images/search_icon_transp.png" alt="Search Icon")
+          h3
+            | Hmm...
+          h5
+            | No results found for '#{query}'.
+          p
+            | Please double check there are no spelling errors or typos - or even try a different search term.
+          p
+            | We try our best to ensure our database is updated with all available movies. 
+            strong Try another search?
+          form.form-inline.my-2.my-lg-0(action='/search' method='POST')
+                  input.form-control.mr-sm-2(type='search' name="search" placeholder='Search' aria-label='Search' required)
+                  button.btn.btn-default(type='submit').search_button
+                    i.fas.fa-search
+
+      for movie in search_results
+        - var poster_src = `https://image.tmdb.org/t/p/w500/${movie.poster_path}`
+         a(href=`/movies/${movie.id}`)#search_link
+          .col-6.col-sm-6.col-md-10.col-lg-12.col-xl-12.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0.shadow-lg.search_box
+            .img_poster
+              img(src=poster_src).search_poster
+            .search_text
+              p.search_title 
+                | #{movie.title}
+              p
+                em Release Date: #{movie.release_date}
+              p.hidden_text #{movie.overview}

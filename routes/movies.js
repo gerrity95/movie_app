@@ -38,8 +38,7 @@ router.post('/search', helpers.is_logged_in, async (req,res) =>{
     console.log(req.body);
     let search_result = await tmdb_api.search_query(req.body.search)
     console.log(search_result.body.results)
-    return res.render('search')
-
+    return res.render('search', {'results': search_result.body.results, 'query': req.body.search})
 })
 
 
