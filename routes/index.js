@@ -7,6 +7,7 @@ const passportLocalMongoose = require("passport-local-mongoose");
 const flask_api = require('./helpers/flask_api');
 const helpers = require('./helpers/generic_helpers');
 const reccs_model = require('../models/recommended_movies')
+const rated_model = require('../models/rated_movies')
 
 router.use (function (req, res, next) {
   console.log('/' + req.method);
@@ -18,19 +19,39 @@ router.get("/", (req,res) =>{
 })
 
 router.get("/userprofile", helpers.is_logged_in, async (req,res) =>{
-  
+  console.log("Checking to ensure enough reviews have been processed for user: " + req.user._id)
+  let rated_movies = await rated_model.find({
+    user_id: req.user._id
+  })
+  if (rated_movies.length < 5) {
+    console.log("Not enough movies have been rated by user: " + req.user._id)
+    return res.redirect('/welcome')
+  }
   console.log("Attempting to get movie data...");
   shows = await flask_api.get_reccomendations(req.user._id)
   //shows = flask_api.sample_movies()
   console.log(shows)
   if (shows.status == 200) {
-    console.log(shows.body.result);
     res.render("user_profile", {user_info: req.user, movie_info: shows.body.result});
   }
   else {
     res.render("user_profile", {user_info: req.user, movie_info: 'Bad'});
   }
 
+})
+
+router.get("/welcome", helpers.is_logged_in, async (req,res) =>{
+
+  console.log("Attempting to render welcome page...");
+  let rated_movies = await rated_model.find({
+    user_id: req.user._id
+  });
+  if (rated_movies.length > 5) {
+    console.log("Too many movies have been rated by user: " + req.user._id)
+    return res.redirect('/userprofile')
+  }
+  return res.render("welcome", {user_info: req.user, movie_info: 'Bad'});
+  
 })
 
 //Auth Routes
