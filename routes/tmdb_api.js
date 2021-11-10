@@ -19,11 +19,13 @@ const {
 
 
 router.post("/user/submit_rating", async (req, res, next) => {
+  console.log(url)
   if (req.user) {
     console.log("Checking to see if already rated...");
     console.log("Submitted rating: " + req.body.rating + " for movie: " + req.body.movie_id);
     is_rated = await rater.findOne({
-      'movie_id': req.body.movie_id
+      'movie_id': req.body.movie_id,
+      'user_id': req.user._id
     })
     if (is_rated) {
       console.log("Movie has already been rated. Updating the rating.");
@@ -78,15 +80,29 @@ router.post("/user/submit_rating", async (req, res, next) => {
       let add_show = await rater.create(new_show);
       
       console.log(add_show);
-      return res.send({'success': true});
+      var url = req.get('referer')
+      if (url.includes('welcome')) {
+        // If coming from welcome screen we want to check how many ratings have been submitted
+        console.log("Checking count of rated movies to see if they've passed the welcome period...")
+        rated_count = await rater.find({
+          'user_id': req.user._id
+        })
+        num_rated = rated_count.length
+        console.log("Number of movies rated so far: " + num_rated);
+        if (num_rated >= 5) {
+          console.log("Enough movies rated to start getting recommendations...")
+          return res.send({'success': true, 'meet_requirements': true});
+        }
+      }
+      return res.send({'success': true, 'meet_requirements': false});
     } catch (e) {
       console.log("Error attempting to add show to the DB.")
       console.log("Error: " + e)
-      return res.json({'response': 'bad'});
+      return res.json({'success': false, 'meet_requirements': false});
     }
   }
   console.log("No user, no bueno.")
-  return res.send({'success': false})
+  return res.send({'success': false, 'meet_requirements': false})
 })
 
 router.get('/user/recommended_shows', async (req, res, next) => {

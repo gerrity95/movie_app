@@ -41,5 +41,12 @@ router.post('/search', helpers.is_logged_in, async (req,res) =>{
     return res.render('search', {'results': search_result.body.results, 'query': req.body.search})
 })
 
+router.post('/welcome/search', helpers.is_logged_in, async (req,res) =>{
+    console.log("Attempting to search...");
+    console.log(req.body);
+    let search_result = await tmdb_api.search_query(req.body.search)
+    return res.json({'results': search_result.body.results, 'query': req.body.search})
+})
+
 
 module.exports = router;
