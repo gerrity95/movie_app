@@ -6,6 +6,8 @@ from collections import Counter
 import json
 import datetime
 from bson import ObjectId, encode
+import uuid
+
 
 class JSONEncoder(json.JSONEncoder):
     def default(self, o):
@@ -27,77 +29,60 @@ class Recommendations:
         
     async def calculate_reccs(self, user_id: str):
         """
-        Check if there are currently reccs stored for the given user_id
-        if no reccs:
-            gather_reccs_data
-            store_reccs_data
-            return reccs_data
-        else if reccs:
-            recent_reviewed = Get timestamp for most recent rated movie (stored)
-            if recent_reviewed is more recent than reccs_data updated:
-                gather_reccs_data
-                store_reccs_data
-                return reccs_data
-            else:
-                return reccs_data
         """
-        #return 'hello', None
+        # Check for existing recommendations
         stored_reccs, error = await self.query_mongo_for_user(user_id, 'recommended_movies')
         if error:
             print(f"Error {error} attempting to get reccommended movies")
             return None, RecommendationException
         if stored_reccs:
             try:
+                # TODO CHECK FOR STATE HERE IF ITS IN PROGRESS
+                """
+                EDGE CASE, user rates movie, goes to in progress, rates another movie before first movie finishes processing. Do we generate them again?
+                """
+                print("Checking if we are currently updating the recommendations for user: " + user_id)
+                if stored_reccs[0]['state'] == 'in_progress':
+                    counter = 0
+                    while counter < 5:
+                        print("Currently in the process of updating the recommendations. Will retry in 5 seconds to check if complete... ")
+                        await asyncio.sleep(5)
+                        stored_reccs, error = await self.query_mongo_for_user(user_id, 'recommended_movies')
+                        if error:
+                            print(f"Error {error} attempting to get reccommended movies ")
+                            return None, RecommendationException
+
+                        if stored_reccs[0]['state'] == 'in_progress':
+                            counter += 1
+                        else:
+                            # No need to generate them again so can just return. Want to wait until process is complete.
+                            print("Recommendations have been updated as part of another process. Returning. ")
+                            return stored_reccs[0]['recommendations'], None
+
                 encoded_reccs = JSONEncoder().encode(stored_reccs[0])
                 encoded_reccs = json.loads(encoded_reccs)
+                # Check against rated movies to see if we need to update the recommendations
+                print("Comparing recommendations against existing ratings... ")
                 need_new_reccs, error = await self.compare_reccs_with_rated(user_id=user_id, encoded_reccs=encoded_reccs)
                 if error:
-                    print(f"Error {error} seen attempting to compare recommendations with rated movies")
+                    print(f"Error {error} seen attempting to compare recommendations with rated movies ")
                     return None, RecommendationException    
             except Exception as e:
-                print(f"Error {e} seen attempting to compare recommendations with rated movies")
+                print(f"Error {e} seen attempting to compare recommendations with rated movies ")
                 return None, RecommendationException
         else:
-            print("No recommendations have been generated. Attempting to populate now....")
+            print("No recommendations have been generated. Atetmpting to populate now.... ")
             recommendations, error = await self.process_recommendations(user_id=user_id, is_new=True)
             return recommendations, error
         
         if need_new_reccs:
-            print(f"Recommendations have expired for user {user_id}. Attempting to update...")
+            print(f"Recommendations have expired for user {user_id}. Attempting to update... ")
             recommendations, error = await self.process_recommendations(user_id=user_id, is_new=False, existing_reccs_id=stored_reccs[0]['_id'])
             return recommendations, error
         else:
-            print(f"Recommendations are up to date for user {user_id}. Will not attempt to update")
+            print(f"Recommendations are up to date for user {user_id}. Will not attempt to update ")
             return encoded_reccs['recommendations'], None
-        
-    async def process_recommendations(self, user_id: str, is_new: bool, existing_reccs_id: str = None):
-        """
-        A function to gather and process all recommendations for the given user
-        """
-        rec_collection = self.mongo_client.recommended_collection()
-        reccs_data, error = await self.gather_reccs_data(user_id)
-        if error:
-            print("Error attempting to get rated movies")
-            return None, RecommendationException("Error attempting to gather recommendation data")
-        
-        try:
-            print("Attempting to process recommendation data...")
-            sorted_reccomendations = self.recc_calculator.do_calculate(tmdb_data=json.loads(reccs_data))
-            if is_new:
-                print("First time generating recommendations. Appending to Mongo...")
-                document = {'user_id': user_id, 'recommendations': sorted_reccomendations,
-                            'createdAt': datetime.datetime.now(), 'updatedAt': datetime.datetime.now()}
-                result = await rec_collection.insert_one(document)
-                print(result)
-            else:
-                print("Updating recommendations in Mongo...")
-                result = await rec_collection.update_one({'_id': existing_reccs_id}, {'$set': {'recommendations': sorted_reccomendations}, '$currentDate': { 'updatedAt': True }})
-                print(result)
-            return sorted_reccomendations, None
-        except Exception as err:
-            print(f"Error {err} seen when attempting to calculate reccommendations")
-            return None, Exception(str(err))
-    
+
     async def compare_reccs_with_rated(self, user_id, encoded_reccs: dict):
         """
         Function to compare the stored reccs with the most recent rated movie to see if the reccs need to be updated
@@ -118,6 +103,42 @@ class Recommendations:
             return True, None
         else:
             return False, None
+        
+    async def process_recommendations(self, user_id: str, is_new: bool, existing_reccs_id: str = None):
+        """
+        A function to gather and process all recommendations for the given user
+        """
+        try:
+            rec_collection = self.mongo_client.recommended_collection()
+            if is_new:
+                print("First time generating recommendations. Creating empty recommendations object and Appending to Mongo...")
+                document = {'user_id': user_id, 'recommendations': {},
+                                'createdAt': datetime.datetime.now(), 'updatedAt': datetime.datetime.now(), 'state': 'in_progress'}
+                result = await rec_collection.insert_one(document)
+            else:
+                print("Attempting to update the recommendations. Setting state to in progress..")
+                result = await rec_collection.update_one({'_id': existing_reccs_id}, {'$set': {'state': 'in_progress'}, '$currentDate': { 'updatedAt': True }})
+
+            print(result)
+            reccs_data, error = await self.gather_reccs_data(user_id)
+            if error:
+                print("Error attempting to get rated movies")
+                return None, RecommendationException("Error attempting to gather recommendation data")
+        
+            print("Attempting to process recommendation data...")
+            sorted_reccomendations = self.recc_calculator.do_calculate(tmdb_data=json.loads(reccs_data))
+            print("Updating recommendations in Mongo...")
+            if not existing_reccs_id:
+                stored_reccs, error = await self.query_mongo_for_user(user_id, 'recommended_movies')
+                existing_reccs_id = stored_reccs[0]['_id']
+
+            result = await rec_collection.update_one({'_id': existing_reccs_id}, {'$set': {'recommendations': sorted_reccomendations, 'state': 'complete'}, '$currentDate': { 'updatedAt': True }})
+            print(result)
+            return sorted_reccomendations, None
+        except Exception as err:
+            print(f"Error {err} seen when attempting to calculate reccommendations")
+            return None, Exception(str(err))
+
                 
     async def gather_reccs_data(self, user_id: str):
         print("Attempting to gather all recommendation data...")

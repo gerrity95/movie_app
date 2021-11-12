@@ -94,6 +94,8 @@ router.post("/user/submit_rating", async (req, res, next) => {
           return res.send({'success': true, 'meet_requirements': true});
         }
       }
+      console.log("Going to attempt to update the recommendations in the background...")
+      shows = flask_api.get_reccomendations(req.user._id);
       return res.send({'success': true, 'meet_requirements': false});
     } catch (e) {
       console.log("Error attempting to add show to the DB.")
