@@ -6,6 +6,7 @@ from flask import Flask, jsonify, request
 from base.tmdbclient import TmdbClient
 app = Flask(__name__)
 from base.mongoclient import MongoClient
+from base.rabbitmq_client import RabbitMqClient
 from recommendations import Recommendations
 from dotenv import load_dotenv
 from pathlib import Path
@@ -30,6 +31,13 @@ async def tmdb_test():
     # return a json
     return jsonify({'status': ping_result})
 
+#we define the route /
+@app.route('/rmq_ping')
+async def rmq_test():
+    ping_result = await RabbitMqClient().main()
+    # return a json
+    return jsonify({'status': True})
+
 
 #we define the route /
 @app.route('/get_reccomendations', methods=['GET', 'POST'])
@@ -49,6 +57,6 @@ async def get_reccs():
 
 
 if __name__ == '__main__':
-    #define the localhost ip and the cport that is going to be used
-    # in some future article, we are going to use an env variable instead a hardcoded port 
-    app.run(host='0.0.0.0', port=os.getenv('PORT'))
+    #define the localhost ip andd the cport that is going to be used
+    # in some future article, we are going to use an env variable instead a hardcoded port
+    app.run(host='0.0.0.0', port=os.getenv('PORT')) 

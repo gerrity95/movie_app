@@ -9,8 +9,27 @@ services:
             - ./flask_backend/:/usr/src/app/
         ports: 
             - 5000:5000
+        depends_on:
+          - rabbitmq
         environment: 
             PORT: 5000
+            FLASK_DEBUG: 1
+            PYTHONUNBUFFERED: 1
+        restart: unless-stopped
+        networks:
+          - app-network
+  rmq_client:
+        build: 
+          context: ./flask_backend/rmq_app
+          dockerfile: Dockerfile_RMQ
+        volumes: 
+            - ./flask_backend/rmq_app/:/usr/src/app/
+        ports: 
+            - 5001:5001
+        depends_on:
+          - rabbitmq
+        environment: 
+            PORT: 5001
             FLASK_DEBUG: 1
             PYTHONUNBUFFERED: 1
         restart: unless-stopped
@@ -39,7 +58,7 @@ services:
       - app-network
     command: ./wait-for.sh db:27017 -- /home/node/app/node_modules/.bin/nodemon app.js
   db:
-    image: mongo:4.1.8-xenial
+    image: andresvidal/rpi3-mongodb3
     container_name: db
     restart: unless-stopped
     env_file: .env
@@ -52,7 +71,7 @@ services:
       - app-network
 
   mongo-express:
-    image: mongo-express
+    image: ind3x/rpi-mongo-express
     container_name: mongo-express
     environment:
     - ME_CONFIG_MONGODB_SERVER=db
@@ -70,6 +89,21 @@ services:
     ports:
       - 8081:8081
     restart: always
+
+  rabbitmq:
+    container_name: "rabbitmq"
+    image: rabbitmq:3.8-management-alpine
+    environment:
+        - RABBITMQ_DEFAULT_USER=$RMQ_USER
+        - RABBITMQ_DEFAULT_PASS=$RMQ_PASSWORD
+    ports:
+        # AMQP protocol port
+        - '5672:5672'
+        # HTTP management UI
+        - '15672:15672'
+    networks:
+        - app-network
+  
 
 networks:
   app-network:
