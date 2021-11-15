@@ -18,17 +18,19 @@ html(lang="en")
     script(src='/js/helpers.js')
 
   body
+
+    include includes/loading_modal.pug
     
     .wrapper
       // Sidebar
       nav#sidebar
         .sidebar-header
-          a.home_click(href='/userprofile')
+          a.home_click#logo_btn(style="cursor: pointer;")
             img(src='/images/small_logo_cropped.png' alt="FMovies Icon")
         ul.list-unstyled.components
           p
           li
-            a.home_click(href='/userprofile') Home
+            a.home_click#home_btn(href='/userprofile') Home
           li
             a(href='#') About
           li
@@ -59,7 +61,7 @@ html(lang="en")
                     i.fas.fa-search
 
                 li.nav-item.active
-                  a.home_click.nav-link(href="/userprofile") Dashboard
+                  a.home_click.nav-link#dash_btn(href="/userprofile") Dashboard
                 li.nav-item
                   a.nav-link(href="/logout") Logout
 
@@ -72,9 +74,27 @@ html(lang="en")
       document.getElementById("bad_login").innerHTML = '*Username or password is incorrect.';
     }
 
-    $(document).ready(function(){
-      $(".home_click").on('click', function(e){
-          document.getElementById("loader_base").style.display = 'block';
-          document.getElementById("main_wrapper").style.filter = 'blur(25px)';
-      });
-    });
+    const logo_btn = document.querySelector('#logo_btn');
+    const dash_button = document.querySelector('.logo_btn')
+        // handle button click
+        $("#logo_btn, #dash_btn, #home_btn").click(function () {
+            $('#generatingReccs').modal({
+              backdrop: 'static',
+              keyboard: false
+              })
+            $("#generatingReccs").modal('show');
+            $.ajax({
+                type: "GET",
+                url: '/user/userprofile',
+                dataType: "json",
+                success: function(data){
+                  console.log("SUCCESS")
+                  console.log(data);
+                  window.location.href = "/userprofile";
+                },
+                error: function(jqXHR, textStatus, errorThrown){
+                  console.log("FAILURE")
+                  console.log(errorThrown);
+                }              
+            });
+        });

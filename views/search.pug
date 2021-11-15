@@ -25,10 +25,13 @@ block content
                     i.fas.fa-search
 
       for movie in search_results
-        - var poster_src = `https://image.tmdb.org/t/p/w500/${movie.poster_path}`
-         a(href=`/movies/${movie.id}`)#search_link
+        if movie.poster_path
+          - var poster_src = `https://image.tmdb.org/t/p/w500/${movie.poster_path}`
+        else
+          - var poster_src = '/images/missing_image.png'
+        a(href=`/movies/${movie.id}` style="width: 100%")#search_link
           .col-6.col-sm-6.col-md-10.col-lg-12.col-xl-12.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0.shadow-lg.search_box
-            .img_poster
+            .img_poster.my-auto
               img(src=poster_src).search_poster
             .search_text
               p.search_title 

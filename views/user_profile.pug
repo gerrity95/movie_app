@@ -18,12 +18,13 @@ block content
                 br
                 span Rating: #{movie.movie_info.vote_average} | 
                 span  Weight: #{movie.weight}
+              br
               label Release Date
               ul
                 li #{movie.movie_info.release_date}
-              label Original Language
+              label
               ul.colors
-                li #{movie.movie_info.original_language}
+                li 
               a.btn.custom_button(href=`/movies/${movie.movie_id}`) Find Out More
 
           a#product-mobile(href=`/movies/${movie.movie_id}`)

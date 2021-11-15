@@ -1,7 +1,7 @@
 extends home_layout
 
 block content
-  
+  include includes/loading_modal.pug
   // Full Page Image Header with Vertically Centered Content
   #loader(style="display:none")
   header.masthead#masthead_load(style="background-image: url('/images/movie_background.png')")
@@ -45,8 +45,10 @@ block content
 
     $(document).ready(function(){
       $("form#home_login_form").on('submit', function(e){
-          document.getElementById("loader").style.display = 'block';
-          document.getElementById("form_background").style.display = 'none';
-          document.getElementById("masthead_load").style.filter = 'blur(25px)';
+          $('#generatingReccs').modal({
+              backdrop: 'static',
+              keyboard: false
+              })
+            $("#generatingReccs").modal('show');
       });
     });

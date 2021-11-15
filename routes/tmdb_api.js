@@ -94,6 +94,12 @@ router.post("/user/submit_rating", async (req, res, next) => {
           return res.send({'success': true, 'meet_requirements': true});
         }
       }
+      else {
+        console.log("Hasn't yet met requirements to generate recommendations")
+        return res.send({'success': true, 'meet_requirements': false});
+      }
+
+      // Will attempt to generate reccs in background each time we add a new rating for improved performance
       console.log("Going to attempt to update the recommendations in the background...")
       shows = flask_api.get_reccomendations(req.user._id);
       return res.send({'success': true, 'meet_requirements': false});

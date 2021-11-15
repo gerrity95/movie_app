@@ -40,6 +40,33 @@ router.get("/userprofile", helpers.is_logged_in, async (req,res) =>{
 
 })
 
+router.get("/user/userprofile", async (req,res) =>{
+
+  if (req.user) {
+    console.log("AJAX request made to get user profile...")
+    console.log("Checking to ensure enough reviews have been processed for user: " + req.user._id)
+    let rated_movies = await rated_model.find({
+      user_id: req.user._id
+    })
+    if (rated_movies.length < 5) {
+      console.log("Not enough movies have been rated by user: " + req.user._id)
+      return res.json({'success': false, 'movies_rated': false})
+    }
+    console.log("Attempting to get movie data...");
+    shows = await flask_api.get_reccomendations(req.user._id)
+    //shows = flask_api.sample_movies()
+    console.log(shows)
+    if (shows.status == 200) {
+      return res.json({'success': true, 'movies_rated': true})
+    }
+    else {
+      return res.json({'success': false, 'movies_rated': true})
+    }
+  
+  }
+
+})
+
 router.get("/welcome", helpers.is_logged_in, async (req,res) =>{
 
   console.log("Attempting to render welcome page...");

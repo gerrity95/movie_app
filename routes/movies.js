@@ -15,6 +15,8 @@ router.get("/movies/:movie_id", helpers.is_logged_in, async (req,res) =>{
         console.log(err);
         return next(err);
        }));
+    director = ''
+    screenplay = ''
     try {
         movie_cast.body.crew.forEach(function(value){
             if (value.job == "Director") {
