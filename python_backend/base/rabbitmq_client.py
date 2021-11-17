@@ -1,6 +1,6 @@
-import pika
 import os
 from pathlib import Path
+from typing import Any
 from dotenv import load_dotenv
 import asyncio
 import aio_pika
@@ -18,39 +18,110 @@ class RabbitMqClient():
         self.port = '5672'
         self.user ='rmq_user'
         self.password = '3aZyvgvc5Q2pnQzu'
-
-    async def main(self):
-        connection = await aio_pika.connect_robust(
-            "amqp://rmq_user:3aZyvgvc5Q2pnQzu@rabbitmq:5672/")
-
-        recommendation_event = RecommendationsEvent()
-
-        channel = await connection.channel()    # type: aio_pika.Channel
-        await channel.default_exchange.publish(
-            aio_pika.Message(
-                body=recommendation_event.serialize()
-            ),
-            routing_key=recommendation_event.routing_key
-        )
-
-         # Declaring queue
-        queue = await channel.declare_queue(
-            recommendation_event.result_routing_key,
-            auto_delete=True
-        )   # type: aio_pika.Queue
-
-        async with queue.iterator() as queue_iter:
-            # Cancel consuming after __aexit__
-            async for message in queue_iter:
-                new_one: RecommendationsEvent = pickle.loads(message.body)
-                async with message.process():
-                    print(new_one.timestamp)
-                    
-                    if queue.name in message.body.decode():
-                        break
+        self.timeout = 60
+        self.connection = None
+        self.channel = None
+        self.exchange_name = "fmovies-exchange"
+        self.exchange = None
         
-        await queue.delete()
-
-
-
-        #await connection.close()
+    async def connect(self):
+        print("Connecting to RMQ")
+        connection = await aio_pika.connect_robust(url="amqp://rmq_user:3aZyvgvc5Q2pnQzu@rabbitmq:5672/",
+                                                   timeout=self.timeout)
+        return connection
+    
+    async def refresh_connection(self):
+        if not self.channel or self.channel.is_closed:
+            if not self.connection or self.connection.is_closed:
+                print("Refreshing RMQ Connection")
+                self.connection = await self.connect()
+                print("Refreshing Channel connection")
+                self.channel = await self.connection.channel()
+                self.exchange = await self.channel.declare_exchange(name=self.exchange_name, durable=True)
+                print(f"RabbitMQ Exchange {self.exchange} is declared")
+                
+    async def close(self):
+        """
+        This function closes the connection and channel
+        """
+        if self.channel and not self.channel.is_closed:
+            await self.channel.close()
+            print("RabbitMQ Client close channel")
+        if self.connection and not self.connection.is_closed:
+            await self.connection.close()
+            print("RabbitMQ Client close connection")
+            
+    async def declare_queue(self, routing_key, durable, auto_delete):
+        await self.refresh_connection()
+        queue_name = f"{self.exchange_name}.{routing_key}"
+        
+        queue = await self.channel.declare_queue(name=queue_name, timeout=self.timeout, durable=durable, auto_delete=auto_delete)
+        await queue.bind(exchange=self.exchange, routing_key=routing_key)
+        print(f"Successfully declared queue: {queue_name}")
+        return queue
+    
+    async def delete_queue(self, routing_key):
+        await self.refresh_connection()
+        queue_name = f"{self.exchange_name}.{routing_key}"
+        print(f"Attempting to delete queue: {queue_name}")
+        
+        await self.channel.queue_delete(queue_name=queue_name, timeout=self.timeout)
+        print(f"Successfully deleted queue: {queue_name}")
+    
+    async def ping(self):
+        # TODO VERIFY THIS FUNCTION
+        ping = self.connect()
+        
+        return ping
+    
+    async def publish(self, message: Any, routing_key: str):
+        """
+        Allows us to publish a message to a RMQ Queue
+        """
+        await self.refresh_connection()
+        print(f"Publish to MQ {message.__class__.__name__} {message.uuid}")
+        body = pickle.dumps(message)
+        message = aio_pika.Message(body=body, expiration=60)
+        await self.exchange.publish(message=message, routing_key=routing_key, timeout=self.timeout)
+        
+    async def consume(self, queue):
+        """
+        Allows us to consume and parse a message from a RMQ Queue
+        """
+        await self.refresh_connection()
+        async with queue.iterator() as iterator:
+            async for message in iterator:
+                async with message.process():
+                    event = pickle.loads(message.body)
+                    print(f"Consume from MQ {event.__class__.__name__} {event.uuid}")
+                    
+                    yield event
+                    
+                    try:
+                        if queue.name in message.body.decode():
+                            break
+                    except Exception as e:
+                        pass
+                    
+    async def consume_first(self, routing_key, queue, count):
+        """
+        Will consume the number of events specified in count from a given queue
+        """
+        await self.refresh_connection()
+        events = []
+        try:
+            async for event in self.consume(queue=queue):
+                events.append(event)
+                if len(events) == count:
+                    print(f"Stopping consuming for {event.__class__.__name__}. Consumed count: {len(events)}")
+                    break
+                else:
+                    print(f"Waiting for more events for {event.__class__.__name__}")
+            return events, None
+        except Exception as err:
+            if events:
+                print(f"Consuming {event.__class__.__name__} was partially succesful.")
+                return events, None
+            else:
+                print(f"Failed to consume events from RMQ {routing_key} with error: {err}")
+                return None, err

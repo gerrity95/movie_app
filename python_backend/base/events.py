@@ -7,14 +7,18 @@ class RecommendationsEvent:
     @classmethod
     def event_type(cls) -> str:
         return cls.__name__
+    
+    @staticmethod
+    def routing_key() -> str:
+        return 'recommendations_queue'
 
     def __init__(self):
         self.uuid = str(uuid4())
         self.parent_uuid = self.uuid
         self.timestamp = datetime.datetime.now()
         self.reccomendations = []
-        self.routing_key = 'recommendations_queue'
-        self.result_routing_key = str(self.routing_key + '_' + self.uuid)
+        self.result_routing_key = self.uuid
+        self.test_attribute = "Hello Mark"
         
     def serialize(self):
         """Convert a RecommendationsEvent to bytes so we can pass it through RMQ"""

@@ -8,6 +8,7 @@ app = Flask(__name__)
 from base.mongoclient import MongoClient
 from base.rabbitmq_client import RabbitMqClient
 from recommendations import Recommendations
+from recommendations_publisher import RecommendationPublisher
 from dotenv import load_dotenv
 from pathlib import Path
 
@@ -34,7 +35,8 @@ async def tmdb_test():
 #we define the route /
 @app.route('/rmq_ping')
 async def rmq_test():
-    ping_result = await RabbitMqClient().main()
+    reccs_publisher = RecommendationPublisher(rabbitmq_client=RabbitMqClient())
+    result = await reccs_publisher.main()
     # return a json
     return jsonify({'status': True})
 
