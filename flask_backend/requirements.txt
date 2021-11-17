@@ -1,8 +1,0 @@
-flask
-motor
-requests
-asyncio
-python-dotenv
-flask[async]
-pika
-aio_pika
