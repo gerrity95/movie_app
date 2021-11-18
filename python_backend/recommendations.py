@@ -1,11 +1,13 @@
 import asyncio
 from base.mongoclient import MongoClient
 from base.tmdbclient import TmdbClient
+from base.rabbitmq_client import RabbitMqClient
 from base.recc_calculator import ReccCalculator
 import json
 import datetime
 from base.recommendations_helper import RecommendationException, JSONEncoder, RecommendationsHelper
 from bson import ObjectId
+from base.events import RecommendationsEvent
 
 
 class Recommendations:
@@ -13,6 +15,7 @@ class Recommendations:
     def __init__(self) -> None:
         self.mongo_client = MongoClient()
         self.tmdb_client = TmdbClient()
+        self.rabbitmq_client = RabbitMqClient()
         self.recc_calculator = ReccCalculator()
         self.recc_helper = RecommendationsHelper()
         
@@ -60,14 +63,16 @@ class Recommendations:
                 print(f"Error {e} seen attempting to compare recommendations with rated movies ")
                 return None, RecommendationException
         else:
-            print("No recommendations have been generated. Atetmpting to populate now.... ")
-            recommendations, error = await self.process_recommendations(user_id=user_id, is_new=True)
-            return recommendations, error
+            print("No recommendations have been generated. Sending request to RMQ to populate.... ")
+            recommendations_event: RecommendationsEvent = await self.make_recommendation_request(user_id=user_id, is_new=True)
+            # TODO PARSE EVENT RESULT
+            return recommendations_event.test_attribute, None
         
         if need_new_reccs:
-            print(f"Recommendations have expired for user {user_id}. Attempting to update... ")
-            recommendations, error = await self.process_recommendations(user_id=user_id, is_new=False, existing_reccs_id=stored_reccs[0]['_id'])
-            return recommendations, error
+            print(f"Recommendations have expired for user {user_id}. Sending request to RMQ to update... ")
+            recommendations_event: RecommendationsEvent = await self.make_recommendation_request(user_id=user_id, is_new=False, existing_reccs_id=stored_reccs[0]['_id'])
+            # TODO PARSE EVENT RESULT
+            return recommendations_event.test_attribute, error
         else:
             print(f"Recommendations are up to date for user {user_id}. Will not attempt to update ")
             return encoded_reccs['recommendations'], None
@@ -92,3 +97,40 @@ class Recommendations:
             return True, None
         else:
             return False, None
+        
+    async def make_recommendation_request(self, user_id: str, is_new: bool, existing_reccs_id: str = None) -> RecommendationsEvent:
+        """
+        Function that will make a request to RMQ and await a response to get our recommendations.
+        """
+        recommendation_event = RecommendationsEvent(user_id=user_id, is_new=is_new)
+        if existing_reccs_id:
+            recommendation_event.existing_reccs_id = existing_reccs_id
+        
+        print(f"Declaring return queue for {recommendation_event.user_id}")
+        return_queue = await self.rabbitmq_client.declare_queue(routing_key=recommendation_event.result_routing_key,
+                                                                durable=False,
+                                                                auto_delete=True)
+        
+        print(f"Publishing RecommendationEvent for {recommendation_event.user_id}")
+        error: Exception = await self.rabbitmq_client.publish(message=recommendation_event, 
+                                                              routing_key=recommendation_event.routing_key())
+        
+        if not error:
+            print("Successfully published RecommendationsEvent")
+            result, error = await self.rabbitmq_client.consume_first(routing_key=recommendation_event.result_routing_key,
+                                                                     queue=return_queue, count=1)
+            if result:
+                recommendation_event: RecommendationsEvent = result[0]
+                print(f"Succesfully got a result back from RMQ")
+                print(recommendation_event)
+                print(recommendation_event.reccomendations)
+            else:
+                print(f"Error {error} seen getting a result back from RMQ")
+            
+            print("Attempting to delete queue...")
+            await self.rabbitmq_client.delete_queue(routing_key=recommendation_event.result_routing_key)
+        else:
+            print(f"Error: {error} seen attempting to publish RecommendationsEvent")
+            await self.rabbitmq_client.delete_queue(routing_key=recommendation_event.result_routing_key)
+        
+        return recommendation_event

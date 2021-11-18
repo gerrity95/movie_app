@@ -1,3 +1,4 @@
+from datetime import datetime
 import os
 from pathlib import Path
 from typing import Any
@@ -103,7 +104,7 @@ class RabbitMqClient():
                     except Exception as e:
                         pass
                     
-    async def consume_first(self, routing_key, queue, count):
+    async def _consume(self, routing_key, queue, count):
         """
         Will consume the number of events specified in count from a given queue
         """
@@ -125,3 +126,16 @@ class RabbitMqClient():
             else:
                 print(f"Failed to consume events from RMQ {routing_key} with error: {err}")
                 return None, err
+            
+    async def consume_first(self, routing_key, queue, count):
+        
+        start = datetime.now()
+        try:
+            return await asyncio.wait_for(self._consume(routing_key=routing_key,
+                                                        queue=queue,
+                                                        count=count),
+                                          timeout=20)
+        except asyncio.futures.TimeoutError as error:
+            elapsed = (datetime.now() - start).total_seconds()
+            print(f"Consuming events has timed out after {elapsed} seconds")
+            return None, error
