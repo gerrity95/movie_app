@@ -1,7 +1,6 @@
 function isLoggedIn(req,res,next) {
     console.log("Checking if a user is logged in...")
     if(req.isAuthenticated()){
-        console.log(req);
         return next();
     }
     else {

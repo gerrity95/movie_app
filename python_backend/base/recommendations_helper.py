@@ -59,6 +59,7 @@ class RecommendationsHelper:
             return sorted_reccomendations, None
         except Exception as err:
             print(f"Error {err} seen when attempting to calculate reccommendations")
+            await rec_collection.update_one({'_id': existing_reccs_id}, {'$set': {'state': 'failed'}, '$currentDate': { 'updatedAt': True }})
             return None, Exception(str(err))
 
                 
@@ -74,45 +75,46 @@ class RecommendationsHelper:
         directors, genres, keywords = self.extract_details_for_discover(rated_movies)
         
         discover_directors = []
-        for direc in directors:
-            disc_direc, error = await self.tmdb_client.make_discover_request(type='director', unique_id=direc[0])
-            if error:
+        disc_direc, error = await self.tmdb_client.make_parallel_discover_request(type='director', unique_id_list=directors)
+        if error:
                 print("Error attempting to get query discover")
                 return None, RecommendationException
-            discover_directors.extend(disc_direc['results'])
+        for item in disc_direc:
+            discover_directors.extend(item['results'])
+            
         discover_genres = []
-        for gen in genres:
-            disc_direc, error = await self.tmdb_client.make_discover_request(type='genre', unique_id=gen[0])
-            if error:
+        disc_genre, error = await self.tmdb_client.make_parallel_discover_request(type='genre', unique_id_list=genres)
+        if error:
                 print("Error attempting to get query discover")
                 return None, RecommendationException
-            discover_genres.extend(disc_direc['results'])
-        
+        for item in disc_genre:
+            discover_genres.extend(item['results'])
+            
         discover_keywords = []
-        for keyword in keywords:
-            disc_direc, error = await self.tmdb_client.make_discover_request(type='keywords', unique_id=keyword[0])
-            if error:
+        disc_keywords, error = await self.tmdb_client.make_parallel_discover_request(type='keywords', unique_id_list=keywords)
+        if error:
                 print("Error attempting to get query discover")
                 return None, RecommendationException
-            discover_keywords.extend(disc_direc['results'])
+        for item in disc_keywords:
+            discover_keywords.extend(item['results'])
             
         top_movies = self.get_top_rated_movies(rated_movies)
+        similar_movies, error = await self.tmdb_client.make_parallel_movie_request(path='similar', movies=top_movies)
+        if error:
+            print("Error attempting to get similar movies")
+            return None, RecommendationException
+        
         similar_movie_collection = []
-        for movie in top_movies:
-            similar_movies, error = await self.tmdb_client.make_movie_request(path='similar', movie_id=movie['movie_id'])
-            if error:
-                print("Error attempting to get similar movies")
-                return None, RecommendationException
-            similar_movie_collection.extend(similar_movies['results'])
+        for item in similar_movies:
+            similar_movie_collection.extend(item['results'])
 
+        recommended_movies, error = await self.tmdb_client.make_parallel_movie_request(path='recommendations', movies=top_movies)
+        if error:
+            print("Error attempting to get recommended movies")
+            return None, RecommendationException
         recommended_movie_collection = []
-        for movie in top_movies:
-            recommended_movies, error = await self.tmdb_client.make_movie_request(path='recommendations', movie_id=movie['movie_id'])
-            if error:
-                print("Error attempting to get recommended movies")
-                return None, RecommendationException
-            recommended_movie_collection.extend(recommended_movies['results'])
-            
+        for item in recommended_movies:
+            recommended_movie_collection.extend(item['results'])
         
         full_response = {'discover_directors': discover_directors, 'discover_genres': discover_genres,
                          'discover_keywords': discover_keywords,

@@ -55,7 +55,6 @@ router.get("/user/userprofile", async (req,res) =>{
     console.log("Attempting to get movie data...");
     shows = await flask_api.get_reccomendations(req.user._id)
     //shows = flask_api.sample_movies()
-    console.log(shows)
     if (shows.status == 200) {
       return res.json({'success': true, 'movies_rated': true})
     }

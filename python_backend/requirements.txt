@@ -2,6 +2,7 @@ flask
 motor
 requests
 asyncio
+aiohttp
 python-dotenv
 flask[async]
 pika
