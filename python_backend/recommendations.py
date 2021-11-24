@@ -6,8 +6,7 @@ from base.recc_calculator import ReccCalculator
 import json
 import datetime
 from base.recommendations_helper import RecommendationException, JSONEncoder, RecommendationsHelper
-from bson import ObjectId
-from base.events import RecommendationsEvent
+from base.events import RecommendationsEvent, State
 
 
 class Recommendations:
@@ -22,6 +21,7 @@ class Recommendations:
     async def calculate_reccs(self, user_id: str):
         """
         """
+        calc_start = datetime.datetime.now()
         # Check for existing recommendations
         stored_reccs, error = await self.recc_helper.query_mongo_for_user(user_id, 'recommended_movies')
         if error:
@@ -65,14 +65,24 @@ class Recommendations:
         else:
             print("No recommendations have been generated. Sending request to RMQ to populate.... ")
             recommendations_event: RecommendationsEvent = await self.make_recommendation_request(user_id=user_id, is_new=True)
-            # TODO PARSE EVENT RESULT
-            return recommendations_event.test_attribute, None
+            calc_finish = datetime.datetime.now()
+            print(f"Calculation Duration: {(calc_start - calc_finish).total_seconds()}")
+            if recommendations_event.state != State.ok:
+                print(f"Unable to calculate new Recommendations and there is no existing ones. Returning Exception....")
+                return None, RecommendationException
+            else:
+                return recommendations_event.reccomendations, None
         
         if need_new_reccs:
             print(f"Recommendations have expired for user {user_id}. Sending request to RMQ to update... ")
             recommendations_event: RecommendationsEvent = await self.make_recommendation_request(user_id=user_id, is_new=False, existing_reccs_id=stored_reccs[0]['_id'])
-            # TODO PARSE EVENT RESULT
-            return recommendations_event.test_attribute, error
+            calc_finish = datetime.datetime.now()
+            print(f"Calculation Duration: {(calc_finish - calc_start).total_seconds()} seconds")
+            if recommendations_event.state != State.ok:
+                print(f"Unable to calculate new Recommendations. Returning existing ones....")
+                return encoded_reccs['recommendations'], None
+            else:
+                return recommendations_event.reccomendations, None
         else:
             print(f"Recommendations are up to date for user {user_id}. Will not attempt to update ")
             return encoded_reccs['recommendations'], None
@@ -86,7 +96,7 @@ class Recommendations:
         reccs_updated = datetime.datetime.fromisoformat(encoded_reccs['updatedAt'])
         
         # Getting rated movies
-        recent_movie, error = await self.most_recent_rated_movie(user_id)
+        recent_movie, error = await self.recc_helper.most_recent_rated_movie(user_id)
         if error:
             print(f"Error {error} attempting to get rated movies")
             return None, RecommendationException
@@ -122,8 +132,6 @@ class Recommendations:
             if result:
                 recommendation_event: RecommendationsEvent = result[0]
                 print(f"Succesfully got a result back from RMQ")
-                print(recommendation_event)
-                print(recommendation_event.reccomendations)
             else:
                 print(f"Error {error} seen getting a result back from RMQ")
             

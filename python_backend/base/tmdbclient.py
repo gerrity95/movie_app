@@ -1,10 +1,6 @@
 import requests
 import json
-import os
-from urllib.parse import quote
-from dotenv import load_dotenv
-from pathlib import Path
-
+from env_config import Config
 
 class TmdbClient():
     """
@@ -12,11 +8,9 @@ class TmdbClient():
     """
 
     def __init__(self) -> None:
-        ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-        dotenv_path = Path(os.path.join(ROOT_DIR, '.env'))
-        load_dotenv(dotenv_path=dotenv_path)
-        self.api_key = os.getenv('TMDB_API')
-        self.read_token = os.getenv('TMDB_READ_TOKEN')
+        self.config = Config()
+        self.api_key = self.config.TMDB_API
+        self.read_token = self.config.TMDB_READ_TOKEN
         self.api_endpoint = 'https://api.themoviedb.org/3/'
 
     async def ping(self) -> bool:

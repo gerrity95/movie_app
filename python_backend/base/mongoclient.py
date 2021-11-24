@@ -1,12 +1,6 @@
-import requests
-import asyncio
-import os
-from urllib.parse import quote
-from dotenv import load_dotenv
-from pathlib import Path
 from motor.core import AgnosticDatabase, AgnosticCollection
 from motor.motor_asyncio import AsyncIOMotorClient
-
+from env_config import Config
 
 class MongoClient():
     """
@@ -14,13 +8,11 @@ class MongoClient():
     """
 
     def __init__(self) -> None:
-        ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-        dotenv_path = Path(os.path.join(ROOT_DIR, '.env'))
-        load_dotenv(dotenv_path=dotenv_path)
-        self.endpoint = os.getenv('MONGO_HOSTNAME')
-        self.port = os.getenv('MONGO_PORT')
-        self.user = os.getenv('MONGO_USERNAME')
-        self.password = os.getenv('MONGO_PASSWORD')
+        self.config = Config()
+        self.endpoint = self.config.MONGO_HOSTNAME
+        self.port = self.config.MONGO_PORT
+        self.user = self.config.MONGO_USERNAME
+        self.password = self.config.MONGO_PASSWORD
         self.client = AsyncIOMotorClient(f'mongodb://{self.user}:{self.password}@{self.endpoint}:{self.port}')
 
     def node_db(self) -> AgnosticDatabase:

@@ -4,6 +4,8 @@ from base.mongoclient import MongoClient
 from base.tmdbclient import TmdbClient
 from collections import Counter
 from base.recc_calculator import ReccCalculator
+from bson import ObjectId
+
 
 class JSONEncoder(json.JSONEncoder):
     def default(self, o):

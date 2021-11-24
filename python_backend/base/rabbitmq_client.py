@@ -1,24 +1,18 @@
 from datetime import datetime
-import os
-from pathlib import Path
 from typing import Any
-from dotenv import load_dotenv
 import asyncio
 import aio_pika
-import json
-from base.events import RecommendationsEvent
 import pickle
+from env_config import Config
 
 class RabbitMqClient():
 
     def __init__(self) -> None:
-        ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-        dotenv_path = Path(os.path.join(ROOT_DIR, '.env'))
-        load_dotenv(dotenv_path=dotenv_path)
-        self.endpoint = 'rabbitmq'
-        self.port = '5672'
-        self.user ='rmq_user'
-        self.password = '3aZyvgvc5Q2pnQzu'
+        self.config = Config()
+        self.endpoint = self.config.RMQ_HOST
+        self.port = self.config.RMQ_PORT
+        self.user = self.config.RMQ_USER
+        self.password = self.config.RMQ_PASSWORD
         self.timeout = 60
         self.connection = None
         self.channel = None
@@ -27,7 +21,7 @@ class RabbitMqClient():
         
     async def connect(self):
         print("Connecting to RMQ")
-        connection = await aio_pika.connect_robust(url="amqp://rmq_user:3aZyvgvc5Q2pnQzu@rabbitmq:5672/",
+        connection = await aio_pika.connect_robust(url=f"amqp://{self.user}:{self.password}@{self.endpoint}:{self.port}/",
                                                    timeout=self.timeout)
         return connection
     

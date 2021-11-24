@@ -4,15 +4,18 @@ import json
 import os
 from pathlib import Path
 from dotenv import load_dotenv
-from base.events import RecommendationsEvent
+from base.events import RecommendationsEvent, State
+from base.recommendations_helper import RecommendationsHelper
 from base.rabbitmq_client import RabbitMqClient
-
+from base.recc_calculator import ReccCalculator
 
 class AsyncRMQ():
 
-    def __init__(self, rabbitmq_client: RabbitMqClient) -> None:
-        self.rabbitmq_client = rabbitmq_client
-
+    def __init__(self) -> None:
+        self.rabbitmq_client = RabbitMqClient()
+        self.reccs_helper = RecommendationsHelper()
+        self.reccs_calculator = ReccCalculator()
+        
 
     async def consume_reccs_events(self):
         
@@ -27,11 +30,21 @@ class AsyncRMQ():
                 mq_consumer = self.rabbitmq_client.consume(queue=events_queue)
                 async for event in mq_consumer:
                     recommendations_event: RecommendationsEvent = event
-                    print(f"Consumer RecommendationsEvents from RMQ")
-                    print("DO SOME PROCESSING.....")
-                    print(recommendations_event.test_attribute)
-                    await asyncio.sleep(5)
-                    recommendations_event.test_attribute = "Hello from RMQ..."
+                    print(f"Consumed RecommendationsEvent for user: {recommendations_event.user_id}")
+                    recommendations_event.state = State.in_progress
+                    new_reccs, error = await self.reccs_helper.process_recommendations(user_id=recommendations_event.user_id, 
+                                                                                       is_new=recommendations_event.is_new,
+                                                                                       existing_reccs_id=recommendations_event.existing_reccs_id)
+                    
+                    if error:
+                        print(f"Error {error} calculating reccs for user: {recommendations_event.user_id}")
+                        recommendations_event.state = State.fail
+                    else:
+                        print(f"Successfully calculated Recommendations for user: {recommendations_event.user_id}")
+                        recommendations_event.state = State.ok
+                        recommendations_event.reccomendations = new_reccs
+                    
+                    print(f"Returning RecommendationsEvent for {recommendations_event.user_id}")
                     exception = await self.rabbitmq_client.publish(message=recommendations_event, 
                                                                    routing_key=recommendations_event.result_routing_key)
                     if exception:
@@ -44,7 +57,7 @@ class AsyncRMQ():
                 await asyncio.sleep(30)
                 
 def main():
-    app = AsyncRMQ(rabbitmq_client=RabbitMqClient())
+    app = AsyncRMQ()
     loop = asyncio.get_event_loop()
     loop.run_until_complete(asyncio.gather(app.consume_reccs_events()))
     loop.close()
