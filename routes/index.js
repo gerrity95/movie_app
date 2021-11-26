@@ -158,10 +158,17 @@ router.post("/register",(req,res)=>{
     last_name: req.body.last_name}),
     req.body.password, function(err,user){
       if(err){
+        console.log(err.name)
         if (err.name == 'UserExistsError') {
           console.log("Cannot create user as they already exist.");
           return res.redirect(url + "?user_exists=True");
         }
+        else if (err.name == 'MongoServerError') {
+          if (err.message.includes("E11000 duplicate key error")) {
+            console.log("Cannot create user as they already exist.");
+            return res.redirect(url + "?email_exists=True");
+          }
+        }  
         console.log("Unknown error when attempting to register")
         console.log(err);
         return res.redirect(url + "?error=True");

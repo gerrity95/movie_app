@@ -28,13 +28,3 @@ block content
     if (getQueryVariable('failed_login')) {
       document.getElementById("bad_login").innerHTML = '*Username or password is incorrect.';
     }
-
-    $(document).ready(function(){
-      $("form#login_form").on('submit', function(e){
-          $('#generatingReccs').modal({
-              backdrop: 'static',
-              keyboard: false
-              })
-            $("#generatingReccs").modal('show');
-      });
-    });

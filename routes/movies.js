@@ -17,6 +17,7 @@ router.get("/movies/:movie_id", helpers.is_logged_in, async (req,res) =>{
        }));
     director = ''
     screenplay = ''
+    writer = ''
     try {
         movie_cast.body.crew.forEach(function(value){
             if (value.job == "Director") {
@@ -25,6 +26,9 @@ router.get("/movies/:movie_id", helpers.is_logged_in, async (req,res) =>{
             if (value.job == "Screenplay") {
                 screenplay = value.name
             }
+            if (value.job == "Writer") {
+                writer = value.name
+            }
           });
     
     } catch (e) {
@@ -32,7 +36,7 @@ router.get("/movies/:movie_id", helpers.is_logged_in, async (req,res) =>{
         return res.render('error', {'error': e})
     }
     return res.render("movie_profile", {'movie_info': movie_info.body, 'movie_credits': movie_cast.body,
-                                        'director': director, 'screenplay': screenplay});
+                                        'director': director, 'screenplay': screenplay, 'writer': writer});
   })
 
 router.post('/search', helpers.is_logged_in, async (req,res) =>{

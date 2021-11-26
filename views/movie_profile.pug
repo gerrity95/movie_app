@@ -8,7 +8,14 @@ block content
   - var movie_cast = movie_credits
   - var header_src = `https://image.tmdb.org/t/p/original/${movie_info.backdrop_path}`
   - var poster_src = `https://image.tmdb.org/t/p/w500/${movie_info.poster_path}`
-  - var percent_rating = movie_info.vote_average * 10 
+  - var percent_rating = movie_info.vote_average * 10
+
+  if (screenplay.length)
+    - var author_title = 'Screenplay' 
+    - var author = screenplay
+  else
+    - var author_title = 'Writer'
+    - var author = writer
 
   .container-fluid(style=`background-image:url(${header_src})`).movie_header_image
     .row.movie_darken#movie-desktop
@@ -51,11 +58,11 @@ block content
           thead
             tr
               th(style="width: 25%") Director
-              th(style="width: 25%") Screenplay
+              th(style="width: 25%") #{author_title}
           tbody
             tr
               td #{director}
-              td #{screenplay}
+              td #{author}
     
     .row.movie_darken#movie-mobile
       .col-6.col-sm-6.col-md-5.col-lg-3.col-xl-3.offset-lg-1.offset-xl-1.offset-md-1.offset-sm-0.offset-0.align-self-center.d-flex.justify-content-center
@@ -93,16 +100,15 @@ block content
             tr
               td #{movie_info.release_date}
               td #{movie_info.runtime} minutes
-        
         table.table.table-borderless.movie_text
           thead
             tr
               th(style="width: 25%") Director
-              th(style="width: 25%") Screenplay
+              th(style="width: 25%") #{author_title}
           tbody
             tr
               td #{director}
-              td #{screenplay}
+              td #{author}
 
   .container-fluid.movie_interact_container
     .row.movie_interact_box
