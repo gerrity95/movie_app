@@ -3,13 +3,18 @@ extends layout
 block content
   title FMovies Home
   include includes/success_review_modal.pug
+  include includes/success_watchlist.pug
   include includes/failed_review_modal.pug
+  include includes/failed_watchlist.pug
   - var movie_info = movie_info
   - var movie_cast = movie_credits
   - var header_src = `https://image.tmdb.org/t/p/original/${movie_info.backdrop_path}`
   - var poster_src = `https://image.tmdb.org/t/p/w500/${movie_info.poster_path}`
   - var percent_rating = movie_info.vote_average * 10
-
+  if (is_watchlist)
+    - var watchlist_title = 'Remove From Watchlist'
+  else
+    - var watchlist_title = 'Add To Watchlist'
   if (screenplay.length)
     - var author_title = 'Screenplay' 
     - var author = screenplay
@@ -37,9 +42,9 @@ block content
           | #{movie_info.tagline}
         
         .social-icons
-          a(href="#").social-icon.social-icon--codepen
+          a#watchlist_button_normal.social-icon.social-icon--codepen
             i.far.fa-bookmark.fa-stack-1x(style="color: white")
-            .tooltip Add To Watchlist
+            .tooltip#watchlist_todo #{watchlist_title}
           a(href="#").social-icon.social-icon--codepen
             i.far.fa-trash-alt.fa-stack-1x(style="color: white")
             .tooltip Add To Blocklist
@@ -84,9 +89,9 @@ block content
           | #{movie_info.tagline}
         
         .social-icons
-          a(href="#").social-icon.social-icon--codepen
+          a#watchlist_button_mobile.social-icon.social-icon--codepen
             i.far.fa-bookmark.fa-stack-1x(style="color: white")
-            .tooltip Add To Watchlist
+            .tooltip#watchlist_todo_mobile #{watchlist_title}
           a(href="#").social-icon.social-icon--codepen
             i.far.fa-trash-alt.fa-stack-1x(style="color: white")
             .tooltip Add To Blocklist
@@ -279,3 +284,37 @@ block content
                 }              
             });
         };
+
+    const watchlist_btn = document.querySelector('#watchlist_button')
+        // handle button click
+      $("#watchlist_button_normal, #watchlist_button_mobile").click(function () {
+          
+          $.ajax({
+              type: "POST",
+              url: '/user/addwatchlist',
+              dataType: "json",
+              data: {movie_id: movie_details.id},
+              success: function(data){
+                if (data.success) {
+                  if (data.removed) {
+                    $('#watchlist_message').text('Successfully removed from watchlist.');
+                    $('#watchlist_todo, #watchlist_todo_mobile').text('Add To Watchlist');
+                  }
+                  else {
+                    $('#watchlist_message').text('Successfully added to watchlist.');
+                    $('#watchlist_todo, #watchlist_todo_mobile').text('Remove From Watchlist');
+                  }
+                   $("#successWatchlist").modal('show');
+                }
+                else {
+                  $("#failedWatchlist").modal('show');
+                }
+              },
+              error: function(jqXHR, textStatus, errorThrown){
+                console.log("FAILURE")
+                console.log(errorThrown);
+                $("#failedWatchlist").modal('show');
+
+              }              
+          });
+      });

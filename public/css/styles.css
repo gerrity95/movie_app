@@ -12,6 +12,10 @@ html {
     display: flex;
     flex-direction: column;
   }
+  
+  a:hover {
+    text-decoration: none;
+  }
 
   .title_colors {
     color: #111B47;
