@@ -1,3 +1,6 @@
+# Environment Variables
+env_config.py
+
 # Pycache files
 *.pyc
 

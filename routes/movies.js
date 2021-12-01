@@ -3,7 +3,8 @@ const router = express.Router();
 const https = require('https');
 const tmdb_api = require('./tmdb_api');
 const helpers = require('./helpers/generic_helpers');
-const watchlist_model = require('../models/movie_watchlist')
+const watchlist_model = require('../models/movie_watchlist');
+const flask_api = require('./helpers/flask_api');
 
 router.get("/movies/:movie_id", helpers.is_logged_in, async (req,res) =>{
     console.log("PARAMS");
@@ -94,6 +95,9 @@ router.get("/user/watchlist", helpers.is_logged_in, async (req,res) =>{
     console.log("Attempting to render watchlist for user " + req.user._id);
     let watchlist_movies = await watchlist_model.find({user_id: req.user._id});
     console.log(watchlist_movies);
+    rendered_watchlist = await flask_api.get_watchlist(req.user._id, watchlist_movies);
+    console.log("Successfully got response back from server..");
+    console.log(rendered_watchlist);
     return res.render("watchlist")
 });
 

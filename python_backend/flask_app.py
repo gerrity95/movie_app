@@ -9,6 +9,7 @@ from base.mongoclient import MongoClient
 from base.rabbitmq_client import RabbitMqClient
 from recommendations import Recommendations
 from recommendations_publisher import RecommendationPublisher
+from watchlist import Watchlist
 from dotenv import load_dotenv
 from pathlib import Path
 
@@ -48,6 +49,24 @@ async def get_reccs():
     user_id = request.json.get('user_id')
     if user_id:
             result, error = await Recommendations().calculate_reccs(user_id=user_id)
+            # return a json
+            if error:
+                return {'status': str(error)}
+            
+            return {'result': result}
+
+    else:
+        return jsonify({'status': False})
+
+@app.route('/get_watchlist', methods=['GET', 'POST'])
+async def get_watchlist():
+    print("Request received to get watchlist...")
+    print(request.json)
+    user_id = request.json.get('user_id')
+    if user_id:
+            print(f"Request received to get watchlist for user {user_id}...")
+            movie_list = request.json.get('movie_list')
+            result, error = await Watchlist().process_watchlist(movie_list=movie_list)
             # return a json
             if error:
                 return {'status': str(error)}
