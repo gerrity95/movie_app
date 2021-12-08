@@ -912,6 +912,7 @@ a#product-mobile {
   min-width: 94px;
   width: 94px;
   height: 141px;
+  margin-right: 5px;
 }
 
 .search_text {
@@ -970,6 +971,20 @@ a#search_link {
   max-height: 100%;
   margin-left: auto;
   margin-right: auto;
+}
+
+.welcome_list {
+  overflow-y: scroll;
+  overflow-x: hidden;
+  max-height: 400px
+}
+
+.movie_item:hover {
+  background:rgba(141, 141, 141, 0.6);
+  opacity:1;
+  transition: all 0.5s;
+  -webkit-transition: all 0.5s;
+  cursor: pointer;
 }
 
 @media (max-width: 768px) {

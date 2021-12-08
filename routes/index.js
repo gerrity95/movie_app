@@ -50,7 +50,7 @@ router.get("/user/userprofile", async (req,res) =>{
     })
     if (rated_movies.length < 5) {
       console.log("Not enough movies have been rated by user: " + req.user._id)
-      return res.json({'success': false, 'movies_rated': false})
+      return res.json({'success': false, 'movies_rated': false, 'movie_count': rated_movies.length})
     }
     console.log("Attempting to get movie data...");
     shows = await flask_api.get_reccomendations(req.user._id)
@@ -76,7 +76,7 @@ router.get("/welcome", helpers.is_logged_in, async (req,res) =>{
     console.log("Too many movies have been rated by user: " + req.user._id)
     return res.redirect('/userprofile')
   }
-  return res.render("welcome", {user_info: req.user, movie_info: 'Bad'});
+  return res.render("welcome", {user_info: req.user, movie_info: 'Bad', 'movie_count': rated_movies.length});
   
 })
 

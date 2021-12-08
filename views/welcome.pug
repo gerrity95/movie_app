@@ -3,6 +3,7 @@ extends layout
 block content
   title FMovies Home
   - var reccs = movie_info
+  - var remaining_movies = 5 - movie_count
   include includes/success_review_modal.pug
   include includes/failed_review_modal.pug
   include includes/generating_reccs_modal.pug
@@ -19,8 +20,16 @@ block content
 
     .row.align-items-center.shadow-lg.welcome_message(style="margin-top: 30px")
       .col-12.col-sm-6.col-md-6.col-lg-6.col-xl-6.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0.my-auto.align-text-center
+        p 
+          | In order to start generating recommendations you must rate at least 5 movies. But the more you review,
+          b
+            |  the better the suggestions!
         p
-          | To get started search for one of your favorites movies here to rate it!
+          | To get started search for one of your favorites movies here to rate it.
+        p
+          | You currently have 
+          b #{remaining_movies} 
+          | movies left to rate.
         .welcome-search.search_bar_alignment.my-2.my-lg-0
                   input.form-control.mr-sm-2(type='search' id="welcome_search_submit" placeholder='Search' aria-label='Search' required)
                   button.btn.btn-default(type='submit').search_button#welcome_search
@@ -31,15 +40,56 @@ block content
 
     .row.align-items-center#movie_info_popup.welcome_message.shadow-lg(style="display: none; margin-top: 30px;")
       .col-12.col-sm-12.col-md-12.col-lg-7.col-xl-7.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0.align-text-center
-        .row.align-items-center.my-auto
-          .col-10.col-sm-3.col-md-3.col-lg-3.col-xl-2.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0
-            .img_poster(style="padding-right: 10px")
-              img.search_poster#search_poster.d-block
-          .col-12.col-sm-9.col-md-9.col-lg-9.col-xl-10.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0
-            .search_text
-              h3#movie_title Welcome To FMovies
-              p#movie_date
-              p#movie_overview.hidden_text
+        p(style="padding-bottom: 20px;font-size: 20px")
+          |  Click the movie you want to rate.
+          span(style="margin-left: 10px;").far.fa-check-square
+        .row.align-items-center.my-auto.welcome_list#welcome_movies
+          .row.movie_item#movie0
+            .col-3.col-sm-2.col-md-2.col-lg-3.col-xl-2.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0
+              .img_poster(style="padding-right: 10px;padding-left: 10px")
+                img.search_poster#search_poster0.d-block
+            .col-9.col-sm-10.col-md-10.col-lg-9.col-xl-10.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0
+              .search_text
+                h3#movie_title0
+                p#movie_date0
+                p#movie_overview0.hidden_text
+          .row.movie_item#movie1
+            .col-3.col-sm-2.col-md-2.col-lg-3.col-xl-2.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0
+              .img_poster(style="padding-right: 10px")
+                img.search_poster#search_poster1.d-block
+            .col-9.col-sm-10.col-md-10.col-lg-9.col-xl-10.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0
+              .search_text
+                h3#movie_title1
+                p#movie_date1
+                p#movie_overview1.hidden_text
+          .row.movie_item#movie2
+            .col-3.col-sm-2.col-md-2.col-lg-3.col-xl-2.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0
+              .img_poster(style="padding-right: 10px")
+                img.search_poster#search_poster2.d-block
+            .col-9.col-sm-10.col-md-10.col-lg-9.col-xl-10.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0
+              .search_text
+                h3#movie_title2
+                p#movie_date2
+                p#movie_overview2.hidden_text
+          .row.movie_item#movie3
+            .col-3.col-sm-2.col-md-2.col-lg-3.col-xl-2.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0
+              .img_poster(style="padding-right: 10px")
+                img.search_poster#search_poster3.d-block
+            .col-9.col-sm-10.col-md-10.col-lg-9.col-xl-10.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0
+              .search_text
+                h3#movie_title3
+                p#movie_date3
+                p#movie_overview3.hidden_text
+          .row.movie_item#movie4
+            .col-3.col-sm-2.col-md-2.col-lg-3.col-xl-2.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0
+                .img_poster(style="padding-right: 10px")
+                  img.search_poster#search_poster4.d-block
+            .col-9.col-sm-10.col-md-10.col-lg-9.col-xl-10.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0
+              .search_text
+                h3#movie_title4
+                p#movie_date4
+                p#movie_overview4.hidden_text
+
       .col-12.col-sm-12.col-md-12.col-lg-5.col-xl-5.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0.my-auto.align-text-center
         .feedback
           h5 Submit Rating
@@ -162,25 +212,44 @@ block content
                     if (data.results) {
                       $('#movie_info_popup').show();
                       if (data.results.length > 0) {
-                        // ONLY GOING TO RETURN THE FIRST RESULT
-                        var poster_src = 'https://image.tmdb.org/t/p/w500/' + data.results[0].poster_path
-                        $('#movie_title').html(data.results[0].title);
-                        $('#movie_date').html(data.results[0].release_date);
-                        $('#movie_overview').addClass('hidden_text')
-                        $('#movie_overview').html(data.results[0].overview);
-                        $('#input_movie_id').val(data.results[0].id);
-                        $("#search_poster").attr("src", poster_src);
-                        $('.feedback').show();
+
+                        // Limit results to first 5 movies
+                        var movie_loop = 5
+                        if (data.results.length < 5) {
+                          var movie_loop = data.results.length
+                        }
+                        for (var i = 0; i < movie_loop; i++) {
+                          var poster_src = 'https://image.tmdb.org/t/p/w500/' + data.results[i].poster_path
+                          $('#movie' + i).css({"display": ""});
+                          $('#movie_title' + i).html(data.results[i].title);
+                          $('#movie_date' + i).html(data.results[i].release_date);
+                          $('#movie_overview' + i).addClass('hidden_text')
+                          $('#movie_overview' + i).html(data.results[i].overview);
+                          $('#input_movie_id').val(data.results[i].id);
+                          $("#search_poster" + i).attr("src", poster_src);
+                          $('.feedback').show();
+                        }
+                        // If less than 5 movies returned, make the other entries in the list blank
+                        if (movie_loop < 5) {
+                          for (var i = movie_loop; i < 5; i++) {
+                            $('#movie' + i).css({"display": "none"});
+                          }
+                        }
                       }
                       else {
                         $('.feedback').hide();
-                        $('#movie_date').html("");
+                        $('#movie_date0').html("");
                         $('#input_movie_id').val("");
-                        $("#search_poster").removeAttr('src');
-                        $('#movie_title').html("Hmm... No results found.");
-                        $('#movie_overview').removeClass('hidden_text')
-                        $('#movie_overview').html("Please double check there are no spelling errors or typos - or even try a different search term.")
+                        $("#search_poster0").removeAttr('src');
+                        $('#movie_title0').html("Hmm... No results found.");
+                        $('#movie_overview0').removeClass('hidden_text')
+                        $('#movie_overview0').html("Please double check there are no spelling errors or typos - or even try a different search term.")
+                      
+                        for (var i = 1; i < 5; i++) {
+                            $('#movie' + i).css({"display": "none"});
+                          }
                       }
+                       $("#welcome_movies").scrollTop(0);
                     }
                     else if (!data.results) {
                       $("#failedReview").modal('show');                        

@@ -16,3 +16,11 @@ $(document).ready(function () {
         });
     
     });
+
+
+function timeConverter(minutes) {
+    var hours = Math.floor(minutes / 60);
+    var additional_mins = minutes % 60;
+
+    return {"hours": hours, "minutes": additional_mins}
+}

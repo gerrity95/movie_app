@@ -97,8 +97,8 @@ router.get("/user/watchlist", helpers.is_logged_in, async (req,res) =>{
     console.log(watchlist_movies);
     rendered_watchlist = await flask_api.get_watchlist(req.user._id, watchlist_movies);
     console.log("Successfully got response back from server..");
-    console.log(rendered_watchlist);
-    return res.render("watchlist")
+    console.log(rendered_watchlist.body.result);
+    return res.render("watchlist", {'watchlist': rendered_watchlist.body.result})
 });
 
 

@@ -16,7 +16,19 @@ class Watchlist:
         """
         Function to get all data for all movies in a given users watchlist
         """
-        print("Attempting to process watchlist...")
-        print(movie_list)
+        movie_ids = []
+        for movie in movie_list:
+            movie_ids.append(movie['movie_id'])
         
-        return [], None
+        print(f"List of movies on watchlist: {movie_ids}")
+        print(f"Getting movie information for all movies.")
+        
+        result, error = await self.tmdb_client.get_movie_information(movie_ids=movie_ids)    
+        
+        if error:
+            print(f"Error {error} seen attempting to get movie information for watchlist")
+            return None, Exception
+        
+        print(f"Successfully got movie information for all movies in the watchlist")
+        return result, None
+    

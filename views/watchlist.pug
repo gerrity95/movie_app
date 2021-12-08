@@ -2,7 +2,29 @@ extends layout
 
 block content
   title FMovies Watchlist
-  
+  - var watchlist = watchlist  
   .container-fluid
     .row
-      p Hello Watchlist 
+     .col-12.d-flex.justify-content-center
+        h2.title_style
+          | Movie Watchlist
+    .row(style="margin-top: 20px")
+      for movie in watchlist
+        - var img_src = `https://image.tmdb.org/t/p/w500/${movie.backdrop_path}`
+        .col-6.col-sm-6.col-md-6.col-lg-5.col-xl-4.offset-lg-1.offset-xl-0.offset-md-0.offset-sm-0.offset-0
+          .card(style='width: 100%;margin-bottom: 20px')
+            img.card-img-top(src=img_src alt='...')
+            .card-body
+              h4.card-title #{movie.title}
+              p.text-monospace
+                | #{movie.tagline}
+              b
+                span Rating: #{movie.vote_average}
+                br
+                span Running Time: #{movie.runtime} Minutes
+              a#watchlist_button_normal.social-icon.social-icon--codepen(style="margin-top:10px")
+                i.far.fa-bookmark.fa-stack-1x(style="color: white")
+                .tooltip#watchlist_todo Remove From Watchlist
+              br
+              a.btn.btn-block.custom_button(href=`/movies/${movie.id}`) Find Out More
+

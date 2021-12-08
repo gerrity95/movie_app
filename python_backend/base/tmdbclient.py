@@ -166,3 +166,28 @@ class TmdbClient():
         except Exception as e:
             print(f"Error {e} attempting to talk to TMDB.")
             return None, Exception
+        
+        
+    async def get_movie_information(self, movie_ids: list):
+        """
+        Function that will get movie information for a list of movie IDs
+        """
+        urls = []
+        try:
+            for movie in movie_ids:
+                urls.append(f"{self.api_endpoint}/movie/{movie}")
+                
+            async with aiohttp.ClientSession() as session:
+                ret = await asyncio.gather(*[self.get(url, session) for url in urls])
+            print("Finalized all. Return is a list of len {} outputs.".format(len(ret)))
+            
+            # Convert items from BYTES to JSON
+            completed = []
+            for item in ret:
+                completed.append(json.loads(item))
+
+            return completed, None 
+               
+        except Exception as e:
+            print(f"Error {e} attempting to talk to TMDB.")
+            return None, Exception
