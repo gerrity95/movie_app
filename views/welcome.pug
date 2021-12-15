@@ -26,7 +26,7 @@ block content
             |  the better the suggestions!
         p
           | To get started search for one of your favorites movies here to rate it.
-        p
+        p#remaining_movie_num
           | You currently have 
           b #{remaining_movies} 
           | movies left to rate.
@@ -44,49 +44,54 @@ block content
           |  Click the movie you want to rate.
           span(style="margin-left: 10px;").far.fa-check-square
         .row.align-items-center.my-auto.welcome_list#welcome_movies
-          .row.movie_item#movie0
+          .row.movie_item#movie0.movie_list
             .col-3.col-sm-2.col-md-2.col-lg-3.col-xl-2.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0
               .img_poster(style="padding-right: 10px;padding-left: 10px")
                 img.search_poster#search_poster0.d-block
             .col-9.col-sm-10.col-md-10.col-lg-9.col-xl-10.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0
               .search_text
                 h3#movie_title0
+                p#movie_id0(style="display: none")
                 p#movie_date0
                 p#movie_overview0.hidden_text
-          .row.movie_item#movie1
+          .row.movie_item#movie1.movie_list
             .col-3.col-sm-2.col-md-2.col-lg-3.col-xl-2.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0
               .img_poster(style="padding-right: 10px")
                 img.search_poster#search_poster1.d-block
             .col-9.col-sm-10.col-md-10.col-lg-9.col-xl-10.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0
               .search_text
                 h3#movie_title1
+                p#movie_id1(style="display: none")
                 p#movie_date1
                 p#movie_overview1.hidden_text
-          .row.movie_item#movie2
+          .row.movie_item#movie2.movie_list
             .col-3.col-sm-2.col-md-2.col-lg-3.col-xl-2.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0
               .img_poster(style="padding-right: 10px")
                 img.search_poster#search_poster2.d-block
             .col-9.col-sm-10.col-md-10.col-lg-9.col-xl-10.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0
               .search_text
                 h3#movie_title2
+                p#movie_id2(style="display: none")
                 p#movie_date2
                 p#movie_overview2.hidden_text
-          .row.movie_item#movie3
+          .row.movie_item#movie3.movie_list
             .col-3.col-sm-2.col-md-2.col-lg-3.col-xl-2.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0
               .img_poster(style="padding-right: 10px")
                 img.search_poster#search_poster3.d-block
             .col-9.col-sm-10.col-md-10.col-lg-9.col-xl-10.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0
               .search_text
                 h3#movie_title3
+                p#movie_id3(style="display: none")
                 p#movie_date3
                 p#movie_overview3.hidden_text
-          .row.movie_item#movie4
+          .row.movie_item#movie4.movie_list
             .col-3.col-sm-2.col-md-2.col-lg-3.col-xl-2.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0
                 .img_poster(style="padding-right: 10px")
                   img.search_poster#search_poster4.d-block
             .col-9.col-sm-10.col-md-10.col-lg-9.col-xl-10.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0
               .search_text
                 h3#movie_title4
+                p#movie_id4(style="display: none")
                 p#movie_date4
                 p#movie_overview4.hidden_text
 
@@ -199,6 +204,8 @@ block content
           // handle button click
           btn.onclick = function () {
             if($('#welcome_search_submit').val()) {
+              $(".movie_list").removeClass('movie_select');
+               $('input[name="rating"]').val("0");
               $('#bad_welcome_search').html('');
               var search = $('#welcome_search_submit').val();
               console.log(search);
@@ -212,7 +219,10 @@ block content
                     if (data.results) {
                       $('#movie_info_popup').show();
                       if (data.results.length > 0) {
-
+                        // Removes any rating that might have been added before selecting a different movie
+                        for (var i = 1; i <= 10; i++) {
+                          $("#rating-" + i).prop('checked', false);
+                        } 
                         // Limit results to first 5 movies
                         var movie_loop = 5
                         if (data.results.length < 5) {
@@ -221,6 +231,7 @@ block content
                         for (var i = 0; i < movie_loop; i++) {
                           var poster_src = 'https://image.tmdb.org/t/p/w500/' + data.results[i].poster_path
                           $('#movie' + i).css({"display": ""});
+                          $('#movie_id' + i).html(data.results[i].id);
                           $('#movie_title' + i).html(data.results[i].title);
                           $('#movie_date' + i).html(data.results[i].release_date);
                           $('#movie_overview' + i).addClass('hidden_text')
@@ -237,6 +248,7 @@ block content
                         }
                       }
                       else {
+                        $('input[name="rating"]').prop("disabled", true);
                         $('.feedback').hide();
                         $('#movie_date0').html("");
                         $('#input_movie_id').val("");
@@ -266,7 +278,7 @@ block content
               $('#movie_info_popup').hide();
             }
           };
-    
+    $('input[name="rating"]').prop("disabled", true);
     $('button[id="rating_button"]').prop("disabled", true);
     $('input[name="rating"]').on("click", function() {
       if($('input[name="rating"]:checked').length){
@@ -287,6 +299,7 @@ block content
                     break;
                 }
             }
+            console.log(selectedValue);
             $.ajax({
                 type: "POST",
                 url: '/user/submit_rating',
@@ -305,9 +318,14 @@ block content
                   else if (data.success) {
                     $("#successReview").modal('show');
                     $('#movie_info_popup').hide();
+                    var left_to_rate = 5 - data.num_rated
+                    $("#remaining_movie_num").html("You currently have <b>" + left_to_rate + "</b> movies left to rate")
                   }
                   else if (!data.success) {
                     $("#failedReview").modal('show');
+                    if (data.is_rated) {
+                      $("#failed_review").html("This movie has already been rated. Please try another.")
+                    }
                     $('#movie_info_popup').hide();                        
                     }
                 },
@@ -317,3 +335,43 @@ block content
                 }              
             });
         };
+
+    $(document).on("click",".movie_list", function () {
+      var clickedBtnID = $(this).attr('id'); // or var clickedBtnID = this.id
+
+      if ($(this).hasClass('movie_select')) {
+        // Removes highlight from a movie card if it is already selected
+        $(this).removeClass('movie_select')
+
+        // Disallows the user from trying to submit a rating without having a movie selected
+        $('input[name="rating"]').prop("disabled", true);
+        $('button[id="rating_button"]').prop("disabled", true);
+
+        // Removes any rating that might have been added before selecting a different movie
+        for (var i = 1; i <= 10; i++) {
+          $("#rating-" + i).prop('checked', false);
+        } 
+      }
+      else {
+        // Removes highlight from previously selected movie and adds it to the newly selected
+        $(".movie_list").removeClass('movie_select');
+        $(this).addClass('movie_select')
+
+        // Allows user to make rating but unable to submit until a rating has been clicked
+        $('input[name="rating"]').prop("disabled", false);
+        $('button[id="rating_button"]').prop("disabled", true);
+        
+        // Assigns the movie_id for the selected movie to a var that is passed into the AJAX Request
+        var lastChar = clickedBtnID[clickedBtnID.length -1];
+        var movie_id_div = "movie_id" + lastChar;
+        var movie_id_val = $('#' + movie_id_div).text();
+        $('#input_movie_id').val(movie_id_val)
+
+        // Removes any rating that might have been added before selecting a different movie
+        for (var i = 1; i <= 10; i++) {
+          $("#rating-" + i).prop('checked', false);
+        } 
+      }
+
+      // Add highlight to selected box
+    });

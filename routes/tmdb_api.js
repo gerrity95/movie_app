@@ -19,7 +19,7 @@ const {
 
 
 router.post("/user/submit_rating", async (req, res, next) => {
-  console.log(url)
+  var url = req.get('referer');
   if (req.user) {
     console.log("Checking to see if already rated...");
     console.log("Submitted rating: " + req.body.rating + " for movie: " + req.body.movie_id);
@@ -28,6 +28,10 @@ router.post("/user/submit_rating", async (req, res, next) => {
       'user_id': req.user._id
     })
     if (is_rated) {
+      if (url.includes('welcome')) {
+        console.log("Movie has already been rated. Must be a new movie during welcome initiaion");
+        return res.send({'success': false, 'is_rated': true});  
+      }
       console.log("Movie has already been rated. Updating the rating.");
       is_rated.rating = req.body.rating; 
       await is_rated.save();
@@ -80,7 +84,6 @@ router.post("/user/submit_rating", async (req, res, next) => {
       let add_show = await rater.create(new_show);
       
       console.log(add_show);
-      var url = req.get('referer')
       if (url.includes('welcome')) {
         // If coming from welcome screen we want to check how many ratings have been submitted
         console.log("Checking count of rated movies to see if they've passed the welcome period...")
@@ -98,7 +101,7 @@ router.post("/user/submit_rating", async (req, res, next) => {
       // Will attempt to generate reccs in background each time we add a new rating for improved performance
       console.log("Going to attempt to update the recommendations in the background...")
       shows = flask_api.get_reccomendations(req.user._id);
-      return res.send({'success': true, 'meet_requirements': false});
+      return res.send({'success': true, 'meet_requirements': false, 'num_rated': num_rated});
     } catch (e) {
       console.log("Error attempting to add show to the DB.")
       console.log("Error: " + e)

@@ -987,6 +987,14 @@ a#search_link {
   cursor: pointer;
 }
 
+.movie_select {
+  background:rgba(66, 66, 66, 0.6);
+  opacity:1;
+  transition: all 0.5s;
+  -webkit-transition: all 0.5s;
+  cursor: pointer;
+}
+
 @media (max-width: 768px) {
 
   .welcome_message {
@@ -998,7 +1006,7 @@ a#search_link {
   }
 
   .movie_prompt_text {
-    margin-top: 20px;
+    display: None;
   }
   
 }

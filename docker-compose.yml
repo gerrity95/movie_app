@@ -3,10 +3,10 @@ version: '3'
 services:
   flask_backend:
         build: 
-          context: ./flask_backend/
+          context: ./python_backend/
           dockerfile: Dockerfile_flask
         volumes: 
-            - ./flask_backend/:/usr/src/app/
+            - ./python_backend/:/usr/src/app/
         ports: 
             - 5000:5000
         depends_on:
@@ -20,10 +20,10 @@ services:
           - app-network
   rmq_client:
         build: 
-          context: ./flask_backend/rmq_app
+          context: ./python_backend/
           dockerfile: Dockerfile_RMQ
         volumes: 
-            - ./flask_backend/rmq_app/:/usr/src/app/
+            - ./python_backend/:/usr/src/app/
         ports: 
             - 5001:5001
         depends_on:
