@@ -181,13 +181,21 @@ router.post("/register",(req,res)=>{
         console.log(err);
         return res.redirect(url + "?error=True");
       }
-  passport.authenticate("local")(req, res, function(){
-    console.log("User successfully registered...");
-    console.log(req.sessionID);
-    return res.redirect('/userprofile')
-  })    
-  })
-})
+    console.log('Successfully created user: ' + user.email);
+    if (user) {
+      console.log("Attemping to authenticate...");
+      passport.authenticate("local")(req, res, function(){
+        console.log("User successfully registered...");
+        console.log(req.sessionID);
+        req.logIn(user, function(err) {
+          if (err) { return next(err); }
+          console.log("Successfully logged in for user: " + req.user.email);
+          return res.redirect('/userprofile');
+        });
+      });
+    };    
+  });
+});
 
 router.get("/logout",(req,res)=>{
   req.logout();
