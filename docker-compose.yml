@@ -58,7 +58,7 @@ services:
       - app-network
     command: ./wait-for.sh db:27017 -- /home/node/app/node_modules/.bin/nodemon app.js
   db:
-    image: andresvidal/rpi3-mongodb3
+    image: mongo:4.1.8-xenial
     container_name: db
     restart: unless-stopped
     env_file: .env
@@ -71,7 +71,7 @@ services:
       - app-network
 
   mongo-express:
-    image: ind3x/rpi-mongo-express
+    image: mongo-express
     container_name: mongo-express
     environment:
     - ME_CONFIG_MONGODB_SERVER=db
