@@ -2,10 +2,12 @@
 
 Steps to start the app:
 
-Clone down repo: 
+Clone down repo and checkout the appropriate branch: 
 
 ```
 git clone https://github.com/gerrity95/movie_app.git
+
+git checkout linux_startup
 ```
 
 Install node packages:
