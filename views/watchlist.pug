@@ -1,6 +1,7 @@
 extends layout
 
 block content
+  include includes/failed_watchlist.pug
   title FMovies Watchlist
   - var watchlist = watchlist  
   .container-fluid
@@ -27,4 +28,38 @@ block content
                 .tooltip#watchlist_todo Remove From Watchlist
               br
               a.btn.btn-block.custom_button(href=`/movies/${movie.id}`) Find Out More
+
+  script.
+
+    const watchlist_btn = document.querySelector('#watchlist_button')
+        // handle button click
+      $("#watchlist_button_normal").click(function () {
+          
+          $.ajax({
+              type: "POST",
+              url: '/user/addwatchlist',
+              dataType: "json",
+              data: {movie_id: movie_details.id},
+              success: function(data){
+                if (data.success) {
+                  if (data.removed) {
+                    $('#watchlist_message').text('Successfully removed from watchlist.');
+                    location.reload(true);
+                  }
+                  else {
+                    $("#failedWatchlist").modal('show');
+                  }
+                }
+                else {
+                  $("#failedWatchlist").modal('show');
+                }
+              },
+              error: function(jqXHR, textStatus, errorThrown){
+                console.log("FAILURE")
+                console.log(errorThrown);
+                $("#failedWatchlist").modal('show');
+
+              }              
+          });
+      });
 

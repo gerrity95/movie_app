@@ -21,6 +21,21 @@ const {
 router.post("/user/submit_rating", async (req, res, next) => {
   var url = req.get('referer');
   if (req.user) {
+
+    // Get count of movies already rated
+    console.log("Checking count of rated movies to see if they've passed the welcome period...")
+    rated_count = await rater.find({
+      'user_id': req.user._id
+    })
+    num_rated = rated_count.length
+
+    // Stop users from rating movies on the movie page before completing the welcome section
+    if (!url.includes('welcome')) {
+      if (num_rated < 5) {
+        console.log("User tried to work around to the movie page before completing induction..");
+        return res.send({'success': false, 'meet_requirements': false, 'num_rated': num_rated});
+      }
+    }
     console.log("Checking to see if already rated...");
     console.log("Submitted rating: " + req.body.rating + " for movie: " + req.body.movie_id);
     is_rated = await rater.findOne({
@@ -84,14 +99,14 @@ router.post("/user/submit_rating", async (req, res, next) => {
       let add_show = await rater.create(new_show);
       
       console.log(add_show);
-      if (url.includes('welcome')) {
-        // If coming from welcome screen we want to check how many ratings have been submitted
-        console.log("Checking count of rated movies to see if they've passed the welcome period...")
+      console.log("Checking count of rated movies to see if they've passed the welcome period...")
         rated_count = await rater.find({
           'user_id': req.user._id
         })
-        num_rated = rated_count.length
-        console.log("Number of movies rated so far: " + num_rated);
+      num_rated = rated_count.length
+      console.log("Number of movies rated so far: " + num_rated);
+      if (url.includes('welcome')) {
+        // If coming from welcome screen the user will get redirected to their profile once they've rated 5 movies.
         if (num_rated >= 5) {
           console.log("Enough movies rated to start getting recommendations...")
           return res.send({'success': true, 'meet_requirements': true});

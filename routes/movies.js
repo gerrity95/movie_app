@@ -42,9 +42,18 @@ router.get("/movies/:movie_id", helpers.is_logged_in, async (req,res) =>{
     if (is_watchlist.length == 1) {
         watchlist_bool = true
     }
+    if (movie_cast.body.cast.length > 8) {
+        var cast_list =  [0, 1, 2, 3, 4, 5, 6, 7]
+    }
+    else {
+        var cast_list = []
+        for (i = 0; i < movie_cast.body.cast.length; i++){
+            cast_list.push(i)
+        }
+    }
     return res.render("movie_profile", {'movie_info': movie_info.body, 'movie_credits': movie_cast.body,
                                         'director': director, 'screenplay': screenplay, 'writer': writer,
-                                        'is_watchlist': watchlist_bool});
+                                        'is_watchlist': watchlist_bool, 'cast_list': cast_list});
   })
 
 router.post('/search', helpers.is_logged_in, async (req,res) =>{

@@ -227,9 +227,13 @@ block content
     h2
       | Top Billed Cast
     .row#collapseExample.collapse(aria-expanded='false')
-      each val in [0, 1, 2, 3, 4, 5, 6, 7]
+      
+      each val in cast_list
         .col-xl-2.col-lg-2.col-md-3.col-sm-5.col-5.offset-0.offset-sm-2.credit_details.text-center.shadow-lg
-          - var profile_src = `https://image.tmdb.org/t/p/w500/${movie_cast.cast[val].profile_path}`
+          if movie_cast.cast[val].profile_path
+            - var profile_src = `https://image.tmdb.org/t/p/w500/${movie_cast.cast[val].profile_path}`
+          else
+            - var profile_src = '/images/headshot.png'
           img.card-img-top(src=profile_src alt='Card image cap').profile_photo
           .details
             p #{movie_cast.cast[val].name}
@@ -272,6 +276,9 @@ block content
                 data: {rating: selectedValue, movie_id: movie_details.id},
                 success: function(data){
                   console.log(data);
+                  if (!data.meet_requirements) {
+                    window.location.href = '/welcome'
+                  }
                   if (data.success) {
                     $("#successReview").modal('show');
                   }

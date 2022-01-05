@@ -7,13 +7,13 @@ block content
   header.masthead#masthead_load(style="background-image: url('/images/movie_background.png')")
     .container-fluid.h-100.align-items-center(style="display: flex")
       .row.header_text.shadow-lg.mx-auto#form_background
-        .col-xl-6.col-lg-6.col-md-8.col-sm-10.offset-sm-1.offset-md-2.offset-xl-0.offset-lg-0.text-center
+        .col-xl-6.col-lg-6.col-md-8.col-sm-10.col-12.offset-0.offset-sm-1.offset-md-2.offset-xl-0.offset-lg-0.text-center
           h1.fw-light.home_title Welcome to FMovies
-          img(src='/images/small_logo_cropped.png' alt="FMovies Icon")
-          p.lead(style="margin-top: 20px") A great starter layout for a landing page
-        .col-xl-6.col-lg-6.col-md-8.col-sm-10.offset-sm-1.offset-md-2.offset-xl-0.offset-lg-0.text-center
-          h3.title_colors.text-center
-            | Sign in to FMovies
+          img(src='/images/NewLogoBlack.png' alt="FMovies Icon" style="width: 80%")
+          p.lead(style="margin-top: 20px") The only place for movie recommendations.
+        .col-xl-6.col-lg-6.col-md-8.col-sm-10.offset-sm-1.offset-md-2.offset-xl-0.offset-lg-0
+          h4.title_colors
+            | Sign in
           div.message.alert.alert-danger(style="display:none;")
             | #{message}
           form#home_login_form(action='/login' method='POST')
@@ -28,15 +28,19 @@ block content
             div.form-group.form-registration
               button.submit.btn.alt_button(type="submit") Login
             p#bad_login.password_error
+            div.form-group.form-registration
+              p
+              | Don't have an account? 
+              | &nbsp; #[a(href="/register") Sign up here.]
 
   // Page Content
-  section.py-5
-    .container
-      h2.fw-light Page Content
-      p
-        | Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repellendus ab nulla dolorum autem nisi officiis
-        | blanditiis voluptatem hic, assumenda aspernatur facere ipsam nemo ratione cumque magnam enim fugiat
-        | reprehenderit expedita.
+  //section.py-5
+  //  .container
+  //    h2.fw-light Page Content
+  //    p
+  //      | Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repellendus ab nulla dolorum autem nisi officiis
+  //      | blanditiis voluptatem hic, assumenda aspernatur facere ipsam nemo ratione cumque magnam enim fugiat
+  //      | reprehenderit expedita.
 
   script.
     if (getQueryVariable('failed_login')) {

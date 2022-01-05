@@ -18,6 +18,14 @@ router.get("/", (req,res) =>{
   res.render("home");
 })
 
+router.get("/about", (req,res) =>{
+  res.render("about");
+})
+
+router.get("/contact", (req,res) =>{
+  res.render("contact");
+})
+
 router.get("/userprofile", helpers.is_logged_in, async (req,res) =>{
   console.log("Checking to ensure enough reviews have been processed for user: " + req.user._id)
   let rated_movies = await rated_model.find({

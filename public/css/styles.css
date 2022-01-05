@@ -94,15 +94,19 @@ html {
     background-color: #ffffff;
     border-radius: 10px;
     padding-top: 0%;
-    padding-bottom: 0%;
-    padding-left: 10%;
-    padding-right: 10%;
+    padding-bottom: 4%;
+    padding-left: 0%;
+    padding-right: 0%;
     width: 90%;
     margin-top: 50px;
   }
 
   .home_title {
     display: none;
+  }
+
+  .sidebar_collapse {
+    margin-bottom: 10px;
   }
 }
 
@@ -462,6 +466,28 @@ a.article:hover {
     padding: 20px;
     min-height: 100vh;
     transition: all 0.3s;
+}
+
+#welcome_content {
+  width: 100%;
+  padding: 20px;
+  min-height: 100vh;
+  transition: all 0.3s;
+  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+  background-size: 400% 400%;
+  animation: gradient 15s ease infinite;
+}
+
+@keyframes gradient {
+  0% {
+      background-position: 0% 50%;
+  }
+  50% {
+      background-position: 100% 50%;
+  }
+  100% {
+      background-position: 0% 50%;
+  }
 }
 
 /* ---------------------------------------------------
@@ -1010,3 +1036,53 @@ a#search_link {
   }
   
 }
+
+
+/* About page style */
+
+.white_text {
+  color: #fff
+}
+
+.parallax {
+  /* The image used */
+
+  /* Set a specific height */
+   
+
+  /* Create the parallax scrolling effect */
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+@media (max-width: 768px) {
+
+  .mobile_padding {
+    padding-bottom: 20px;
+  }
+
+}
+
+/* Contact form */
+
+.c_form_inputs {
+  margin-top: 10px;
+}
+
+.row_style {
+  height: 100%;
+  margin-top: 0%
+}
+
+.contact_button {
+  margin-top: 20px;
+}
+
+@media screen and (max-width: 768px) {
+    .row_style {
+      height: 80%;
+      margin-top: 8%;
+    }
+  }

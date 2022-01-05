@@ -1,0 +1,53 @@
+extends home_layout
+
+block content
+  title FMovies - Contact
+  .container-fluid(style="padding-top: 60px;")
+    .row
+      svg(xmlns='http://www.w3.org/2000/svg' viewbox='0 0 1440 200')
+        path(fill='#212531' fill-opacity='1' d='M0,160L48,133.3C96,107,192,53,288,58.7C384,64,480,128,576,144C672,160,768,128,864,138.7C960,149,1056,203,1152,192C1248,181,1344,107,1392,69.3L1440,32L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z')
+    .row.curved-div(style="padding-top: 20px;")
+      .col-10.col-sm-10.col-md-5.col-lg-3.col-xl-3.offset-xl-2.offset-lg-2.offset-md-1.offset-1.align-self-center.row_style
+        img(src='/images/video2.png', style="width:100%")
+      .col-12.col-sm-10.col-md-5.col-lg-5.col-xl-5.offset-xl-1.offset-lg-1.offset-md-1.offset-0.align-self-center.row_style
+        h4.text-center.title_colors
+          | Get In Touch
+        p.text_colors
+          | If you have any feedback or just want to get in touch to talk about how FMovies works please feel free to contact us. If you would like to find out how to get involved in the development reach out to us also and we can go from there.
+        
+        div.message.alert.alert-danger(style="display:none;")
+          | #{message}
+        form#contactForm(action='/contact', method='post')
+          .row.mb-4
+            .col
+              .form-outline
+                input#first_name.form-control.c_form_inputs(placeholder="First Name..." type="text", name="first_name" required)
+            .col
+              input#surname.form-control.c_form_inputs(placeholder="Surname..."  type="text", name="surname" required)
+          div
+            input#email.form-control.c_form_inputs(placeholder="Email..."  type="email", name="email" required)
+            input#subject.form-control.c_form_inputs(placeholder="Subject..." type="text", name="subject" required)
+            textarea#message.form-control.c_form_inputs(placeholder="Message..." rows='5' name="text" required)
+          div.contact_button
+            p !{captcha}
+            button.submit.btn.custom_button.btn-lg(type="submit") Submit
+          
+          p#noRecaptcha.password_error
+            
+          if (success_mail == true)
+              div(style="color:green") Successfully sent message. We'll get back to you as soon as we can.
+          else if (success_mail == false)
+              div(style="color:red") Error attempting to send message.
+        
+      svg(viewbox='0 0 1440 319')
+        path(fill='#212531' fill-opacity='1' d='M0,32L48,80C96,128,192,224,288,224C384,224,480,128,576,90.7C672,53,768,75,864,96C960,117,1056,139,1152,149.3C1248,160,1344,160,1392,160L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z')
+                
+                
+  script.
+      window.onload = function() {
+      var recaptcha = document.forms["contactForm"]["g-recaptcha-response"];
+      recaptcha.required = true;
+      recaptcha.oninvalid = function(e) {
+        document.getElementById('noRecaptcha').innerHTML = 'Please complete the Recaptcha.';
+      }
+    }

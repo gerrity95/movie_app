@@ -1,4 +1,4 @@
-extends layout
+extends welcome_layout
 
 block content
   title FMovies Home
@@ -11,14 +11,16 @@ block content
   .container-fluid
     .row.align-items-center.welcome_message
       .col-12.col-sm-6.col-md-6.col-lg-6.col-xl-6.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0.my-auto.align-text-center
-        img(src='/images/small_logo_cropped.png' alt="FMovies Icon").welcome_icon.d-block
-      .col-12.col-sm-6.col-md-6.col-lg-6.col-xl-6.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0.my-auto
+        img(src='/images/NewLogoWhite.png' alt="FMovies Icon").welcome_icon.d-block
+      .col-12.col-sm-6.col-md-6.col-lg-6.col-xl-6.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0.my-auto(style="color: white")
         h3 Welcome To FMovies
         p 
-          | Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras ultrices sollicitudin metus, lacinia ultricies nisl maximus nec. Sed sit amet urna dictum, tincidunt ligula id, luctus magna. Vivamus congue malesuada metus, nec luctus dui semper nec. Pellentesque at scelerisque sapien. Interdum et malesuada fames ac ante ipsum primis in faucibus. Mauris maximus tortor a ligula egestas, at ornare eros ullamcorper.  
+          | Our aim is to make it a lot easier for you to figure out what you want to watch. A lot of us waste half the time scrolling through different movie lists trying to figure out what to watch without knowing if we would like it or not.
+        p 
+          | Here at FMovies, we want to make the choice as easy as possible.  
 
 
-    .row.align-items-center.shadow-lg.welcome_message(style="margin-top: 30px")
+    .row.align-items-center.shadow-lg.welcome_message(style="margin-top: 30px; background-color: #fff")
       .col-12.col-sm-6.col-md-6.col-lg-6.col-xl-6.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0.my-auto.align-text-center
         p 
           | In order to start generating recommendations you must rate at least 5 movies. But the more you review,
@@ -38,7 +40,7 @@ block content
       .col-12.col-sm-6.col-md-6.col-lg-6.col-xl-6.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0.movie_prompt_text
         h5 TODO PUT SOMETHING HERE FOR DESKTOP
 
-    .row.align-items-center#movie_info_popup.welcome_message.shadow-lg(style="display: none; margin-top: 30px;")
+    .row.align-items-center#movie_info_popup.welcome_message.shadow-lg(style="display: none; margin-top: 30px; background-color: #fff")
       .col-12.col-sm-12.col-md-12.col-lg-7.col-xl-7.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0.align-text-center
         p(style="padding-bottom: 20px;font-size: 20px")
           |  Click the movie you want to rate.
@@ -199,6 +201,9 @@ block content
 
 
   script.
+
+    $(".header_search").prop('disabled', true);
+    $('input[name="search"]').prop("disabled", true);
 
     const btn = document.querySelector('#welcome_search');
           // handle button click
