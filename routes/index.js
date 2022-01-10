@@ -7,7 +7,10 @@ const passportLocalMongoose = require("passport-local-mongoose");
 const flask_api = require('./helpers/flask_api');
 const helpers = require('./helpers/generic_helpers');
 const reccs_model = require('../models/recommended_movies')
-const rated_model = require('../models/rated_movies')
+const rated_model = require('../models/rated_movies');
+var passwordValidator = require('password-validator');
+
+var password_schema = new passwordValidator();
 
 router.use (function (req, res, next) {
   console.log('/' + req.method);
@@ -27,7 +30,7 @@ router.get("/contact", (req,res) =>{
 })
 
 router.get("/userprofile", helpers.is_logged_in, async (req,res) =>{
-  console.log("Checking to ensure enough reviews have been processed for user: " + req.user._id)
+  console.log("Checking to ensure enough reviews have been processed for the user: " + req.user._id)
   let rated_movies = await rated_model.find({
     user_id: req.user._id
   })
@@ -146,6 +149,21 @@ router.post('/api/login', function(req, res, next) {
 router.get("/api/test", helpers.is_logged_in, (req,res) =>{
   console.log("User is logged in");
   res.json({user_info: req.user});
+  })
+
+router.get("/api/test_register", (req,res) =>{
+  console.log("Testing register");
+  password_schema
+    .is().min(8)                                    // Minimum length 8
+    .is().max(100)                                  // Maximum length 100
+    .has().uppercase()                              // Must have uppercase letters
+    .has().lowercase()                              // Must have lowercase letters
+    .has().digits(1)                                // Must have at least 1 digits
+    .has().not().spaces()                           // Should not have spaces
+    .is().not().oneOf(['Passw0rd', 'Password123']);
+  console.log(req.body);
+  console.log(password_schema.validate(req.body.pass, { details: true }));
+  return res.json({"result": true});
   })
 
 router.get("/register",(req,res)=>{

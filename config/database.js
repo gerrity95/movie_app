@@ -13,7 +13,7 @@ useNewUrlParser: true,
 connectTimeoutMS: 10000,
 };
 
-const url = `mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOSTNAME}:${MONGO_PORT}/${MONGO_DB}?authSource=admin`;
+const url = `mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOSTNAME}:${MONGO_PORT}/${MONGO_DB}?authSource=${MONGO_DB}`;
 
 let connection = mongoose.connect(url, options).then( function() {
     console.log('MongoDB is connected');

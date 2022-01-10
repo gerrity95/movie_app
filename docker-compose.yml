@@ -39,7 +39,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: nodejs
+    image: nodejs:14.18.0
     container_name: nodejs
     restart: unless-stopped
     env_file: .env
@@ -53,10 +53,10 @@ services:
       - "3000:3000"
     volumes:
       - .:/home/node/app
-      - node_modules:/home/node/app/node_modules
+      - /home/node/app/node_modules
     networks:
       - app-network
-    command: ./wait-for.sh db:27017 -- /home/node/app/node_modules/.bin/nodemon app.js
+    command: ./wait-for.sh db:27017 -- /home/node/app/node_modules/.bin/pm2-runtime start ecosystem.config.js
   db:
     image: andresvidal/rpi3-mongodb3
     container_name: db
