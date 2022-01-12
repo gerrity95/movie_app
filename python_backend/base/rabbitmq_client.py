@@ -65,7 +65,7 @@ class RabbitMqClient():
     
     async def ping(self):
         # TODO VERIFY THIS FUNCTION
-        ping = self.connect()
+        ping = await self.connect()
         
         return ping
     

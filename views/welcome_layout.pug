@@ -22,34 +22,11 @@ html(lang="en")
     include includes/loading_modal.pug
     
     .wrapper
-      // Sidebar
-      nav#sidebar
-        .sidebar-header
-          a.home_click#logo_btn(style="cursor: pointer;")
-            img(src='/images/NewLogoBlack.png' alt="FMovies Icon" style="width: 80%")
-        ul.list-unstyled.components
-          p
-          li
-            a.home_click#home_btn(href='/userprofile') Home
-          li
-            a(href='#') About
-          li
-            a(href='/user/watchlist') Watch List
-        ul.list-unstyled.CTAs
-          li
-           // button.submit.btn.alt_button(style="width: 100%" href='https://bootstrapious.com/tutorial/files/sidebar.zip') Download source
-          li
-           // button.submit.btn.custom_button(style="width: 100%;margin-top: 20px" href='https://bootstrapious.com/p/bootstrap-sidebar') Back to article
-
+      
       // Page Content
       #welcome_content
         nav.navbar.navbar-expand-lg.navbar-light(style="background: transparent; box-shadow: 0px 0px 0px")
           .container-fluid
-            button#sidebarCollapse.btn.custom_button(type='button')
-              i.fas.fa-align-left(style="margin-right: 5px")
-              span Toggle Sidebar
-            button.btn.btn-dark.d-inline-block.d-lg-none.ml-auto(type='button' data-toggle='collapse' data-target='#navbarSupportedContent' aria-controls='navbarSupportedContent' aria-expanded='false' aria-label='Toggle navigation')
-              i.fas.fa-align-justify
             #navbarSupportedContent.collapse.navbar-collapse
 
               ul.nav.navbar-nav.ml-auto

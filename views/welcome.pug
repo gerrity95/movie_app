@@ -251,6 +251,8 @@ block content
                             $('#movie' + i).css({"display": "none"});
                           }
                         }
+                        $('input[name="rating"]').prop("disabled", true);
+                        $('button[id="rating_button"]').prop("disabled", true);
                       }
                       else {
                         $('input[name="rating"]').prop("disabled", true);

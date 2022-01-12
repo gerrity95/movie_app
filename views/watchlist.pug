@@ -9,7 +9,8 @@ block content
      .col-12.d-flex.justify-content-center
         h2.title_style
           | Movie Watchlist
-    .row(style="margin-top: 20px")
+    .row(style="margin-top: 20px")#watchlist-desktop
+      
       for movie in watchlist
         - var img_src = `https://image.tmdb.org/t/p/w500/${movie.backdrop_path}`
         .col-6.col-sm-6.col-md-6.col-lg-5.col-xl-4.offset-lg-1.offset-xl-0.offset-md-0.offset-sm-0.offset-0
@@ -28,6 +29,22 @@ block content
                 .tooltip#watchlist_todo Remove From Watchlist
               br
               a.btn.btn-block.custom_button(href=`/movies/${movie.id}`) Find Out More
+
+    .row(style="margin-top: 20px")#watchlist-mobile
+      for movie in watchlist
+        - var img_src = `https://image.tmdb.org/t/p/w500/${movie.backdrop_path}`
+        a(href=`/movies/${movie.id}` style="width: 100%")#search_link
+          .col-12.col-sm-10.col-md-10.col-lg-12.col-xl-12.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0.shadow-lg(style=`background-image:url(${img_src})`).watchlist_header_image
+            .watchlist_box
+              .img_poster.my-auto
+                img(src=img_src).search_poster
+              .search_text
+                p.search_title 
+                  | #{movie.title}
+                p
+                  em Rating: #{movie.vote_average}
+                p.text-monospace
+                  | #{movie.tagline}
 
   script.
 

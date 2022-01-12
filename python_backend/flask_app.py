@@ -36,10 +36,9 @@ async def tmdb_test():
 #we define the route /
 @app.route('/rmq_ping')
 async def rmq_test():
-    reccs_publisher = RecommendationPublisher(rabbitmq_client=RabbitMqClient())
-    result = await reccs_publisher.main()
+    ping_result = await RabbitMqClient().ping()
     # return a json
-    return jsonify({'status': True})
+    return jsonify({'status': str(ping_result)})
 
 
 #we define the route /

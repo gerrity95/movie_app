@@ -13,7 +13,8 @@ class MongoClient():
         self.port = self.config.MONGO_PORT
         self.user = self.config.MONGO_USERNAME
         self.password = self.config.MONGO_PASSWORD
-        self.client = AsyncIOMotorClient(f'mongodb://{self.user}:{self.password}@{self.endpoint}:{self.port}')
+        self.db = self.config.MONGO_DB
+        self.client = AsyncIOMotorClient(f'mongodb://{self.user}:{self.password}@{self.endpoint}:{self.port}/{self.db}')
 
     def node_db(self) -> AgnosticDatabase:
         return self.client.nodejs_db

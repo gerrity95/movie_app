@@ -1086,3 +1086,34 @@ a#search_link {
       margin-top: 8%;
     }
   }
+
+
+/* Watchlist Styling */
+
+#watchlist-desktop {display: '';}
+#watchlist-mobile {display: none;}
+
+
+@media (max-width: 768px) {
+
+  #watchlist-desktop {display: none;}
+  #watchlist-mobile {display: block;}
+
+  .watchlist_header_image {
+    border-radius: 10px;
+    max-height: 60%;
+    background-size: cover;
+    padding: 0px;
+  }
+
+  .watchlist_box {
+    border-radius: 5px;
+    margin: 10px;
+    margin-left: 0px;
+    padding: 20px;
+    width: 100%;
+    display: flex;
+    background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8));
+  }
+
+}
