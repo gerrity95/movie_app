@@ -11,6 +11,12 @@ const rated_model = require('../models/rated_movies');
 var passwordValidator = require('password-validator');
 
 var password_schema = new passwordValidator();
+password_schema
+    .is().min(8)                                    // Minimum length 8
+    .is().max(100)                                  // Maximum length 100
+    .has().uppercase()                              // Must have uppercase letters
+    .has().lowercase()                              // Must have lowercase letters
+    .has().digits(1)                                // Must have at least 1 digits
 
 router.use (function (req, res, next) {
   console.log('/' + req.method);
@@ -153,18 +159,14 @@ router.get("/api/test", helpers.is_logged_in, (req,res) =>{
 
 router.get("/api/test_register", (req,res) =>{
   console.log("Testing register");
-  password_schema
-    .is().min(8)                                    // Minimum length 8
-    .is().max(100)                                  // Maximum length 100
-    .has().uppercase()                              // Must have uppercase letters
-    .has().lowercase()                              // Must have lowercase letters
-    .has().digits(1)                                // Must have at least 1 digits
-    .has().not().spaces()                           // Should not have spaces
-    .is().not().oneOf(['Passw0rd', 'Password123']);
-  console.log(req.body);
-  console.log(password_schema.validate(req.body.pass, { details: true }));
-  return res.json({"result": true});
-  })
+  var is_valid_pword = isValidPassword(req.body.password);
+  console.log(is_valid_pword);
+  if (is_valid_pword !== true) {
+    console.log("Password does not meet requirements.");
+    return res.json({'result': is_valid_pword});
+  }
+  return res.json({'result': true});
+});
 
 router.get("/register",(req,res)=>{
   res.render("register");
@@ -172,9 +174,11 @@ router.get("/register",(req,res)=>{
 
 router.post("/register",(req,res)=>{
   var url = req.get('referer').split('?')[0];
-  if (!isValidPassword(req.body.password)) {
+  let is_valid_pword = isValidPassword(req.body.password);
+
+  if (is_valid_pword !== true) {
     console.log("Password does not meet requirements.");
-    return res.redirect(url + "?bad_password=True")
+    return res.render("register", {fail_message: is_valid_pword})
   }
     
   User.register(new User({
@@ -221,10 +225,13 @@ router.get("/logout",(req,res)=>{
 });
 
 function isValidPassword(password) {
-  if (password.length >= 8) {
+  var presult = password_schema.validate(password, { details: true });
+  if (presult.length != 0) {
+    return presult;
+  }
+  else {
     return true;
   }
-  return false;
 };
 
 

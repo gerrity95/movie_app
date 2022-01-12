@@ -1,7 +1,11 @@
 extends home_layout
 
 block content
-  
+  - var fail_messages = []
+  if fail_message
+    - var fail_messages = fail_message
+  else
+    - var fail_messages = []
   // Full Page Image Header with Vertically Centered Content
   header.masthead(style="background-image: url('/images/register_background.jpg')")
     .container.h-100
@@ -38,8 +42,13 @@ block content
                                           aria-describedby="passwordHelp",
                                           autocomplete="current-password" required)
 
-              small#passwordHelp.form-text.text-muted(style="margin-top:0px") Password must be 8 characters or more.
+              small#passwordHelp.form-text.text-muted(style="margin-top:0px;margin-bottom: 0px") Password must contain at least one uppercase letter, one lowercase letter and one number.
               
+              p#fail_messages.password_error(style="text-align: left;margin-top: 0px;padding-top: 0px;")
+                for message in fail_messages
+                  | #{message.message}
+                  br
+
               p#bad_password.password_error
               p#unknown_error.password_error
                               
