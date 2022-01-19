@@ -9,6 +9,15 @@ function isLoggedIn(req,res,next) {
     }
   }
 
+function existing_session(req) {
+  if (req.user) {
+    return req.user;
+  }
+  return false;
+
+}
+
 module.exports = {
-    is_logged_in: isLoggedIn
+    is_logged_in: isLoggedIn,
+    existing_session: existing_session
 }

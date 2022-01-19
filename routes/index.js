@@ -24,15 +24,18 @@ router.use (function (req, res, next) {
 });
 
 router.get("/", (req,res) =>{
-  res.render("home");
+  var user_info = helpers.existing_session(req);
+  res.render("home", {user_info: user_info});
 })
 
 router.get("/about", (req,res) =>{
-  res.render("about");
+  var user_info = helpers.existing_session(req);
+  res.render("about", {user_info: user_info});
 })
 
 router.get("/contact", (req,res) =>{
-  res.render("contact");
+  var user_info = helpers.existing_session(req);
+  res.render("contact", {user_info: user_info});
 })
 
 router.get("/userprofile", helpers.is_logged_in, async (req,res) =>{
@@ -99,7 +102,8 @@ router.get("/welcome", helpers.is_logged_in, async (req,res) =>{
 
 //Auth Routes
 router.get("/login",(req,res)=>{
-  res.render("login");
+  var user_info = helpers.existing_session(req);
+  res.render("login", {user_info: user_info});
 });
 
 router.post('/login', function(req, res, next) {
@@ -169,7 +173,8 @@ router.get("/api/test_register", (req,res) =>{
 });
 
 router.get("/register",(req,res)=>{
-  res.render("register");
+  var user_info = helpers.existing_session(req);
+  res.render("register", {user_info: user_info});
 });
 
 router.post("/register",(req,res)=>{

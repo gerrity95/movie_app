@@ -24,7 +24,7 @@ block content
                 span Rating: #{movie.vote_average}
                 br
                 span Running Time: #{movie.runtime} Minutes
-              a#watchlist_button_normal.social-icon.social-icon--codepen(style="margin-top:10px")
+              a(href=`${movie.id}`)#watchlist_button_normal.social-icon.social-icon--codepen(style="margin-top:10px")
                 i.far.fa-bookmark.fa-stack-1x(style="color: white")
                 .tooltip#watchlist_todo Remove From Watchlist
               br
@@ -36,27 +36,26 @@ block content
         a(href=`/movies/${movie.id}` style="width: 100%")#search_link
           .col-12.col-sm-10.col-md-10.col-lg-12.col-xl-12.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0.shadow-lg(style=`background-image:url(${img_src})`).watchlist_header_image
             .watchlist_box
-              .img_poster.my-auto
-                img(src=img_src).search_poster
-              .search_text
-                p.search_title 
+              .search_text.white_text
+                h4(style="letter-spacing: 1px;") 
                   | #{movie.title}
                 p
                   em Rating: #{movie.vote_average}
-                p.text-monospace
+                p
                   | #{movie.tagline}
-
+              a.btn.btn-block.custom_button(href=`/movies/${movie.id}`) Find Out More
   script.
 
     const watchlist_btn = document.querySelector('#watchlist_button')
         // handle button click
-      $("#watchlist_button_normal").click(function () {
-          
+      $("#watchlist_button_normal").click(function(e) {
+          e.preventDefault();
+          var movie_id = ($(this).attr('href'));
           $.ajax({
               type: "POST",
               url: '/user/addwatchlist',
               dataType: "json",
-              data: {movie_id: movie_details.id},
+              data: {movie_id: movie_id},
               success: function(data){
                 if (data.success) {
                   if (data.removed) {

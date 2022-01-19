@@ -20,28 +20,25 @@ html(lang="en")
   body
 
     include includes/loading_modal.pug
-    
-    .wrapper
       
-      // Page Content
-      #welcome_content
-        nav.navbar.navbar-expand-lg.navbar-light(style="background: transparent; box-shadow: 0px 0px 0px")
-          .container-fluid
-            #navbarSupportedContent.collapse.navbar-collapse
+    // Page Content
+    nav.navbar.navbar-expand-lg.navbar-light(style="background: #222632; box-shadow: 0px 0px 0px;margin-bottom: 0px")
+      .container-fluid
+        #navbarSupportedContent.collapse.navbar-collapse
 
-              ul.nav.navbar-nav.ml-auto
-                form.search_bar_alignment.my-2.my-lg-0(action='/search' method='POST')
-                  input.form-control.mr-sm-2(type='search' name="search" placeholder='Search' aria-label='Search' required)
-                  button.header_search.btn.btn-default(type='submit' style="background-color: #fff").search_button
-                    i.fas.fa-search
+          ul.nav.navbar-nav.ml-auto
+            form.search_bar_alignment.my-2.my-lg-0(action='/search' method='POST')
+              input.form-control.mr-sm-2(type='search' name="search" placeholder='Search' aria-label='Search' required)
+              button.header_search.btn.btn-default(type='submit' style="background-color: #fff").search_button
+                i.fas.fa-search
 
-                li.nav-item.active
-                  a.home_click.nav-link#dash_btn(style="color: #fff" href="/userprofile") Dashboard
-                li.nav-item
-                  a.nav-link(style="color: #fff" href="/logout") Logout
+            li.nav-item.active
+              a.home_click.nav-link#dash_btn(style="color: #fff" href="/userprofile") Dashboard
+            li.nav-item
+              a.nav-link(style="color: #fff" href="/logout") Logout
 
-        // We'll fill this with dummy content
-        block content
+      // We'll fill this with dummy content
+    block content
 
   
   script.

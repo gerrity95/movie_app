@@ -1112,7 +1112,6 @@ a#search_link {
     margin-left: 0px;
     padding: 20px;
     width: 100%;
-    display: flex;
     background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8));
   }
 
