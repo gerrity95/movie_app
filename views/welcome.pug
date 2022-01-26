@@ -1,7 +1,7 @@
 extends welcome_layout
 
 block content
-  title FMovies Home
+  title FMovies Welcome
   - var reccs = movie_info
   - var remaining_movies = 5 - movie_count
   include includes/success_review_modal.pug
@@ -25,8 +25,11 @@ block content
           | All the recommended movies are assigned a weight. This weight indicates how much we think you'd enjoy the movie. The higher the weight, the more we think you'll like it. As you rate more movies the weight will change for each of the movies you haven't yet rated. 
         h5.white_text(style="letter-spacing: 2px;").text-center
           | Scroll down to get started!
+        .social-icons
+          a#scroll_button_welcome.social-icon.social-icon--codepen.mx-auto(style="height: 50px;width:50px;background:#a178cf")
+            i.fas.fa-arrow-down.fa-stack-1x(style="color: white")
         
-      svg(xmlns='http://www.w3.org/2000/svg' viewbox='0 0 1440 370' style="background-image: url('/images/top2.jpg')").parallax
+      svg(xmlns='http://www.w3.org/2000/svg' viewbox='0 0 1440 370' style="background-image: url('/images/welcome_back3.jpg')").parallax
         path(fill='#212531' fill-opacity='1' d='M0,160L48,133.3C96,107,192,53,288,58.7C384,64,480,128,576,144C672,160,768,128,864,138.7C960,149,1056,203,1152,192C1248,181,1344,107,1392,69.3L1440,32L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z')
 
     .row.curved-div(style="margin-top: 0px;padding-top: 40px;margin-bottom: 20px")
@@ -280,7 +283,9 @@ block content
                             $('#movie' + i).css({"display": "none"});
                           }
                       }
-                       $("#welcome_movies").scrollTop(0);
+                       $('html,body').animate({
+                          scrollTop: $("#welcome_movies").offset().top},
+                          'slow');
                     }
                     else if (!data.results) {
                       $("#failedReview").modal('show');                        
@@ -393,3 +398,11 @@ block content
 
       // Add highlight to selected box
     });
+
+    const scroll_btn = document.querySelector('#scroll_button_welcome');
+        // handle button click
+        scroll_btn.onclick = function () {
+          $('html,body').animate({
+            scrollTop: $("#welcome_search_submit").offset().top},
+            'slow');
+        };
