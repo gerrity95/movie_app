@@ -9,6 +9,8 @@ const helpers = require('./helpers/generic_helpers');
 const reccs_model = require('../models/recommended_movies')
 const rated_model = require('../models/rated_movies');
 var passwordValidator = require('password-validator');
+const email = require('../config/email')
+const email_transporter = email.transporter;
 
 var password_schema = new passwordValidator();
 password_schema
@@ -130,6 +132,13 @@ router.post('/login', function(req, res, next) {
      })(req, res, next);
 
    });
+
+router.post('/api/email_test', async(req, res) =>{
+  console.log("Email test");
+  // send mail with defined transport object
+  let info = await email.send_email("bar@example.com", "Hello Subject", "<b>Hello world?</b>");
+  return res.json({"email": info});
+});
 
 router.post('/api/login', function(req, res, next) {
   passport.authenticate('local', function(err, user, info) {

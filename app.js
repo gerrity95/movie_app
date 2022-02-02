@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const router = express.Router();
 const db = require('./config/database');
+const email = require('./config/email');
 const path = require('path');
 const indexRouter = require('./routes/index');
 const movieRouter = require('./routes/movies');
@@ -14,6 +15,7 @@ const User = require("./models/user");
 const session = require("express-session");
 const MongoStore = require("connect-mongodb-session")(session);
 const db_connection = db.connection;
+const email_transporter = email.transporter;
 
 const port = 3000;
 
