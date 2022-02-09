@@ -1,59 +1,44 @@
 extends welcome_layout
 
 block content
-  title FMovies Welcome
+  title FMovies Home
   - var reccs = movie_info
   - var remaining_movies = 5 - movie_count
   include includes/success_review_modal.pug
   include includes/failed_review_modal.pug
   include includes/generating_reccs_modal.pug
   
-  .container-fluid(style="padding-top: 20px;background-image: url('/images/about_blank.png')")
-    .row.curved-div(style="padding-top: 40px;")
-      .col-10.col-sm-10.col-md-5.col-lg-3.col-xl-3.offset-xl-2.offset-lg-2.offset-md-1.offset-1.align-self-center.row_style.mobile_padding
-        img(src='/images/what_to_watch_white1.png', style="width:100%")
-      .col-10.col-sm-10.col-md-5.col-lg-5.col-xl-5.offset-xl-1.offset-lg-1.offset-md-1.offset-1.align-self-center.row_style
-        h4.text-center.white_text
-          | What do we do?
-        p.white_text
-          | Our aim is to provide a simple way to generate movie recommendations tailored to each individual user. Everyone has at spent at least an evening or two scrolling through movies on Netflix or Amazon Prime not knowing what to watch. We want to make this as easy as possible.   
-        p.white_text
-          | What we do is ask every user to rate five of their favorite movies. Once we get that many we can start generating recommendations. 
-        p.white_text
-          | As with anything, the more you rate, the more accurate we get. This works for movies you dont like as well. Not a fan of Marvel? If we can identify these kind of trends we'll try our best to avoid recommending similar movies.
-        p.white_text
-          | All the recommended movies are assigned a weight. This weight indicates how much we think you'd enjoy the movie. The higher the weight, the more we think you'll like it. As you rate more movies the weight will change for each of the movies you haven't yet rated. 
-        h5.white_text(style="letter-spacing: 2px;").text-center
-          | Scroll down to get started!
-        .social-icons
-          a#scroll_button_welcome.social-icon.social-icon--codepen.mx-auto(style="height: 50px;width:50px;background:#a178cf")
-            i.fas.fa-arrow-down.fa-stack-1x(style="color: white")
-        
-      svg(xmlns='http://www.w3.org/2000/svg' viewbox='0 0 1440 370' style="background-image: url('/images/welcome_back3.jpg')").parallax
-        path(fill='#212531' fill-opacity='1' d='M0,160L48,133.3C96,107,192,53,288,58.7C384,64,480,128,576,144C672,160,768,128,864,138.7C960,149,1056,203,1152,192C1248,181,1344,107,1392,69.3L1440,32L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z')
+  .container-fluid
+    .row.align-items-center.welcome_message
+      .col-12.col-sm-6.col-md-6.col-lg-6.col-xl-6.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0.my-auto.align-text-center
+        img(src='/images/NewLogoWhite.png' alt="FMovies Icon").welcome_icon.d-block
+      .col-12.col-sm-6.col-md-6.col-lg-6.col-xl-6.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0.my-auto(style="color: white")
+        h3 Welcome To FMovies
+        p 
+          | Our aim is to make it a lot easier for you to figure out what you want to watch. A lot of us waste half the time scrolling through different movie lists trying to figure out what to watch without knowing if we would like it or not.
+        p 
+          | Here at FMovies, we want to make the choice as easy as possible.  
 
-    .row.curved-div(style="margin-top: 0px;padding-top: 40px;margin-bottom: 20px")
-      .col-10.col-sm-10.col-md-5.col-lg-5.col-xl-5.offset-xl-1.offset-lg-1.offset-md-1.offset-1.align-self-center.row_style
-        h4.text-center.white_text
-          | Let's Get Started
-        p.white_text 
+
+    .row.align-items-center.shadow-lg.welcome_message(style="margin-top: 30px; background-color: #fff")
+      .col-12.col-sm-6.col-md-6.col-lg-6.col-xl-6.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0.my-auto.align-text-center
+        p 
           | In order to start generating recommendations you must rate at least 5 movies. But the more you review,
           b
             |  the better the suggestions!
-        p.white_text
+        p
           | To get started search for one of your favorites movies here to rate it.
-        p#remaining_movie_num.white_text
+        p#remaining_movie_num
           | You currently have 
           b #{remaining_movies} 
           | movies left to rate.
         .welcome-search.search_bar_alignment.my-2.my-lg-0
                   input.form-control.mr-sm-2(type='search' id="welcome_search_submit" placeholder='Search' aria-label='Search' required)
-                  button.btn.btn-default(type='submit').search_button#welcome_search(style="color: #fff")
+                  button.btn.btn-default(type='submit').search_button#welcome_search
                     i.fas.fa-search
         p.password_error#bad_welcome_search
-        
-      .col-10.col-sm-10.col-md-5.col-lg-3.col-xl-3.offset-xl-2.offset-lg-2.offset-md-1.offset-1.align-self-center.row_style
-        img(src='/images/movie_list_snippet1.png', style="width:100%")
+      .col-12.col-sm-6.col-md-6.col-lg-6.col-xl-6.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0.movie_prompt_text
+        h5 TODO PUT SOMETHING HERE FOR DESKTOP
 
     .row.align-items-center#movie_info_popup.welcome_message.shadow-lg(style="display: none; margin-top: 30px; background-color: #fff")
       .col-12.col-sm-12.col-md-12.col-lg-7.col-xl-7.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0.align-text-center
@@ -283,9 +268,7 @@ block content
                             $('#movie' + i).css({"display": "none"});
                           }
                       }
-                       $('html,body').animate({
-                          scrollTop: $("#welcome_movies").offset().top},
-                          'slow');
+                       $("#welcome_movies").scrollTop(0);
                     }
                     else if (!data.results) {
                       $("#failedReview").modal('show');                        
@@ -299,6 +282,7 @@ block content
             }
             else {
               $('#bad_welcome_search').html("Please input a value when searching.");
+              $('#movie_info_popup').hide();
             }
           };
     $('input[name="rating"]').prop("disabled", true);
@@ -398,11 +382,3 @@ block content
 
       // Add highlight to selected box
     });
-
-    const scroll_btn = document.querySelector('#scroll_button_welcome');
-        // handle button click
-        scroll_btn.onclick = function () {
-          $('html,body').animate({
-            scrollTop: $("#welcome_search_submit").offset().top},
-            'slow');
-        };

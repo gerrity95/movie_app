@@ -4,15 +4,15 @@ block content
   include includes/loading_modal.pug
   // Full Page Image Header with Vertically Centered Content
   #loader(style="display:none")
-  header.masthead#masthead_load(style="background-image: url('/images/movie_background.png')")
+  header.masthead#masthead_load(style="background-image: url('/images/movie_background.png');height: 80vh")
     .container-fluid.h-100.align-items-center(style="display: flex")
       .row.header_text.shadow-lg.mx-auto#form_background
         .col-xl-6.col-lg-6.col-md-8.col-sm-10.col-12.offset-0.offset-sm-1.offset-md-2.offset-xl-0.offset-lg-0.text-center
-          h1.fw-light.home_title Welcome to FMovies
-          img(src='/images/NewLogoBlack.png' alt="FMovies Icon" style="width: 80%")
-          p.lead(style="margin-top: 20px") The only place for movie recommendations.
+          img(src='/images/what_to_watch_black.png' alt="FMovies Icon" style="width: 80%")
+          h2.fw-light.home_title Movie Recommendations For You. 🎞️
+          p.lead(style="margin-top: 20px") WhatToWatch is the best place for you to get recommendations for movies we know you will love. 
         .col-xl-6.col-lg-6.col-md-8.col-sm-10.offset-sm-1.offset-md-2.offset-xl-0.offset-lg-0
-          h4.title_colors
+          h4.title_style.text-center
             | Sign in
           div.message.alert.alert-danger(style="display:none;")
             | #{message}
@@ -32,6 +32,20 @@ block content
               p
               | Don't have an account? 
               | &nbsp; #[a(href="/register") Sign up here.]
+  
+  .container-fluid(style="padding-top: 30px;padding-bottom: 40px;")
+    .row.curved-div(style="padding-top: 20px;")
+      .col-12.col-sm-10.col-md-5.col-lg-4.col-xl-4.offset-xl-1.offset-lg-1.offset-md-1.offset-0.align-self-center.row_style.mobile_padding
+        img(src='/images/movie_back_small.jpg', style="width:100%;border-radius:5px")
+      .col-12.col-sm-10.col-md-5.col-lg-5.col-xl-5.offset-xl-1.offset-lg-1.offset-md-1.offset-0.align-self-center.row_style
+        h2.title_style
+          | The Easiest Way To Find A Movie. 🍿
+        p
+          | Our aim is to provide a simple way to generate movie recommendations tailored to each individual user. Everyone has at spent at least an evening or two scrolling through movies on Netflix or Amazon Prime not knowing what to watch. We want to make this as easy as possible.   
+        p
+          | All we ask is for you to rate five of your favorite movies. That's it! Once you do this, there'll be a personal list of movies tailored just for you. As with anything, the more you rate, the more accurate we get. 📽️
+        p
+          | To get started all you need to do is&nbsp; #[a(href="/register") Sign up here.] If you would like to find out a little bit more info about the app you can&nbsp; #[a(href="/about") read about us here.]
 
   // Page Content
   //section.py-5

@@ -3,7 +3,8 @@ const router = express.Router();
 const User = require("../models/user");
 const crypto = require("crypto");
 const Token = require("../models/token");
-const email = require('../config/email')
+const helpers = require('./helpers/generic_helpers');
+const email = require('../config/email');
 const email_transporter = email.transporter;
 const dotenv = require('dotenv');
 dotenv.config();
@@ -28,7 +29,7 @@ router.post("/password_reset", async (req, res) => {
         console.log("Email doesn't exist when attempting to reset password..");
         return res.redirect(url + "?EmailDoesNotExist=True");
       }
-      console.log("Successfully found user...")
+      console.log("Successfully found user...");
 
       let token = await Token.findOne({ userId: user._id });
       if (!token) {
@@ -63,6 +64,13 @@ router.post("/:userId/:token", async (req, res) => {
         });
         if (!token) return res.status(400).send("Invalid link or expired");
 
+        let is_valid_pword = helpers.is_valid_password(req.body.reset_password);
+
+        if (is_valid_pword !== true) {
+          console.log("Password does not meet requirements.");
+          return res.render("password_reset", {user_id: req.params.userId, token: req.params.token, fail_message: is_valid_pword});
+        }
+
         await user.setPassword(req.body.reset_password, async function(err,user){
           if(err){
             console.log("Error: " + err.name + "when attempting to update user password");
@@ -76,7 +84,7 @@ router.post("/:userId/:token", async (req, res) => {
           await token.delete();
         })
 
-        return res.render("login", {password_reset: true});
+        return res.redirect("/login?password_reset=True");
     } catch (error) {
         res.send("An error occured");
         console.log(error);

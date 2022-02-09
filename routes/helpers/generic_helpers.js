@@ -1,3 +1,13 @@
+var passwordValidator = require('password-validator');
+
+var password_schema = new passwordValidator();
+password_schema
+    .is().min(8)                                    // Minimum length 8
+    .is().max(100)                                  // Maximum length 100
+    .has().uppercase()                              // Must have uppercase letters
+    .has().lowercase()                              // Must have lowercase letters
+    .has().digits(1)                                // Must have at least 1 digits
+
 function isLoggedIn(req,res,next) {
     console.log("Checking if a user is logged in...")
     if(req.isAuthenticated()){
@@ -17,7 +27,18 @@ function existing_session(req) {
 
 }
 
+function isValidPassword(password) {
+  var presult = password_schema.validate(password, { details: true });
+  if (presult.length != 0) {
+    return presult;
+  }
+  else {
+    return true;
+  }
+};
+
 module.exports = {
     is_logged_in: isLoggedIn,
-    existing_session: existing_session
+    existing_session: existing_session,
+    is_valid_password: isValidPassword
 }

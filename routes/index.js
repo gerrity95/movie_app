@@ -8,15 +8,6 @@ const flask_api = require('./helpers/flask_api');
 const helpers = require('./helpers/generic_helpers');
 const reccs_model = require('../models/recommended_movies')
 const rated_model = require('../models/rated_movies');
-var passwordValidator = require('password-validator');
-
-var password_schema = new passwordValidator();
-password_schema
-    .is().min(8)                                    // Minimum length 8
-    .is().max(100)                                  // Maximum length 100
-    .has().uppercase()                              // Must have uppercase letters
-    .has().lowercase()                              // Must have lowercase letters
-    .has().digits(1)                                // Must have at least 1 digits
 
 router.use (function (req, res, next) {
   console.log('/' + req.method);
@@ -179,7 +170,7 @@ router.get("/register",(req,res)=>{
 
 router.post("/register",(req,res)=>{
   var url = req.get('referer').split('?')[0];
-  let is_valid_pword = isValidPassword(req.body.password);
+  let is_valid_pword = helpers.is_valid_password(req.body.password);
 
   if (is_valid_pword !== true) {
     console.log("Password does not meet requirements.");
@@ -228,16 +219,6 @@ router.get("/logout",(req,res)=>{
   req.logout();
   res.redirect("/");
 });
-
-function isValidPassword(password) {
-  var presult = password_schema.validate(password, { details: true });
-  if (presult.length != 0) {
-    return presult;
-  }
-  else {
-    return true;
-  }
-};
 
 
 module.exports = router;
