@@ -41,9 +41,9 @@ router.post("/password_reset", async (req, res) => {
       }
 
       console.log("Token Created...")
-
-      const link = `${process.env.BASE_URL}/${user._id}/${token.token}`;
-      await email.send_email(user.email, "Password reset", link);
+      
+      const link = `<a href="${process.env.BASE_URL}/${user._id}/${token.token}" target="_blank">Password Reset Link</a>`;
+      await email.send_email(user.email, "What To Watch - Password reset", link);
 
       return res.redirect(url + "?TokenSent=True");
   } catch (error) {

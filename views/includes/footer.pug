@@ -18,7 +18,9 @@ footer.footer.footer_style
       div.col-0.col-lg-4.col-xl-4.col-md-4.align-self-center.order-3.order-lg-2.order-xl-2.order-md-2
         h5(style="font-weight: bold").text-center.title_colors 
       div.col-8.col-lg-4.col-xl-4.col-md-4.align-self-center.order-2.order-xl-2.order-md-2(style="text-align: right")
-        a.btn.btn-md.custom_button(href='#' style="margin-bottom: 10px;") Back To Top
+        .social-icons
+          a#scroll_button_footer.social-icon.social-icon--codepen.mx-auto(style="height: 50px;width:50px;background:#a178cf")
+            i.fas.fa-arrow-up.fa-stack-1x(style="color: white")
     
     div.row.copy
       div.col-8.col-lg-4.col-xl-4.col-md-4
@@ -29,7 +31,14 @@ footer.footer.footer_style
       div.col-8.col-lg-4.col-xl-4.col-md-4.align-self-center(style="text-align: right")
         ul.list-inline.footer_link
           li.list-inline-item
-                
+
+  script.
+    const scroll_btn = document.querySelector('#scroll_button_footer');
+        // handle button click
+        scroll_btn.onclick = function () {
+          $('html,body').animate({
+            scrollTop: 0}, 'slow');
+        };  
 // <div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
 // <div>Icons made by <a href="https://www.flaticon.com/authors/pixel-perfect" title="Pixel perfect">Pixel perfect</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
 // <div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>

@@ -37,3 +37,16 @@ block content
                   br
                   span Rating: #{movie.movie_info.vote_average} | 
                   span  Weight: #{movie.weight}
+
+  .social-icons.profile_scroll_button
+    a#scroll_button_profile.social-icon.social-icon--codepen.mx-auto(style="height: 50px;width:50px;background:#a178cf")
+      i.fas.fa-arrow-up.fa-stack-1x(style="color: white") 
+
+
+  script.
+    const scroll_btn = document.querySelector('#scroll_button_profile');
+        // handle button click
+        scroll_btn.onclick = function () {
+          $('html,body').animate({
+            scrollTop: 0}, 'slow');
+        };  
