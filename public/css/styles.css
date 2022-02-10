@@ -70,6 +70,15 @@ html {
   background-repeat: no-repeat;
 }
 
+.home_masthead {
+  height: 80vh;
+  min-height: 80vh;
+  background-image: url('/images/movie_background.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
 .header_text {
   background-color: #ffffff;
   border-radius: 10px;
@@ -83,6 +92,14 @@ html {
 @media screen and (max-width: 768px) {
 
   .masthead {
+    min-height: 100vh;
+    background-image: url('/images/movie_background.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+  .home_masthead {
     min-height: 100vh;
     background-image: url('/images/movie_background.png');
     background-size: cover;
@@ -107,6 +124,19 @@ html {
 
   .sidebar_collapse {
     margin-bottom: 10px;
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .header_text {
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding-top: 0%;
+    padding-bottom: 4%;
+    padding-left: 0%;
+    padding-right: 0%;
+    width: 90%;
+    margin-top: 50px;
   }
 }
 

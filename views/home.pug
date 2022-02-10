@@ -4,14 +4,14 @@ block content
   include includes/loading_modal.pug
   // Full Page Image Header with Vertically Centered Content
   #loader(style="display:none")
-  header.masthead#masthead_load(style="background-image: url('/images/movie_background.png');height: 80vh")
+  header.home_masthead#masthead_load(style="background-image: url('/images/movie_background.png')")
     .container-fluid.h-100.align-items-center(style="display: flex")
       .row.header_text.shadow-lg.mx-auto#form_background
-        .col-xl-6.col-lg-6.col-md-8.col-sm-10.col-12.offset-0.offset-sm-1.offset-md-2.offset-xl-0.offset-lg-0.text-center
+        .col-xl-6.col-lg-6.col-md-6.col-sm-10.col-12.offset-0.offset-sm-1.offset-md-0.offset-xl-0.offset-lg-0.text-center
           img(src='/images/what_to_watch_black.png' alt="What To Watch Icon" style="width: 80%")
-          h2.fw-light.home_title Movie Recommendations For You. 🎞️
-          p.lead(style="margin-top: 20px") WhatToWatch is the best place for you to get recommendations for movies we know you will love. 
-        .col-xl-6.col-lg-6.col-md-8.col-sm-10.offset-sm-1.offset-md-2.offset-xl-0.offset-lg-0
+          h2.fw-light Movie Recommendations For You. 🎞️
+          p.lead.home_title(style="margin-top: 20px") WhatToWatch is the best place for you to get recommendations for movies we know you will love. 
+        .col-xl-6.col-lg-6.col-md-6.col-sm-10.offset-sm-1.offset-md-0.offset-xl-0.offset-lg-0
           h4.title_style.text-center
             | Sign in
           div.message.alert.alert-danger(style="display:none;")
