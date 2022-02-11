@@ -41,9 +41,18 @@ router.post("/password_reset", async (req, res) => {
       }
 
       console.log("Token Created...")
+
+      html_message = `
+      <center><img src="192.168.1.6:3000/images/what_to_watch_black.png"></center><br><br>
+      Dear ${user.first_name} ${user.last_name},<br><br><p>A request to reset your password has been made. 
+      If you want to reset your password you can <a href="${process.env.BASE_URL}/${user._id}/${token.token}" target="_blank">
+      reset it here.</a></p><br><p><b>Please note</b> For security reasons this link will expire after 2 hours. If you do not reset
+      before then, you will need to try again.</p><br><p>If the above link isn't
+      working you can paste the following link into your address bar: 
+      <a href="${process.env.BASE_URL}/${user._id}/${token.token}" target="_blank">${process.env.BASE_URL}/${user._id}/${token.token}</a></p><br><p>Many Thanks for using What To Watch</p><br>`
       
       const link = `<a href="${process.env.BASE_URL}/${user._id}/${token.token}" target="_blank">Password Reset Link</a>`;
-      await email.send_email(user.email, "What To Watch - Password reset", link);
+      await email.send_email(user.email, "What To Watch - Password reset", html_message);
 
       return res.redirect(url + "?TokenSent=True");
   } catch (error) {

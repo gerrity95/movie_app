@@ -31,7 +31,7 @@ router.get("/contact", (req,res) =>{
 
 router.get("/userprofile", helpers.is_logged_in, async (req,res) =>{
   console.log("Checking to ensure enough reviews have been processed for the user: " + req.user._id)
-  let rated_movies = await rated_model.find({
+  var rated_movies = await rated_model.find({
     user_id: req.user._id
   })
   if (rated_movies.length < 5) {
@@ -56,7 +56,7 @@ router.get("/user/userprofile", async (req,res) =>{
   if (req.user) {
     console.log("AJAX request made to get user profile...")
     console.log("Checking to ensure enough reviews have been processed for user: " + req.user._id)
-    let rated_movies = await rated_model.find({
+    var rated_movies = await rated_model.find({
       user_id: req.user._id
     })
     if (rated_movies.length < 5) {
@@ -80,7 +80,7 @@ router.get("/user/userprofile", async (req,res) =>{
 router.get("/welcome", helpers.is_logged_in, async (req,res) =>{
 
   console.log("Attempting to render welcome page...");
-  let rated_movies = await rated_model.find({
+  var rated_movies = await rated_model.find({
     user_id: req.user._id
   });
   if (rated_movies.length > 5) {
@@ -170,7 +170,7 @@ router.get("/register",(req,res)=>{
 
 router.post("/register",(req,res)=>{
   var url = req.get('referer').split('?')[0];
-  let is_valid_pword = helpers.is_valid_password(req.body.password);
+  var is_valid_pword = helpers.is_valid_password(req.body.password);
 
   if (is_valid_pword !== true) {
     console.log("Password does not meet requirements.");
