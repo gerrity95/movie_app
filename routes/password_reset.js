@@ -13,13 +13,14 @@ router.get("/password_reset", (req,res) =>{
     res.render("password_forget");
   })
 
+/*
 router.post('/api/email_test', async(req, res) =>{
     console.log("Email test");
     // send mail with defined transport object
     let info = await email.send_email("bar@example.com", "Hello Subject", "<b>Hello world?</b>");
     return res.json({"email": info});
   });
-
+*/
 router.post("/password_reset", async (req, res) => {
   var url = req.get('referer').split('?')[0];
   try {

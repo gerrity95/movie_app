@@ -122,6 +122,7 @@ router.post('/login', function(req, res, next) {
 
    });
 
+/*
 router.post('/api/login', function(req, res, next) {
   passport.authenticate('local', function(err, user, info) {
 
@@ -162,6 +163,8 @@ router.get("/api/test_register", (req,res) =>{
   }
   return res.json({'result': true});
 });
+
+*/
 
 router.get("/register",(req,res)=>{
   var user_info = helpers.existing_session(req);
