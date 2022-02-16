@@ -8,6 +8,7 @@ const flask_api = require('./helpers/flask_api');
 const helpers = require('./helpers/generic_helpers');
 const reccs_model = require('../models/recommended_movies')
 const rated_model = require('../models/rated_movies');
+const email = require('../config/email');
 
 router.use (function (req, res, next) {
   console.log('/' + req.method);
@@ -171,7 +172,7 @@ router.get("/register",(req,res)=>{
   res.render("register", {user_info: user_info});
 });
 
-router.post("/register",(req,res)=>{
+router.post("/register", async (req,res)=>{
   var url = req.get('referer').split('?')[0];
   var is_valid_pword = helpers.is_valid_password(req.body.password);
 
@@ -180,12 +181,12 @@ router.post("/register",(req,res)=>{
     return res.render("register", {fail_message: is_valid_pword})
   }
     
-  User.register(new User({
+  await User.register(new User({
     username: req.body.username, 
     email: req.body.email,
     first_name: req.body.first_name,
     last_name: req.body.last_name}),
-    req.body.password, function(err,user){
+    req.body.password, async function(err,user){
       if(err){
         console.log(err.name)
         if (err.name == 'UserExistsError') {
@@ -203,6 +204,13 @@ router.post("/register",(req,res)=>{
         return res.redirect(url + "?error=True");
       }
     console.log('Successfully created user: ' + user.email);
+    html_message = `
+    <center><img style="width:300px;height:168px" src="https://whattowatchmovies.co/images/what_to_watch_black.png"></center><br><br>
+    Dear ${req.body.first_name} ${req.body.last_name},<br><br><p>Welcome to What To Watch! This is the only place you'll need to go to find out what movies you'll love. 
+    Once you login you'll be asked to rate some movies to get started so we can get a baseline on exactly what you like to watch. It should only take a minute or so as we only need 5 movies to get started!</p><br>
+    <p>If you would like to find out a little bit more about how What To Watch works you can read <a href="${process.env.BASE_URL}/about" target="_blank">about us here.</a></p>
+    <p>If you would like to get in contact with us you can <a href="${process.env.BASE_URL}/contact" target="_blank">follow this link here.</a></p><br><p>Many Thanks for using What To Watch</p><br>`
+    await email.send_email(user.email, "Welcome To What To Watch 🍿", html_message);
     if (user) {
       console.log("Attemping to authenticate...");
       passport.authenticate("local")(req, res, function(){
