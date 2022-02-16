@@ -13,17 +13,19 @@ window.cookieconsent.initialise({
     "type": "opt-out",
     "cookie": {
         "name": "fmovies_cookie",
+        secure: true,
     },
     "revokable": "true",
-    "SameSite": "Lax",
     onInitialise: function (status) {
         var type = this.options.type;
         var didConsent = this.hasConsented();
         if (type == 'opt-in' && didConsent) {
-        console.log("Cookies enabled");
+            gtag('config', 'G-J4CGFXDF0J');
         }
         if (type == 'opt-out' && !didConsent) {
-        console.log("Cookies disabled");
+            gtag('config', 'G-J4CGFXDF0J', {
+                'client_storage': 'none'
+            });
         // https://developers.google.com/analytics/devguides/collection/gtagjs/user-opt-out
         }
         },
@@ -31,21 +33,25 @@ window.cookieconsent.initialise({
         var type = this.options.type;
         var didConsent = this.hasConsented();
         if (type == 'opt-in' && didConsent) {
-            console.log("Cookies enabled");
+            gtag('config', 'G-J4CGFXDF0J');
         }
         if (type == 'opt-out' && !didConsent) {
-            console.log("Cookies disabled");
+            gtag('config', 'G-J4CGFXDF0J', {
+                'client_storage': 'none'
+            });
         // https://developers.google.com/analytics/devguides/collection/gtagjs/user-opt-out
         }
         },
     onRevokeChoice: function() {
         var type = this.options.type;
         if (type == 'opt-in') {
-            console.log("Cookies disabled");
+            gtag('config', 'G-J4CGFXDF0J', {
+                'client_storage': 'none'
+            });
         // https://developers.google.com/analytics/devguides/collection/gtagjs/user-opt-out
         }
         if (type == 'opt-out') {
-            console.log("Cookies enabled");
+            gtag('config', 'G-J4CGFXDF0J');
         }
         }
     });

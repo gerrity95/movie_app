@@ -11,9 +11,7 @@ const {
 
   
 const transporter = nodemailer.createTransport({
-    host: MAIL_HOST,
-    port: MAIL_PORT,
-    secure: false, // true for 465, false for other ports
+    service: 'Godaddy',
     auth: {
       user: MAIL_USER, // generated ethereal user
       pass: MAIL_PASS, // generated ethereal password
@@ -24,7 +22,7 @@ const sendEmail = async (email, subject, text) => {
     try {
         
         await transporter.sendMail({
-            from: '"Fred Foo 👻" <foo@example.com>',
+            from: '"What To Watch <info@whattowatchmovies.co>',
             to: email,
             subject: subject,
             html: text,

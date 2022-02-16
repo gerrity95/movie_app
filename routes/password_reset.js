@@ -13,14 +13,14 @@ router.get("/password_reset", (req,res) =>{
     res.render("password_forget");
   })
 
-/*
+
 router.post('/api/email_test', async(req, res) =>{
     console.log("Email test");
     // send mail with defined transport object
-    let info = await email.send_email("bar@example.com", "Hello Subject", "<b>Hello world?</b>");
+    let info = await email.send_email("gerrity95@gmail.com", "Welcome to WhatToWatchMovies", "<b>Hello world?</b>");
     return res.json({"email": info});
   });
-*/
+
 router.post("/password_reset", async (req, res) => {
   var url = req.get('referer').split('?')[0];
   try {
@@ -44,7 +44,7 @@ router.post("/password_reset", async (req, res) => {
       console.log("Token Created...")
 
       html_message = `
-      <center><img src="192.168.1.6:3000/images/what_to_watch_black.png"></center><br><br>
+      <center><img style="width:300px;height:168px" src="https://whattowatchmovies.co/images/what_to_watch_black.png"></center><br><br>
       Dear ${user.first_name} ${user.last_name},<br><br><p>A request to reset your password has been made. 
       If you want to reset your password you can <a href="${process.env.BASE_URL}/${user._id}/${token.token}" target="_blank">
       reset it here.</a></p><br><p><b>Please note</b> For security reasons this link will expire after 2 hours. If you do not reset

@@ -17,7 +17,7 @@ const MongoStore = require("connect-mongodb-session")(session);
 const db_connection = db.connection;
 const email_transporter = email.transporter;
 
-const port = 3000;
+const port = 8080;
 
 const {
   MONGO_USERNAME,
