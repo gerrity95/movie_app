@@ -3,10 +3,20 @@ extends layout
 block content
   title What To Watch - Profile
   - var reccs = movie_info
+  - var genres = genres
   
   .container-fluid
-    .row
-      for movie in reccs
+    .row.filter_genre_row
+      .col-3.offset-9
+        h5 Filter By Genre
+        select.form-control#genre_select
+          option(value="all" selected="selected") All
+          for genre in genres
+            option(value=genre.id) #{genre.name}
+    .row(style="margin-top: 30px")#movie_update
+
+    .row#movie_default
+     for movie in reccs
         - var img_src = `https://image.tmdb.org/t/p/w500/${movie.movie_info.poster_path}`
         .col-6.col-sm-4.col-md-4.col-lg-4.col-xl-3.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0
           .product#product-desktop
@@ -21,7 +31,7 @@ block content
               br
               label &nbsp;
               ul
-                li &nbsp;
+                li Genres: #{movie.movie_info.genre_ids}
               label
               ul.colors
                 li 
@@ -44,9 +54,56 @@ block content
 
 
   script.
+    var movie_reccs = !{JSON.stringify(reccs)};
+    var selected_movies = movie_reccs;
+    console.log(selected_movies);
     const scroll_btn = document.querySelector('#scroll_button_profile');
         // handle button click
         scroll_btn.onclick = function () {
           $('html,body').animate({
             scrollTop: 0}, 'slow');
-        };  
+        };
+
+    $("#genre_select").change(function () {
+        $("#movie_update").empty();
+        $("#movie_default").empty();
+        $("#movie_default").css('display', 'none');
+        var selected_genre = this.value;
+        if (selected_genre == 'all') {
+          var selected_movies = movie_reccs
+        }
+        else {
+          var selected_movies = []
+          for(i=0;i<movie_reccs.length;i++) {
+            if (movie_reccs[i].movie_info.genre_ids.includes(parseInt(selected_genre))) {
+              selected_movies.push(movie_reccs[i]);
+            }
+          }
+        }
+        var update_div = document.getElementById('movie_update');
+        if (selected_movies.length == 0) {
+          var no_movies = document.createElement('div')
+          no_movies.innerHTML = "<h2>Sorry. No Movies Found. 😥</h2><p>Not to worry though. If you would be interested to see more movies of this type, start rating some of your favorites and then any ones we recommend will be sure to pop up!</p>";
+          update_div.appendChild(no_movies);
+        }
+        else {
+          for(i=0;i<selected_movies.length;i++) {
+            var img_src = 'https://image.tmdb.org/t/p/w500/' + selected_movies[i].movie_info.poster_path;
+            var products_container = document.createElement('div');
+            products_container.classList.add("col-6", "col-sm-4", "col-md-4", "col-lg-4", "col-xl-3", "offset-lg-0", "offset-xl-0", "offset-md-0", "offset-sm-0", "offset-0")
+            update_div.appendChild(products_container);
+            var product_desktop = document.createElement('div');
+            product_desktop.setAttribute('id', 'product-desktop');
+            product_desktop.classList.add("product");
+            products_container.appendChild(product_desktop)
+            var img_box = document.createElement('div');
+            img_box.classList.add("imgbox");
+            img_box.innerHTML = '<img src="' + img_src + '" />'
+            product_desktop.appendChild(img_box);
+            var specifies = document.createElement('div');
+            specifies.classList.add("specifies");
+            specifies.innerHTML = '<h2>' + selected_movies[i].movie_info.title + '<br><b><span> Rating: ' + selected_movies[i].movie_info.vote_average + ' | </span><span>Weight: ' + selected_movies[i].weight + '</span></b></h2><br><label> &nbsp;</label><ul><li>&nbsp;</li></ul><label></label><ul class="colors"><li></li></ul><a class="btn custom_button" href="/movies/' + selected_movies[i].movie_id + '">Find Out More</a>'
+            product_desktop.appendChild(specifies);
+          }
+        }
+    });  

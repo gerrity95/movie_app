@@ -776,6 +776,12 @@ a#product-mobile {
   right: 20px;
 }
 
+.filter_genre_row {
+  border-radius: 5px;
+  padding: 10px;
+  background-color: #f8f9fa;
+}
+
 /* MOVIE PAGE STYLING */
 
 #movie-desktop {display: flex;}
