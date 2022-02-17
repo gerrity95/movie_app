@@ -1,0 +1,8 @@
+User-agent: *
+Disallow: /config/
+Disallow: /node_modules/
+Disallow: /email/
+Disallow: /dist/
+Disallow: /src/
+
+Sitemap: https://whattowatchmovies.co/sitemap.xml
