@@ -7,7 +7,7 @@ block content
   
   .container-fluid
     .row.filter_genre_row
-      .col-3.offset-9
+      .col-xl-3.col-lg-3.col-md-3.col-sm-6.col-6.offset-6.offset-sm-6.offset-md-9.offset.lg-9.offset-xl-9
         h5 Filter By Genre
         select.form-control#genre_select
           option(value="all" selected="selected") All
@@ -89,9 +89,12 @@ block content
         else {
           for(i=0;i<selected_movies.length;i++) {
             var img_src = 'https://image.tmdb.org/t/p/w500/' + selected_movies[i].movie_info.poster_path;
+            
             var products_container = document.createElement('div');
             products_container.classList.add("col-6", "col-sm-4", "col-md-4", "col-lg-4", "col-xl-3", "offset-lg-0", "offset-xl-0", "offset-md-0", "offset-sm-0", "offset-0")
             update_div.appendChild(products_container);
+            
+            // Structure for Desktop
             var product_desktop = document.createElement('div');
             product_desktop.setAttribute('id', 'product-desktop');
             product_desktop.classList.add("product");
@@ -104,6 +107,17 @@ block content
             specifies.classList.add("specifies");
             specifies.innerHTML = '<h2>' + selected_movies[i].movie_info.title + '<br><b><span> Rating: ' + selected_movies[i].movie_info.vote_average + ' | </span><span>Weight: ' + selected_movies[i].weight + '</span></b></h2><br><label> &nbsp;</label><ul><li>&nbsp;</li></ul><label></label><ul class="colors"><li></li></ul><a class="btn custom_button" href="/movies/' + selected_movies[i].movie_id + '">Find Out More</a>'
             product_desktop.appendChild(specifies);
+
+            // Structure for Mobile
+            var product_mobile = document.createElement('a');
+            product_mobile.setAttribute('id', 'product-mobile')
+            product_mobile.setAttribute('href', '/movies/' + selected_movies[i].movie_id);
+            product_mobile.innerHTML = '<div class="product"><div class="imgbox"><img src="' + img_src + '" /></div><div class="specifies"><h2>' + selected_movies[i].movie_info.title + '<br><b><span> Rating: ' + selected_movies[i].movie_info.vote_average + ' | </span><span>Weight: ' + selected_movies[i].weight + '</span></b></h2></div></div>';
+            products_container.appendChild(product_mobile);
+            
+            
+            
+
           }
         }
     });  
