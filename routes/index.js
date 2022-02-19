@@ -25,11 +25,6 @@ router.get("/about", (req,res) =>{
   res.render("about", {user_info: user_info});
 })
 
-router.get("/contact", (req,res) =>{
-  var user_info = helpers.existing_session(req);
-  res.render("contact", {user_info: user_info});
-})
-
 router.get("/userprofile", helpers.is_logged_in, async (req,res) =>{
   console.log("Checking to ensure enough reviews have been processed for the user: " + req.user._id)
   var rated_movies = await rated_model.find({

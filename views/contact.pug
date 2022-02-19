@@ -28,20 +28,8 @@ block content
           div.contact_button
             p !{captcha}
             button.submit.btn.custom_button.btn-lg(type="submit") Submit
-          
-          p#noRecaptcha.password_error
             
           if (success_mail == true)
               div(style="color:green") Successfully sent message. We'll get back to you as soon as we can.
           else if (success_mail == false)
               div(style="color:red") Error attempting to send message.
-
-                
-  script.
-      window.onload = function() {
-      var recaptcha = document.forms["contactForm"]["g-recaptcha-response"];
-      recaptcha.required = true;
-      recaptcha.oninvalid = function(e) {
-        document.getElementById('noRecaptcha').innerHTML = 'Please complete the Recaptcha.';
-      }
-    }

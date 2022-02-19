@@ -34,8 +34,26 @@ const sendEmail = async (email, subject, text) => {
     }
 };
 
+const sendContactEmail = async (subject, first_name, surname, user_email, message) => {
+  try {
+      html_message = `<br><p>From: ${user_email}</p><p>Name: ${first_name} ${surname}</p><br>
+                      <p>${message}</p>`
+      await transporter.sendMail({
+          from: '"What To Watch <info@whattowatchmovies.co>',
+          to: 'info@whattowatchmovies.co',
+          subject: subject,
+          html: html_message,
+      });
+
+      console.log("email sent sucessfully");
+  } catch (error) {
+      console.log(error, "email not sent");
+  }
+};
+
 
   module.exports = {
     transporter: transporter,
-    send_email: sendEmail
+    send_email: sendEmail,
+    send_contact_email: sendContactEmail
   }
