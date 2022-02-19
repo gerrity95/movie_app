@@ -246,11 +246,48 @@ async function tmdb_search(search_query) {
   });
 }
 
+async function get_genres() {
+  var options = {
+    host: 'api.themoviedb.org',
+    path: '/3/genre/movie/list',
+    port: 443,
+    method: 'GET',
+    headers: {'Authorization': 'Bearer ' + TMDB_READ_TOKEN}
+  };
+
+  console.log(options);
+  
+  var body = ""
+  return new Promise((resolve, reject) => {
+    const req = https.request(options, (res) => {
+      console.log("Request made to TMDB to get genres...");
+      console.log('statusCode:', res.statusCode);
+      console.log('headers:', res.headers);
+    
+      res.on('data', (chunk) => {
+        body += chunk;
+      });
+      res.on('end', () => {
+        response_body = JSON.parse(body);
+        resolve({"status": res.statusCode, "body": response_body});
+      })
+    });
+    
+    req.on('error', (e) => {
+      console.error("Error querying TMDB: " + e);
+      reject(e)
+    });
+    
+    req.end();
+  });
+}
+
 
 
 module.exports = {
   router: router,
   get_movie_details: get_movie_details,
   generic_tmdb_query: generic_tmdb_query,
-  search_query: tmdb_search
+  search_query: tmdb_search,
+  get_genres: get_genres
 }
