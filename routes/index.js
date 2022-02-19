@@ -9,6 +9,7 @@ const helpers = require('./helpers/generic_helpers');
 const reccs_model = require('../models/recommended_movies')
 const rated_model = require('../models/rated_movies');
 const email = require('../config/email');
+const tmdb_api = require('./tmdb_api');
 
 router.use (function (req, res, next) {
   console.log('/' + req.method);
@@ -40,14 +41,18 @@ router.get("/userprofile", helpers.is_logged_in, async (req,res) =>{
     return res.redirect('/welcome')
   }
   console.log("Attempting to get movie data...");
-  shows = await flask_api.get_reccomendations(req.user._id)
-  //shows = flask_api.sample_movies()
+  console.log("Getting genre list..");
+  var genres = await tmdb_api.get_genres(); 
+  console.log(genres.body.genres);
+  console.log("Getting shows...");
+  var shows = await flask_api.get_reccomendations(req.user._id)
+  //showss = flask_api.sample_movies()
   console.log(shows)
   if (shows.status == 200) {
-    res.render("user_profile", {user_info: req.user, movie_info: shows.body.result});
+    res.render("user_profile", {user_info: req.user, movie_info: shows.body.result, genres: genres.body.genres});
   }
   else {
-    res.render("user_profile", {user_info: req.user, movie_info: 'Bad'});
+    res.render("user_profile", {user_info: req.user, movie_info: 'Bad', genres: genres.body.genres});
   }
 
 })
