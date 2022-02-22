@@ -37,8 +37,14 @@ function isValidPassword(password) {
   }
 };
 
+
+function randomIntFromInterval(min, max) { // min and max included 
+  return Math.floor(Math.random() * (max - min + 1) + min)
+}
+
 module.exports = {
     is_logged_in: isLoggedIn,
     existing_session: existing_session,
-    is_valid_password: isValidPassword
+    is_valid_password: isValidPassword,
+    random_number: randomIntFromInterval
 }
