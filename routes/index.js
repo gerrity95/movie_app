@@ -79,7 +79,6 @@ router.get("/user/userprofile", async (req,res) =>{
 })
 
 router.get("/welcome", helpers.is_logged_in, async (req,res) =>{
-
   console.log("Attempting to render welcome page...");
   var rated_movies = await rated_model.find({
     user_id: req.user._id
@@ -88,7 +87,15 @@ router.get("/welcome", helpers.is_logged_in, async (req,res) =>{
     console.log("Too many movies have been rated by user: " + req.user._id)
     return res.redirect('/userprofile')
   }
-  return res.render("welcome", {user_info: req.user, movie_info: 'Bad', 'movie_count': rated_movies.length});
+  const rndInt = helpers.random_number(1, 8)
+  inspire_query = 'language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=' + rndInt + '&vote_average.gte=8&with_original_language=en&vote_count.gte=1000';
+  var inspiration_movies = await tmdb_api.discover_search(inspire_query);
+  var inspiry_list = false;
+  if (inspiration_movies.status == 200) {
+    inspiry_list = inspiration_movies.body.results;
+  }
+
+  return res.render("welcome", {user_info: req.user, movie_info: 'Bad', 'movie_count': rated_movies.length, inspire_movies: inspiry_list});
   
 })
 

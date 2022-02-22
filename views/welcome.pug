@@ -4,6 +4,7 @@ block content
   title What To Watch - Welcome
   - var reccs = movie_info
   - var remaining_movies = 5 - movie_count
+  - var inspired_movies = inspire_movies
   include includes/success_review_modal.pug
   include includes/failed_review_modal.pug
   include includes/generating_reccs_modal.pug
@@ -31,6 +32,21 @@ block content
         
       svg(xmlns='http://www.w3.org/2000/svg' viewbox='0 0 1440 370' style="background-image: url('/images/welcome_back3.jpg')").parallax
         path(fill='#212531' fill-opacity='1' d='M0,160L48,133.3C96,107,192,53,288,58.7C384,64,480,128,576,144C672,160,768,128,864,138.7C960,149,1056,203,1152,192C1248,181,1344,107,1392,69.3L1440,32L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z')
+
+    .row.curved-div(style="margin-top: 0px;padding-top: 40px;margin-bottom: 20px")
+      .col-12.col-sm-12.col-md-6.col-lg-6.col-xl-4.offset-xl-4.offset-lg-3.offset-md-3.offset-0.align-self-center.row_style
+        h4.text-center.title_style(style="color: #fff")
+          | Looking for inspiration
+        p.white_text 
+          | Can't think of what movies you want to rate? Hover over any of the movies here to get an idea from some of our favorite movies! 
+
+      .col-12.col-sm-12.col-md-6.col-lg-6.col-xl-6.offset-xl-3.offset-lg-3.offset-md-3.offset-0.align-self-center.row_style
+        .row
+          for movie in inspired_movies
+            - var img_src = `https://image.tmdb.org/t/p/w500/${movie.poster_path}`
+            .col-3.col-sm-4.col-md-2.col-lg-2.col-xl-2.poster_container
+              img(src=img_src).inspire_poster
+              .tooltip #{movie.original_title}
 
     .row.curved-div(style="margin-top: 0px;padding-top: 40px;margin-bottom: 20px")
       .col-10.col-sm-10.col-md-5.col-lg-5.col-xl-5.offset-xl-1.offset-lg-1.offset-md-1.offset-1.align-self-center.row_style
@@ -361,10 +377,12 @@ block content
 
     $(document).on("click",".movie_list", function () {
       var clickedBtnID = $(this).attr('id'); // or var clickedBtnID = this.id
+      $(this).removeClass('movie_item');
 
       if ($(this).hasClass('movie_select')) {
         // Removes highlight from a movie card if it is already selected
         $(this).removeClass('movie_select')
+        $(this).addClass('movie_item')
 
         // Disallows the user from trying to submit a rating without having a movie selected
         $('input[name="rating"]').prop("disabled", true);
