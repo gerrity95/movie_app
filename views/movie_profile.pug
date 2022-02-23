@@ -229,7 +229,12 @@ block content
         .additional_options
           h3.title_style Watch Providers
           select.selectpicker.form-control#watch_provider_country(data-live-search="true" data-size="5")
-          #streamers(style="margin-top: 20px")
+          h5(style="padding-top: 15px") Streaming
+          .row#streaming_movies
+          h5(style="padding-top: 15px") Renting
+          .row#rent_movies
+          h5(style="padding-top: 15px") Purchase
+          .row#buy_movies
   
   #module.container-fluid
     h2
@@ -264,23 +269,68 @@ block content
     var wp_countries = !{JSON.stringify(watch_provider_countries)};
     var wp_content = !{JSON.stringify(watch_providers_content)};
     var ip_info = !{JSON.stringify(ip_info)};
-    console.log(wp_countries);
     // Populate watch provider dropdown
     $(document).ready(function () {
       
+
       for (var i = 0; i < wp_countries.length; i++) {
+          if (wp_countries[i].iso_3166_1 == ip_info.body.country) {
+            var default_country = wp_countries[i].english_name;
+          }
           $('#watch_provider_country').append('<option class="flag ' + wp_countries[i].iso_3166_1.toLowerCase() + '" value="' + wp_countries[i].iso_3166_1 + '">' + wp_countries[i].english_name + '</option>');
       }
-
+      console.log(default_country);
+      $('#watch_provider_country').selectpicker('val', ip_info.body.country).attr("selected",true).attr("title", default_country);
+  
       $('#watch_provider_country').selectpicker('refresh');
 
-      console.log(ip_info);
-      console.log(wp_content);
       var relevant_results = wp_content.body.results;
-      var relevant_provider = relevant_results[ip_info.body.country].flatrate;
-      $('#streamers').html('<p>' + relevant_provider[0].provider_name + '</p>')
+      
+      var stream_parent = document.getElementById('streaming_movies');
+      var rent_parent = document.getElementById('rent_movies');
+      var buy_parent = document.getElementById('buy_movies');
+      update_providers(stream_parent, rent_parent, buy_parent, relevant_results, ip_info.body.country);
+
       
     });
+
+    function update_providers(stream_parent, rent_parent, buy_parent, wp_results, country_code) {
+      console.log(country_code);
+      // Function that updates the watch providers dynamically 
+      var stream_providers = wp_results[country_code].flatrate;
+      var buy_providers = wp_results[country_code].buy;
+      var rent_providers = wp_results[country_code].rent;
+
+      // Streaming
+      for (var i=0; i < stream_providers.length;i++) {
+        var img_src = 'https://image.tmdb.org/t/p/w500/' + stream_providers[i].logo_path;
+      
+        var stream_slot = document.createElement('div');
+        stream_slot.classList.add("col-2");
+        stream_slot.innerHTML = '<img style="width:90%;border-radius:5px" src="' + img_src + '" alt="' + stream_providers[i].provider_name + '"/>';
+        stream_parent.appendChild(stream_slot);
+      }
+
+      // Rentals
+      for (var i=0; i < rent_providers.length;i++) {
+        var img_src = 'https://image.tmdb.org/t/p/w500/' + rent_providers[i].logo_path;
+      
+        var rent_slot = document.createElement('div');
+        rent_slot.classList.add("col-2");
+        rent_slot.innerHTML = '<img style="width:90%;border-radius:5px" src="' + img_src + '" alt="' + rent_providers[i].provider_name + '"/>';
+        rent_parent.appendChild(rent_slot);
+      }
+
+      // Purchases
+      for (var i=0; i < buy_providers.length;i++) {
+        var img_src = 'https://image.tmdb.org/t/p/w500/' + buy_providers[i].logo_path;
+      
+        var buy_slot = document.createElement('div');
+        buy_slot.classList.add("col-2");
+        buy_slot.innerHTML = '<img style="width:90%;border-radius:10px;padding-bottom: 10px;" src="' + img_src + '" alt="' + buy_providers[i].provider_name + '"/>';
+        buy_parent.appendChild(buy_slot);
+      }
+    }
 
     $("#watch_provider_country").change(function () {
       console.log(this.value);

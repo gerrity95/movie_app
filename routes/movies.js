@@ -4,12 +4,16 @@ const https = require('https');
 const tmdb_api = require('./tmdb_api');
 const helpers = require('./helpers/generic_helpers');
 const watchlist_model = require('../models/movie_watchlist');
+const watch_providers = require('../models/watch_providers');
 const flask_api = require('./helpers/flask_api');
 
 router.get("/movies/:movie_id", helpers.is_logged_in, async (req,res) =>{
-    console.log("PARAMS");
-    console.log("Attempting to get movie detail for " + req.params.movie_id)
-    let [is_watchlist, movie_info, movie_cast] = await Promise.all([
+    console.log("Attempting to get movie detail for " + req.params.movie_id);
+    watch_providers_path = `${req.params.movie_id}/watch/providers`
+    let [watch_providers_content, watch_provider_countries, ip_info, is_watchlist, movie_info, movie_cast] = await Promise.all([
+        tmdb_api.get_movie_details(watch_providers_path),
+        watch_providers.find({}),
+        helpers.get_ip_info(),
         watchlist_model.find({user_id: req.user._id, movie_id: req.params.movie_id}),
         tmdb_api.get_movie_details(req.params.movie_id),
         tmdb_api.generic_tmdb_query(req.params.movie_id, 'credits')
@@ -51,9 +55,14 @@ router.get("/movies/:movie_id", helpers.is_logged_in, async (req,res) =>{
             cast_list.push(i)
         }
     }
+
+    console.log(watch_providers_content);
+
     return res.render("movie_profile", {'movie_info': movie_info.body, 'movie_credits': movie_cast.body,
                                         'director': director, 'screenplay': screenplay, 'writer': writer,
-                                        'is_watchlist': watchlist_bool, 'cast_list': cast_list});
+                                        'is_watchlist': watchlist_bool, 'cast_list': cast_list, 
+                                        'ip_info': ip_info, 'watch_provider_countries': watch_provider_countries,
+                                        'watch_providers_content': watch_providers_content});
   })
 
 router.post('/search', helpers.is_logged_in, async (req,res) =>{
