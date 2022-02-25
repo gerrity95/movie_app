@@ -56,8 +56,6 @@ router.get("/movies/:movie_id", helpers.is_logged_in, async (req,res) =>{
         }
     }
 
-    console.log(watch_providers_content);
-
     return res.render("movie_profile", {'movie_info': movie_info.body, 'movie_credits': movie_cast.body,
                                         'director': director, 'screenplay': screenplay, 'writer': writer,
                                         'is_watchlist': watchlist_bool, 'cast_list': cast_list, 
