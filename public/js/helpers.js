@@ -27,7 +27,11 @@ function timeConverter(minutes) {
 
 function update_providers(stream_parent, rent_parent, buy_parent, wp_results, country_code, country) {
     console.log(country_code);
-    // Function that updates the watch providers dynamically 
+    // Function that updates the watch providers dynamically
+    if (wp_results[country_code] === undefined) {
+      $( "#missing_country" ).append( "<p>Unfortunately we aren't able to get provider information for your country. If there is anywhere else you would like to try please select from the list below. 🙂</p>" );
+      return;
+    } 
     var stream_providers = wp_results[country_code].flatrate;
     var buy_providers = wp_results[country_code].buy;
     var rent_providers = wp_results[country_code].rent;
@@ -45,7 +49,7 @@ function update_providers(stream_parent, rent_parent, buy_parent, wp_results, co
       
         var stream_slot = document.createElement('div');
         stream_slot.classList.add("col-xl-2", "col-lg-2", "col-md-3", "col-sm-4", "col-4");;
-        stream_slot.innerHTML = '<img style="width:90%;border-radius:5px" src="' + img_src + '" alt="' + stream_providers[i].provider_name + '"/>';
+        stream_slot.innerHTML = '<img title="' + stream_providers[i].provider_name + '" style="width:90%;border-radius:5px" src="' + img_src + '" alt="' + stream_providers[i].provider_name + '"/>';
         stream_parent.appendChild(stream_slot);
       }
     }
@@ -64,7 +68,7 @@ function update_providers(stream_parent, rent_parent, buy_parent, wp_results, co
       
         var rent_slot = document.createElement('div');
         rent_slot.classList.add("col-xl-2", "col-lg-2", "col-md-3", "col-sm-4", "col-4");
-        rent_slot.innerHTML = '<img style="width:90%;border-radius:5px;padding-top: 10px" src="' + img_src + '" alt="' + rent_providers[i].provider_name + '"/>';
+        rent_slot.innerHTML = '<img title="' + rent_providers[i].provider_name + '" style="width:90%;border-radius:5px;padding-top: 10px" src="' + img_src + '" alt="' + rent_providers[i].provider_name + '"/>';
         rent_parent.appendChild(rent_slot);
       }
     }
@@ -82,7 +86,7 @@ function update_providers(stream_parent, rent_parent, buy_parent, wp_results, co
       
         var buy_slot = document.createElement('div');
         buy_slot.classList.add("col-xl-2", "col-lg-2", "col-md-3", "col-sm-4", "col-4");;
-        buy_slot.innerHTML = '<img style="width:90%;border-radius:10px;padding-bottom: 10px;" src="' + img_src + '" alt="' + buy_providers[i].provider_name + '"/>';
+        buy_slot.innerHTML = '<img title="' + buy_providers[i].provider_name + '" style="width:90%;border-radius:10px;padding-bottom: 10px;" src="' + img_src + '" alt="' + buy_providers[i].provider_name + '"/>';
         buy_parent.appendChild(buy_slot);
       }
     }
