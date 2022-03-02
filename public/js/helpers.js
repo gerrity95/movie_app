@@ -49,7 +49,7 @@ function update_providers(stream_parent, rent_parent, buy_parent, wp_results, co
       
         var stream_slot = document.createElement('div');
         stream_slot.classList.add("col-xl-2", "col-lg-2", "col-md-3", "col-sm-4", "col-4");;
-        stream_slot.innerHTML = '<img title="' + stream_providers[i].provider_name + '" style="width:90%;border-radius:5px" src="' + img_src + '" alt="' + stream_providers[i].provider_name + '"/>';
+        stream_slot.innerHTML = '<img title="' + stream_providers[i].provider_name + '" style="width:60px;border-radius:5px" src="' + img_src + '" alt="' + stream_providers[i].provider_name + '"/>';
         stream_parent.appendChild(stream_slot);
       }
     }
@@ -68,7 +68,7 @@ function update_providers(stream_parent, rent_parent, buy_parent, wp_results, co
       
         var rent_slot = document.createElement('div');
         rent_slot.classList.add("col-xl-2", "col-lg-2", "col-md-3", "col-sm-4", "col-4");
-        rent_slot.innerHTML = '<img title="' + rent_providers[i].provider_name + '" style="width:90%;border-radius:5px;padding-top: 10px" src="' + img_src + '" alt="' + rent_providers[i].provider_name + '"/>';
+        rent_slot.innerHTML = '<img title="' + rent_providers[i].provider_name + '" style="width:60px;border-radius:5px;padding-top: 10px" src="' + img_src + '" alt="' + rent_providers[i].provider_name + '"/>';
         rent_parent.appendChild(rent_slot);
       }
     }
@@ -86,7 +86,7 @@ function update_providers(stream_parent, rent_parent, buy_parent, wp_results, co
       
         var buy_slot = document.createElement('div');
         buy_slot.classList.add("col-xl-2", "col-lg-2", "col-md-3", "col-sm-4", "col-4");;
-        buy_slot.innerHTML = '<img title="' + buy_providers[i].provider_name + '" style="width:90%;border-radius:10px;padding-bottom: 10px;" src="' + img_src + '" alt="' + buy_providers[i].provider_name + '"/>';
+        buy_slot.innerHTML = '<img title="' + buy_providers[i].provider_name + '" style="width:60px;border-radius:10px;padding-bottom: 10px;" src="' + img_src + '" alt="' + buy_providers[i].provider_name + '"/>';
         buy_parent.appendChild(buy_slot);
       }
     }

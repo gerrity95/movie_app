@@ -28,8 +28,8 @@ html(lang="en")
     
     script(src='/js/helpers.js')
     // Global site tag (gtag.js) - Google Analytics
-    //script(async='' src='https://www.googletagmanager.com/gtag/js?id=G-J4CGFXDF0J')
-    //script.
+    script(async='' src='https://www.googletagmanager.com/gtag/js?id=G-J4CGFXDF0J')
+    script.
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
@@ -86,6 +86,9 @@ html(lang="en")
 
         // We'll fill this with dummy content
         block content
+
+        script(src='https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.js' data-cfasync='false')
+        script(src='/js/cookie_consent.js')
 
   
   script.
