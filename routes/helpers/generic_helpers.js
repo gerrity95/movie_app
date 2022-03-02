@@ -1,4 +1,12 @@
 var passwordValidator = require('password-validator');
+const https = require('https');
+const dotenv = require('dotenv');
+dotenv.config();
+
+const {
+    IP_INFO_KEY
+  } = process.env;
+
 
 var password_schema = new passwordValidator();
 password_schema
@@ -42,9 +50,43 @@ function randomIntFromInterval(min, max) { // min and max included
   return Math.floor(Math.random() * (max - min + 1) + min)
 }
 
+async function getIPInfo() {
+  var options = {
+    host: 'ipinfo.io',
+    port: 443,
+    method: 'GET',
+    headers: {'Authorization': 'Bearer ' + IP_INFO_KEY}
+  };
+  
+  var body = ""
+  return new Promise((resolve, reject) => {
+    const req = https.request(options, (res) => {
+      console.log("Request made to IPINFO");
+      console.log('statusCode:', res.statusCode);
+      console.log('headers:', res.headers);
+    
+      res.on('data', (chunk) => {
+        body += chunk;
+      });
+      res.on('end', () => {
+        response_body = JSON.parse(body);
+        resolve({"status": res.statusCode, "body": response_body});
+      })
+    });
+    
+    req.on('error', (e) => {
+      console.error("Error querying IPINFO: " + e);
+      reject(e)
+    });
+    
+    req.end();
+  });
+}
+
 module.exports = {
     is_logged_in: isLoggedIn,
     existing_session: existing_session,
     is_valid_password: isValidPassword,
-    random_number: randomIntFromInterval
+    random_number: randomIntFromInterval,
+    get_ip_info: getIPInfo
 }

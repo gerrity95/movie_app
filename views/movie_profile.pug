@@ -8,6 +8,7 @@ block content
   include includes/failed_watchlist.pug
   - var movie_info = movie_info
   - var movie_cast = movie_credits
+  - var watch_provider_countries = watch_provider_countries
   - var header_src = `https://image.tmdb.org/t/p/original/${movie_info.backdrop_path}`
   - var poster_src = `https://image.tmdb.org/t/p/w500/${movie_info.poster_path}`
   - var percent_rating = movie_info.vote_average * 10
@@ -221,7 +222,20 @@ block content
         .additional_options
           h3.title_style Overview
           p
-            | #{movie_info.overview}   
+            | #{movie_info.overview}
+    .row.movie_interact_box
+      .col-12.col-sm-8.col-md-6.col-lg-6.col-xl-4.offset-lg-0.offset-xl-0.offset-md-1.offset-sm-2.offset-0.align-self-center.rating_column
+      .col-12.col-sm-10.col-md-10.col-lg-6.col-xl-6.offset-lg-0.offset-xl-2.offset-md-1.offset-sm-2.align-self-center.rating_column
+        .additional_options
+          h3.title_style Where To Watch
+          #missing_country
+          select.selectpicker.form-control#watch_provider_country.f32(data-live-search="true" data-size="8")
+          h5(style="padding-top: 15px") Streaming
+          .row#streaming_movies
+          h5(style="padding-top: 15px") Renting
+          .row#rent_movies
+          h5(style="padding-top: 15px") Purchase
+          .row#buy_movies
   
   #module.container-fluid
     h2
@@ -249,8 +263,64 @@ block content
 
 
   script.
+
     var movie_details = !{JSON.stringify(movie_info)};
     console.log(movie_details.id);
+
+    var wp_countries = !{JSON.stringify(watch_provider_countries)};
+    var wp_content = !{JSON.stringify(watch_providers_content)};
+    var ip_info = !{JSON.stringify(ip_info)};
+    // Populate watch provider dropdown
+    $(document).ready(function () {
+      
+      for (var i = 0; i < wp_countries.length; i++) {
+          if (wp_countries[i].iso_3166_1 == ip_info.body.country) {
+            var default_country = wp_countries[i].english_name;
+          }
+          $('#watch_provider_country').append('<option class="flag ' + wp_countries[i].iso_3166_1.toLowerCase() + '" value="' + wp_countries[i].iso_3166_1 + '">' + wp_countries[i].english_name + '</option>');
+      }
+      if (default_country === undefined) {
+        $( "#missing_country" ).append( "<p>Unfortunately we aren't able to get provider information for your country. If there is anywhere else you would like to try please select from the list below. 🙂</p>" ); 
+      } else {
+        console.log(default_country);
+        $('#watch_provider_country').selectpicker('val', ip_info.body.country).attr("selected",true).attr("title", default_country);
+    
+        $('#watch_provider_country').selectpicker('refresh');
+
+        var relevant_results = wp_content.body.results;
+        
+        var stream_parent = document.getElementById('streaming_movies');
+        var rent_parent = document.getElementById('rent_movies');
+        var buy_parent = document.getElementById('buy_movies');
+        update_providers(stream_parent, rent_parent, buy_parent, relevant_results, ip_info.body.country, default_country);
+
+      }
+
+      
+    });
+
+
+    $("#watch_provider_country").change(function () {
+      console.log(this.value);
+      for (var i = 0; i < wp_countries.length; i++) {
+          if (wp_countries[i].iso_3166_1 == this.value) {
+            var default_country = wp_countries[i].english_name;
+          }
+      }
+
+      var relevant_results = wp_content.body.results;
+      
+      $("#streaming_movies").empty();
+      $("#rent_movies").empty();
+      $("#buy_movies").empty();
+      $("#missing_country").empty();
+      var stream_parent = document.getElementById('streaming_movies');
+      var rent_parent = document.getElementById('rent_movies');
+      var buy_parent = document.getElementById('buy_movies');
+      update_providers(stream_parent, rent_parent, buy_parent, relevant_results, this.value, default_country);
+
+    });
+
 
     $('button[id="rating_button"]').prop("disabled", true);
     $('input[name="rating"]').on("click", function() {
