@@ -18,7 +18,7 @@ const MongoStore = require("connect-mongodb-session")(session);
 const db_connection = db.connection;
 const email_transporter = email.transporter;
 
-const port = 8080;
+const port = 3000;
 
 const {
   MONGO_USERNAME,
@@ -52,11 +52,11 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use('/', indexRouter);
-app.use('/', movieRouter);
+app.use('/', indexRouter.router);
+app.use('/', movieRouter.router);
 app.use('/', tmdbRouter.router);
-app.use('/', passwordRouter);
-app.use('/', contactRouter);
+app.use('/', passwordRouter.router);
+app.use('/', contactRouter.router);
 app.use('/', errorRouter);
 
 app.use(function(err, req, res, next){

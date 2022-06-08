@@ -26,9 +26,12 @@
     "passport-local-mongoose": "^6.0.1",
     "password-validator": "^5.2.1",
     "pm2": "^5.1.2",
-    "pug": "^3.0.2"
+    "pug": "^3.0.2",
+    "winston": "^3.6.0"
   },
   "devDependencies": {
+    "eslint": "^8.17.0",
+    "eslint-config-google": "^0.14.0",
     "nodemon": "^2.0.15"
   }
 }

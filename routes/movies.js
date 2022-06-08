@@ -1,121 +1,19 @@
 const express = require('express');
 const router = express.Router();
-const https = require('https');
-const tmdb_api = require('./tmdb_api');
-const helpers = require('./helpers/generic_helpers');
-const watchlist_model = require('../models/movie_watchlist');
-const watch_providers = require('../models/watch_providers');
-const flask_api = require('./helpers/flask_api');
 
-router.get("/movies/:movie_id", helpers.is_logged_in, async (req,res) =>{
-    console.log("Attempting to get movie detail for " + req.params.movie_id);
-    watch_providers_path = `${req.params.movie_id}/watch/providers`
-    let [watch_providers_content, watch_provider_countries, ip_info, is_watchlist, movie_info, movie_cast] = await Promise.all([
-        tmdb_api.get_movie_details(watch_providers_path),
-        watch_providers.find({}),
-        helpers.get_ip_info(),
-        watchlist_model.find({user_id: req.user._id, movie_id: req.params.movie_id}),
-        tmdb_api.get_movie_details(req.params.movie_id),
-        tmdb_api.generic_tmdb_query(req.params.movie_id, 'credits')
-    ]).catch((err) => setImmediate(() => {
-        console.log("Error attempting to get data for Movie " + req.params.movie_id);
-        console.log(err);
-        return next(err);
-       }));
-    director = ''
-    screenplay = ''
-    writer = ''
-    try {
-        movie_cast.body.crew.forEach(function(value){
-            if (value.job == "Director") {
-                director = value.name
-            }
-            if (value.job == "Screenplay") {
-                screenplay = value.name
-            }
-            if (value.job == "Writer") {
-                writer = value.name
-            }
-          });
-    
-    } catch (e) {
-        console.log("Error: " + e + " attempting to get movie details")
-        return res.render('error', {'error': e})
-    }
-    let watchlist_bool = false
-    if (is_watchlist.length == 1) {
-        watchlist_bool = true
-    }
-    if (movie_cast.body.cast.length > 8) {
-        var cast_list =  [0, 1, 2, 3, 4, 5, 6, 7]
-    }
-    else {
-        var cast_list = []
-        for (i = 0; i < movie_cast.body.cast.length; i++){
-            cast_list.push(i)
-        }
-    }
+const moviesController = require('./controllers/movies.controller');
+const genericHelpers = require('./helpers/genericHelpers');
 
-    return res.render("movie_profile", {'movie_info': movie_info.body, 'movie_credits': movie_cast.body,
-                                        'director': director, 'screenplay': screenplay, 'writer': writer,
-                                        'is_watchlist': watchlist_bool, 'cast_list': cast_list, 
-                                        'ip_info': ip_info, 'watch_provider_countries': watch_provider_countries,
-                                        'watch_providers_content': watch_providers_content});
-  })
+// GET method routes
+router.get('/movies/:movie_id', genericHelpers.isLoggedIn, moviesController.get_movie);
+router.get('/user/watchlist', genericHelpers.isLoggedIn, moviesController.get_watchlist);
 
-router.post('/search', helpers.is_logged_in, async (req,res) =>{
-    console.log("Attempting to search...");
-    console.log(req.body);
-    let search_result = await tmdb_api.search_query(req.body.search)
-    console.log(search_result.body.results)
-    return res.render('search', {'results': search_result.body.results, 'query': req.body.search})
-})
-
-router.post('/welcome/search', helpers.is_logged_in, async (req,res) =>{
-    console.log("Attempting to search...");
-    console.log(req.body);
-    let search_result = await tmdb_api.search_query(req.body.search)
-    return res.json({'results': search_result.body.results, 'query': req.body.search})
-})
-
-router.post('/user/addwatchlist', helpers.is_logged_in, async (req,res) =>{
-    console.log("Attempting to Add movie to the watchlist...");
-    console.log(req.body);
-    console.log(req.user._id)
-    let existing_watchlist = await watchlist_model.find({
-        user_id: req.user._id,
-        movie_id: req.body.movie_id
-      });
-    if (existing_watchlist.length != 0) {
-        console.log("Movie has already been added to the watchlist for this user. Attempting to Remove...")
-        let delete_watchlist = await watchlist_model.deleteOne({user_id: req.user._id, movie_id: req.body.movie_id});
-        console.log(delete_watchlist)
-        if (delete_watchlist.deletedCount == 1) {
-            console.log("Succesfully deleted movie from watchlist")
-            return res.json({"success": true, "removed": true});
-        }
-        console.log("Issue seen attempting to remove movie from watchlist...")
-        return res.json({"success": false, "removed": true});
-    }
-    console.log("Movie not yet added to watchlist for user " + req.user._id + " attempting to add now.")
-    const new_watchlist = new watchlist_model({
-        user_id: req.user._id,
-        movie_id: req.body.movie_id
-    })
-    let add_watchlist = await watchlist_model.create(new_watchlist)
-    console.log(add_watchlist);
-    return res.json({"success": true, "removed": false});
-})
-
-router.get("/user/watchlist", helpers.is_logged_in, async (req,res) =>{
-    console.log("Attempting to render watchlist for user " + req.user._id);
-    let watchlist_movies = await watchlist_model.find({user_id: req.user._id});
-    console.log(watchlist_movies);
-    rendered_watchlist = await flask_api.get_watchlist(req.user._id, watchlist_movies);
-    console.log("Successfully got response back from server..");
-    console.log(rendered_watchlist.body.result);
-    return res.render("watchlist", {'watchlist': rendered_watchlist.body.result})
-});
+// POST method routes
+router.post('/search', genericHelpers.isLoggedIn, moviesController.search);
+router.post('/welcome/search', genericHelpers.isLoggedIn, moviesController.welcome_search);
+router.post('/user/addwatchlist', genericHelpers.isLoggedIn, moviesController.add_watchlist);
 
 
-module.exports = router;
+module.exports = {
+  router: router,
+};
