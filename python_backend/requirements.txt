@@ -7,3 +7,4 @@ python-dotenv
 flask[async]
 pika
 aio_pika
+pylint

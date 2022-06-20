@@ -1,11 +1,4 @@
-const express = require('express');
-const router = express.Router();
-const path = require('path');
-const rater = require('../../models/rated_movies');
-const passport = require('passport');
-const passportLocalMongoose = require('passport-local-mongoose');
 const dotenv = require('dotenv');
-const async = require('async');
 const http = require('http');
 dotenv.config();
 
@@ -15,8 +8,7 @@ const {
 } = process.env;
 
 
-async function flask_test() {
-  const request_data = {'Hello': 'Mark'};
+async function flaskTest() {
   const options = {
     host: `${FLASK_HOST}`,
     path: '/param_test',
@@ -39,8 +31,8 @@ async function flask_test() {
       });
       res.on('end', () => {
         try {
-          response_body = JSON.parse(body);
-          resolve({'status': res.statusCode, 'body': response_body});
+          const responseBody = JSON.parse(body);
+          resolve({'status': res.statusCode, 'body': responseBody});
         } catch (error) {
           console.log('Error: ' + error + ' attempting to parse response from FLASK API.');
           resolve({'status': res.statusCode, 'body': body});
@@ -53,13 +45,12 @@ async function flask_test() {
       reject(e);
     });
 
-    req.write(JSON.stringify(request_data));
     req.end();
   });
 }
 
-async function get_reccomendations(user_id) {
-  const request_data = {'user_id': user_id};
+async function getRecomendations(userId) {
+  const requestData = {'user_id': userId};
   const options = {
     host: `${FLASK_HOST}`,
     path: '/get_reccomendations',
@@ -82,8 +73,8 @@ async function get_reccomendations(user_id) {
       });
       res.on('end', () => {
         try {
-          response_body = JSON.parse(body);
-          resolve({'status': res.statusCode, 'body': response_body});
+          const responseBody = JSON.parse(body);
+          resolve({'status': res.statusCode, 'body': responseBody});
         } catch (error) {
           console.log('Error: ' + error + ' attempting to parse response from FLASK API.');
           resolve({'status': res.statusCode, 'body': body});
@@ -96,13 +87,13 @@ async function get_reccomendations(user_id) {
       reject(e);
     });
 
-    req.write(JSON.stringify(request_data));
+    req.write(JSON.stringify(requestData));
     req.end();
   });
 }
 
-async function get_watchlist(user_id, movie_list) {
-  const request_data = {'user_id': user_id, 'movie_list': movie_list};
+async function getWatchlist(userId, movieList) {
+  const requestData = {'user_id': userId, 'movie_list': movieList};
   const options = {
     host: `${FLASK_HOST}`,
     path: '/get_watchlist',
@@ -125,8 +116,8 @@ async function get_watchlist(user_id, movie_list) {
       });
       res.on('end', () => {
         try {
-          response_body = JSON.parse(body);
-          resolve({'status': res.statusCode, 'body': response_body});
+          const responseBody = JSON.parse(body);
+          resolve({'status': res.statusCode, 'body': responseBody});
         } catch (error) {
           console.log('Error: ' + error + ' attempting to parse response from FLASK API.');
           resolve({'status': res.statusCode, 'body': body});
@@ -139,14 +130,14 @@ async function get_watchlist(user_id, movie_list) {
       reject(e);
     });
 
-    req.write(JSON.stringify(request_data));
+    req.write(JSON.stringify(requestData));
     req.end();
   });
 }
 
 
 module.exports = {
-  flask_test: flask_test,
-  get_reccomendations: get_reccomendations,
-  get_watchlist: get_watchlist,
+  flask_test: flaskTest,
+  get_reccomendations: getRecomendations,
+  get_watchlist: getWatchlist,
 };

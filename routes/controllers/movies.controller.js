@@ -1,10 +1,10 @@
-const movies_service = require('../services/movies.service');
+const moviesService = require('../services/movies.service');
 const logger = require('../../config/logger');
 
 exports.get_movie = async function(req, res, next) {
   try {
-    const movie_details = await movies_service.getMovie(req);
-    return res.render('movie_profile', movie_details);
+    const movieDetails = await moviesService.getMovie(req);
+    return res.render('movie_profile', movieDetails);
   } catch (err) {
     logger.error('Error attempting to render movie profile');
     logger.error(err);
@@ -14,8 +14,8 @@ exports.get_movie = async function(req, res, next) {
 
 exports.get_watchlist = async function(req, res, next) {
   try {
-    const watchlist_details = await movies_service.getWatchlist(req);
-    return res.render('watchlist', watchlist_details);
+    const watchlistDetails = await moviesService.getWatchlist(req);
+    return res.render('watchlist', watchlistDetails);
   } catch (err) {
     logger.error('Error attempting to render watchlist');
     logger.error(err);
@@ -25,8 +25,8 @@ exports.get_watchlist = async function(req, res, next) {
 
 exports.search = async function(req, res, next) {
   try {
-    const search_results = await movies_service.searchMovies(req);
-    return res.render('search', search_results);
+    const searchResults = await moviesService.searchMovies(req);
+    return res.render('search', searchResults);
   } catch (err) {
     logger.error('Error attempting to search for movies');
     logger.error(err);
@@ -36,8 +36,8 @@ exports.search = async function(req, res, next) {
 
 exports.welcome_search = async function(req, res, next) {
   try {
-    const search_results = await movies_service.searchMovies(req);
-    return res.json(search_results);
+    const searchResults = await moviesService.searchMovies(req);
+    return res.json(searchResults);
   } catch (err) {
     logger.error('Error attempting to search for movies');
     logger.error(err);
@@ -47,8 +47,8 @@ exports.welcome_search = async function(req, res, next) {
 
 exports.add_watchlist = async function(req, res, next) {
   try {
-    const watchlist_results = await movies_service.addToWatchlist(req);
-    return res.json(watchlist_results);
+    const watchlisResults = await moviesService.addToWatchlist(req);
+    return res.json(watchlisResults);
   } catch (err) {
     logger.error('Error attempting to add movie to watchlist');
     logger.error(err);

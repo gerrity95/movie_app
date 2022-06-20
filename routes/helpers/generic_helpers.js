@@ -6,12 +6,11 @@ dotenv.config();
 
 const {
   IP_INFO_KEY,
-  BASE_URL,
 } = process.env;
 
 
-const password_schema = new passwordValidator();
-password_schema
+const passwordSchema = new passwordValidator();
+passwordSchema
     .is().min(8) // Minimum length 8
     .is().max(100) // Maximum length 100
     .has().uppercase() // Must have uppercase letters
@@ -28,7 +27,7 @@ function isLoggedIn(req, res, next) {
   }
 }
 
-function existing_session(req) {
+function existingSession(req) {
   if (req.user) {
     return req.user;
   }
@@ -36,7 +35,7 @@ function existing_session(req) {
 }
 
 function isValidPassword(password) {
-  const presult = password_schema.validate(password, {details: true});
+  const presult = passwordSchema.validate(password, {details: true});
   if (presult.length != 0) {
     return presult;
   } else {
@@ -68,8 +67,8 @@ async function getIPInfo() {
         body += chunk;
       });
       res.on('end', () => {
-        response_body = JSON.parse(body);
-        resolve({'status': res.statusCode, 'body': response_body});
+        const responseBody = JSON.parse(body);
+        resolve({'status': res.statusCode, 'body': responseBody});
       });
     });
 
@@ -83,18 +82,18 @@ async function getIPInfo() {
 }
 
 function generateEmailMessage(req) {
-  html_message = `
+  const htmlMessage = `
         <center><img style="width:300px;height:168px" src="https://whattowatchmovies.co/images/what_to_watch_black.png"></center><br><br>
         Dear ${req.body.first_name} ${req.body.last_name},<br><br><p>Welcome to What To Watch! This is the only place you'll need to go to find out what movies you'll love. 
         Once you login you'll be asked to rate some movies to get started so we can get a baseline on exactly what you like to watch. It should only take a minute or so as we only need 5 movies to get started!</p><br>
         <p>If you would like to find out a little bit more about how What To Watch works you can read <a href="${process.env.BASE_URL}/about" target="_blank">about us here.</a></p>
         <p>If you would like to get in contact with us you can <a href="${process.env.BASE_URL}/contact" target="_blank">follow this link here.</a></p><br><p>Many Thanks for using What To Watch</p><br>`;
 
-  return html_message;
+  return htmlMessage;
 }
 
 function generateResetEmail(user, token) {
-  html_message = html_message = `
+  const htmlMessage = `
   <center><img style="width:300px;height:168px" src="https://whattowatchmovies.co/images/what_to_watch_black.png"></center><br><br>
   Dear ${user.first_name} ${user.last_name},<br><br><p>A request to reset your password has been made. 
   If you want to reset your password you can <a href="${process.env.BASE_URL}/${user._id}/${token.token}" target="_blank">
@@ -103,12 +102,12 @@ function generateResetEmail(user, token) {
   working you can paste the following link into your address bar: 
   <a href="${process.env.BASE_URL}/${user._id}/${token.token}" target="_blank">${process.env.BASE_URL}/${user._id}/${token.token}</a></p><br><p>Many Thanks for using What To Watch</p><br>`;
 
-  return html_message;
+  return htmlMessage;
 }
 
 module.exports = {
   isLoggedIn,
-  existing_session: existing_session,
+  existing_session: existingSession,
   is_valid_password: isValidPassword,
   random_number: randomIntFromInterval,
   get_ip_info: getIPInfo,

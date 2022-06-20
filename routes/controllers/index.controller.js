@@ -1,4 +1,4 @@
-const index_service = require('../services/index.service');
+const indexService = require('../services/index.service');
 const helpers = require('../helpers/generic_helpers');
 const logger = require('../../config/logger');
 const passport = require('passport');
@@ -6,8 +6,8 @@ const User = require('../../models/user');
 
 exports.home = async function(req, res, next) {
   try {
-    const user_info = helpers.existing_session(req);
-    res.render('home', {user_info: user_info});
+    const userInfo = helpers.existing_session(req);
+    res.render('home', {user_info: userInfo});
   } catch (err) {
     logger.error('Error attempting to render index page');
     logger.error(err);
@@ -17,8 +17,8 @@ exports.home = async function(req, res, next) {
 
 exports.about = async function(req, res, next) {
   try {
-    const user_info = helpers.existing_session(req);
-    res.render('about', {user_info: user_info});
+    const userInfo = helpers.existing_session(req);
+    res.render('about', {user_info: userInfo});
   } catch (err) {
     logger.error('Error attempting to render about page');
     logger.error(err);
@@ -28,8 +28,8 @@ exports.about = async function(req, res, next) {
 
 exports.login = async function(req, res, next) {
   try {
-    const user_info = helpers.existing_session(req);
-    res.render('login', {user_info: user_info});
+    const userInfo = helpers.existing_session(req);
+    res.render('login', {user_info: userInfo});
   } catch (err) {
     logger.error('Error attempting to render movie profile');
     logger.error(err);
@@ -39,8 +39,8 @@ exports.login = async function(req, res, next) {
 
 exports.register = async function(req, res, next) {
   try {
-    const user_info = helpers.existing_session(req);
-    res.render('register', {user_info: user_info});
+    const userInfo = helpers.existing_session(req);
+    res.render('register', {user_info: userInfo});
   } catch (err) {
     logger.error('Error attempting to render register page');
     logger.error(err);
@@ -61,11 +61,11 @@ exports.logout = async function(req, res, next) {
 
 exports.user_profile = async function(req, res, next) {
   try {
-    const profile_info = await index_service.getUserProfile(req);
-    if (profile_info.rated_movies < 5) {
+    const profileInfo = await indexService.getUserProfile(req);
+    if (profileInfo.rated_movies < 5) {
       return res.redirect('/welcome');
     }
-    return res.render('user_profile', profile_info.data);
+    return res.render('user_profile', profileInfo.data);
   } catch (err) {
     logger.error('Error attempting to render user profile');
     logger.error(err);
@@ -75,8 +75,8 @@ exports.user_profile = async function(req, res, next) {
 
 exports.user_profile_ajax = async function(req, res, next) {
   try {
-    const user_profile = await index_service.getUserProfileAjax(req);
-    return res.json(user_profile);
+    const userProfile = await indexService.getUserProfileAjax(req);
+    return res.json(userProfile);
   } catch (err) {
     logger.error('Error attempting to render user profile through ajax');
     logger.error(err);
@@ -86,11 +86,11 @@ exports.user_profile_ajax = async function(req, res, next) {
 
 exports.welcome = async function(req, res, next) {
   try {
-    const profile_info = await index_service.getWelcome(req);
-    if (profile_info.rated_movies > 5) {
+    const profileInfo = await indexService.getWelcome(req);
+    if (profileInfo.rated_movies > 5) {
       return res.redirect('/userprofile');
     }
-    return res.render('welcome', profile_info.data);
+    return res.render('welcome', profileInfo.data);
   } catch (err) {
     logger.error('Error attempting to render user profile');
     logger.error(err);
@@ -132,9 +132,10 @@ exports.register_post = async function(req, res, next) {
   /* I cannot for some reason extract this logic to a separate function */
   try {
     const url = req.get('referer').split('?')[0];
-    if (helpers.is_valid_password(req.body.password) !== true) {
+    const isValidPword = helpers.is_valid_password(req.body.password);
+    if (isValidPword !== true) {
       logger.info('Password does not meet requirements.');
-      return {fail_message: is_valid_pword};
+      return {fail_message: isValidPword};
     }
     await User.register(new User({
       username: req.body.username,
@@ -143,8 +144,8 @@ exports.register_post = async function(req, res, next) {
       last_name: req.body.last_name}),
     req.body.password, function(err, user) {
       if (err) {
-        const err_message = index_service.handleRegisterError(err);
-        return res.redirect(url + err_message.fail_message);
+        const errMessage = indexService.handleRegisterError(err);
+        return res.redirect(url + errMessage.fail_message);
       }
       logger.info('Successfully created user: ' + user.email);
       // helpers.generateEmailMessage(req);
