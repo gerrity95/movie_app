@@ -1,12 +1,9 @@
-import os
-from pathlib import Path
-from dotenv import load_dotenv
 import asyncio
-import json
 from base.events import RecommendationsEvent
 from base.rabbitmq_client import RabbitMqClient
 
-class RecommendationPublisher():
+
+class RecommendationPublisher:
 
     def __init__(self, rabbitmq_client: RabbitMqClient) -> None:
         self.rabbitmq_client = rabbitmq_client

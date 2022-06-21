@@ -5,7 +5,8 @@ import aio_pika
 import pickle
 from env_config import Config
 
-class RabbitMqClient():
+
+class RabbitMqClient:
 
     def __init__(self) -> None:
         self.config = Config()
@@ -89,9 +90,7 @@ class RabbitMqClient():
                 async with message.process():
                     event = pickle.loads(message.body)
                     print(f"Consume from MQ {event.__class__.__name__} {event.uuid}")
-                    
                     yield event
-                    
                     try:
                         if queue.name in message.body.decode():
                             break
@@ -115,7 +114,7 @@ class RabbitMqClient():
             return events, None
         except Exception as err:
             if events:
-                print(f"Consuming {event.__class__.__name__} was partially succesful.")
+                print(f"Consuming {event.__class__.__name__} was partially successful.")
                 return events, None
             else:
                 print(f"Failed to consume events from RMQ {routing_key} with error: {err}")

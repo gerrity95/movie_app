@@ -3,6 +3,7 @@ import datetime
 import pickle
 from enum import Enum, auto
 
+
 class State(Enum):
     
     undefined = auto()
@@ -16,6 +17,7 @@ class State(Enum):
     
     def deconstruct(self) -> str:
         return self.name
+
 
 class RecommendationsEvent:
 

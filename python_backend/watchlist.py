@@ -1,9 +1,8 @@
-import asyncio
 from base.mongoclient import MongoClient
 from base.tmdbclient import TmdbClient
 from base.rabbitmq_client import RabbitMqClient
-import json
-import datetime
+from typing import Optional, Tuple
+
 
 class Watchlist:
     
@@ -12,7 +11,7 @@ class Watchlist:
         self.tmdb_client = TmdbClient()
         self.rabbitmq_client = RabbitMqClient()
     
-    async def process_watchlist(self, movie_list: list) -> list:
+    async def process_watchlist(self, movie_list: list) -> Tuple[Optional[list], Optional[Exception]]:
         """
         Function to get all data for all movies in a given users watchlist
         """
