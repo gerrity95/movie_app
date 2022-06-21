@@ -1,26 +1,19 @@
 import asyncio
-import aio_pika
-import json
-import os
-from pathlib import Path
-from dotenv import load_dotenv
 from base.events import RecommendationsEvent, State
 from base.recommendations_helper import RecommendationsHelper
 from base.rabbitmq_client import RabbitMqClient
 from base.recc_calculator import ReccCalculator
 
-class AsyncRMQ():
+
+class AsyncRMQ:
 
     def __init__(self) -> None:
         self.rabbitmq_client = RabbitMqClient()
         self.reccs_helper = RecommendationsHelper()
         self.reccs_calculator = ReccCalculator()
-        
 
     async def consume_reccs_events(self):
-        
         while True:
-            
             try:
                 routing_key = RecommendationsEvent.routing_key()
                 events_queue = await self.rabbitmq_client.declare_queue(routing_key=routing_key,
@@ -55,15 +48,14 @@ class AsyncRMQ():
             except Exception as error:
                 print(f"Failure seen attempting to consume RecommendationEvents: {error}. Sleeping for 30 seconds")
                 await asyncio.sleep(30)
-                
+
+
 def main():
     app = AsyncRMQ()
     loop = asyncio.get_event_loop()
     loop.run_until_complete(asyncio.gather(app.consume_reccs_events()))
     loop.close()
             
-                
-
 
 if __name__ == "__main__":
     main()

@@ -2,7 +2,8 @@ from motor.core import AgnosticDatabase, AgnosticCollection
 from motor.motor_asyncio import AsyncIOMotorClient
 from env_config import Config
 
-class MongoClient():
+
+class MongoClient:
     """
     A generic mongo client
     """

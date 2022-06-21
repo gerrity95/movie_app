@@ -1,6 +1,5 @@
-"""
-Module for running flask app
-"""
+import os
+from flask import Flask, jsonify, request
 
 from flask import Flask, jsonify, request
 from base.tmdbclient import TmdbClient
@@ -8,32 +7,34 @@ from base.mongoclient import MongoClient
 from base.rabbitmq_client import RabbitMqClient
 from recommendations import Recommendations
 from watchlist import Watchlist
-import os
 
 app = Flask(__name__)
 
 
-#we define the route /
+# we define the route /
 @app.route('/')
 def welcome():
     # return a json
     return jsonify({'status': 'api is working'})
 
-#we define the route /
+
+# we define the route /
 @app.route('/mongo_ping')
 async def mongo_test():
     ping_result = await MongoClient().ping()
     # return a json
     return jsonify({'status': ping_result})
 
-#we define the route /
+
+# we define the route /
 @app.route('/tmdb_ping')
 async def tmdb_test():
     ping_result = await TmdbClient().ping()
     # return a json
     return jsonify({'status': ping_result})
 
-#we define the route /
+
+# we define the route /
 @app.route('/rmq_ping')
 async def rmq_test():
     ping_result = await RabbitMqClient().ping()
@@ -41,7 +42,7 @@ async def rmq_test():
     return jsonify({'status': str(ping_result)})
 
 
-#we define the route /
+# we define the route /
 @app.route('/get_reccomendations', methods=['GET', 'POST'])
 async def get_reccs():
     print("Request received to get recommendations...")
@@ -51,10 +52,15 @@ async def get_reccs():
         # return a json
         if error:
             return {'status': str(error)}
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> e10b42f02390b89bed31f4b0c9bddf64c9e3f86b
         return {'result': result}
 
     return jsonify({'status': False})
+
 
 @app.route('/get_watchlist', methods=['GET', 'POST'])
 async def get_watchlist():
@@ -68,13 +74,17 @@ async def get_watchlist():
         # return a json
         if error:
             return {'status': str(error)}
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> e10b42f02390b89bed31f4b0c9bddf64c9e3f86b
         return {'result': result}
 
     return jsonify({'status': False})
 
 
 if __name__ == '__main__':
-    #define the localhost ip andd the cport that is going to be used
+    # define the localhost ip andd the cport that is going to be used
     # in some future article, we are going to use an env variable instead a hardcoded port
-    app.run(host='0.0.0.0', port=os.getenv('PORT')) 
+    app.run(host='0.0.0.0', port=os.getenv('PORT'))
