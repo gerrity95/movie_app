@@ -1,4 +1,6 @@
 import asyncio
+from typing import Optional
+
 from base.mongoclient import MongoClient
 from base.tmdbclient import TmdbClient
 from base.rabbitmq_client import RabbitMqClient
@@ -25,32 +27,18 @@ class Recommendations:
         # Check for existing recommendations
         stored_reccs, error = await self.recc_helper.query_mongo_for_user(user_id, 'recommended_movies')
         if error:
-            print(f"Error {error} attempting to get reccommended movies")
+            print(f"Error {error} attempting to get recommended movies")
             return None, RecommendationException
         if stored_reccs:
             try:
                 # TODO CHECK FOR STATE HERE IF ITS IN PROGRESS
                 """
-                EDGE CASE, user rates movie, goes to in progress, rates another movie before first movie finishes processing. Do we generate them again?
+                EDGE CASE, user rates movie, goes to in progress, rates another movie before first movie finishes 
+                processing. Do we generate them again?
                 """
                 print("Checking if we are currently updating the recommendations for user: " + user_id)
                 if stored_reccs[0]['state'] == 'in_progress':
-                    counter = 0
-                    while counter < 5:
-                        print("Currently in the process of updating the recommendations. Will retry in 5 seconds to "
-                              "check if complete... ")
-                        await asyncio.sleep(5)
-                        stored_reccs, error = await self.recc_helper.query_mongo_for_user(user_id, 'recommended_movies')
-                        if error:
-                            print(f"Error {error} attempting to get reccommended movies ")
-                            return None, RecommendationException
-
-                        if stored_reccs[0]['state'] == 'in_progress':
-                            counter += 1
-                        else:
-                            # No need to generate them again so can just return. Want to wait until process is complete.
-                            print("Recommendations have been updated as part of another process. Returning. ")
-                            return stored_reccs[0]['recommendations'], None
+                    return self.monitor_in_progress(user_id)
 
                 encoded_reccs = JSONEncoder().encode(stored_reccs[0])
                 encoded_reccs = json.loads(encoded_reccs)
@@ -92,6 +80,27 @@ class Recommendations:
         else:
             print(f"Recommendations are up to date for user {user_id}. Will not attempt to update ")
             return encoded_reccs['recommendations'], None
+
+    async def monitor_in_progress(self, user_id) -> [Optional[dict], Optional[Exception]]:
+        """
+        Function to process logic if there are currently recommendations being generated
+        """
+        counter = 0
+        while counter < 5:
+            print("Currently in the process of updating the recommendations. Will retry in 5 seconds to "
+                  "check if complete... ")
+            await asyncio.sleep(5)
+            stored_reccs, error = await self.recc_helper.query_mongo_for_user(user_id, 'recommended_movies')
+            if error:
+                print(f"Error {error} attempting to get reccommended movies ")
+                return None, RecommendationException
+
+            if stored_reccs[0]['state'] == 'in_progress':
+                counter += 1
+            else:
+                # No need to generate them again so can just return. Want to wait until process is complete.
+                print("Recommendations have been updated as part of another process. Returning. ")
+                return stored_reccs[0]['recommendations'], None
 
     async def compare_reccs_with_rated(self, user_id, encoded_reccs: dict):
         """
