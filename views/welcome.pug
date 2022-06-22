@@ -241,7 +241,7 @@ block content
           btn.onclick = function () {
             if($('#welcome_search_submit').val()) {
               $(".movie_list").removeClass('movie_select');
-               $('input[name="rating"]').val("0");
+              //$('input[name="rating"]').val("0");
               $('#bad_welcome_search').html('');
               var search = $('#welcome_search_submit').val();
               console.log(search);
@@ -332,9 +332,11 @@ block content
             console.log(movie_id);
             const rbs = document.querySelectorAll('input[name="rating"]');
             let selectedValue;
+            console.log(rbs);
             for (const rb of rbs) {
                 if (rb.checked) {
                     selectedValue = rb.value;
+                    console.log(rb.id);
                     break;
                 }
             }

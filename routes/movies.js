@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const moviesController = require('./controllers/movies.controller');
-const genericHelpers = require('./helpers/genericHelpers');
+const genericHelpers = require('./helpers/generic_helpers');
 
 // GET method routes
 router.get('/movies/:movie_id', genericHelpers.isLoggedIn, moviesController.get_movie);

@@ -144,6 +144,7 @@ exports.register_post = async function(req, res, next) {
       last_name: req.body.last_name}),
     req.body.password, function(err, user) {
       if (err) {
+        console.log(err);
         const errMessage = indexService.handleRegisterError(err);
         return res.redirect(url + errMessage.fail_message);
       }

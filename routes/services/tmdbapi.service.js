@@ -1,6 +1,6 @@
 const logger = require('../../config/logger');
 const rater = require('../../models/rated_movies');
-const flaskApi = require('../helpers/flaskApi');
+const flaskApi = require('../helpers/flask_api');
 const dotenv = require('dotenv');
 const https = require('https');
 
@@ -27,12 +27,14 @@ async function submitRatingService(req) {
         movieDetails.directorId, movieDetails.movieKeywords, isRated.numRated, url);
 
     // Will attempt to generate reccs in background each time we add a new rating for improved performance
-    logger.info('Going to attempt to update the recommendations in the background...');
-    flaskApi.get_reccomendations(req.user._id);
+    if (submitRating.meet_requirements) {
+      logger.info('Going to attempt to update the recommendations in the background...');
+      flaskApi.get_reccomendations(req.user._id);
+    }
     return submitRating;
   } catch (e) {
     logger.error('Error attempting to add show to the DB.');
-    logger.error('Error: ' + e);
+    logger.error(e);
     return {'success': false, 'meet_requirements': false};
   }
 }
@@ -47,13 +49,14 @@ async function isMovieRated(req, url) {
       'user_id': req.user._id,
     });
     const numRated = ratedCount.length;
+    logger.info("Number of movies rated so far: " + numRated);
 
     // Stop users from rating movies on the movie page before completing the welcome section
     if (!url.includes('welcome')) {
       if (numRated < 5) {
         logger.error('User tried to work around to the movie page before completing induction..');
         return {'success': false, 'meet_requirements': false,
-          'num_rated': numRated, 'updated': true};
+          'numRated': numRated, 'updated': true};
       }
     }
 
@@ -66,15 +69,15 @@ async function isMovieRated(req, url) {
     if (isRated) {
       if (url.includes('welcome')) {
         logger.info('Movie has already been rated. Must be a new movie during welcome initiaion');
-        return {'success': false, 'is_rated': true, 'updated': true, 'num_rated': numRated};
+        return {'success': false, 'is_rated': true, 'updated': true, 'numRated': numRated};
       }
       logger.info('Movie has already been rated. Updating the rating.');
       isRated.rating = req.body.rating;
       await isRated.save();
-      return {'success': true, 'updated': true, 'num_rated': numRated};
+      return {'success': true, 'updated': true, 'numRated': numRated};
     }
 
-    return {'updated': false, 'num_rated': numRated};
+    return {'updated': false, 'numRated': numRated};
   } catch (e) {
     logger.error('Error attempting to identify if a movie has already been rated');
     logger.error(e);
@@ -106,7 +109,8 @@ async function ratedMovieDetails(req) {
       logger.error('Unable to fulfill request to add movie to DB. Cannot get movie keywords');
       throw new Error('Unable to fulfill request to add movie to DB. Cannot get movie keywords');
     };
-    return {'movieKeywords': movieKeywords, 'movieCast': movieCast, 'directorId': directorId};
+    return {'movieDetails': movieDetails, 'movieKeywords': movieKeywords,
+      'movieCast': movieCast, 'directorId': directorId};
   } catch (e) {
     logger.error('Error attempting to gather details for movie when rating');
     logger.error(e);

@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const indexController = require('./controllers/index.controller');
-const genericHelpers = require('./helpers/genericHelpers');
+const genericHelpers = require('./helpers/generic_helpers');
 
 // GET method routes
 // router.use (function (req, res, next) {

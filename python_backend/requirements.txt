@@ -1,5 +1,5 @@
 flask
-motor
+motor==2.5.1
 requests
 asyncio
 aiohttp

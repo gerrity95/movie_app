@@ -1,7 +1,7 @@
 const logger = require('../../config/logger');
 const helpers = require('../helpers/generic_helpers');
 const ratedModel = require('../../models/rated_movies');
-const flaskApi = require('../helpers/flaskApi');
+const flaskApi = require('../helpers/flask_api');
 const tmdbapiService = require('./tmdbapi.service');
 const passport = require('passport');
 const email = require('../../config/email');
@@ -60,8 +60,7 @@ async function getWelcome(req) {
     return {rated_movies: ratedMovies.length, data: {}};
   }
   const rndInt = helpers.random_number(1, 8);
-  const inspireQuery = `language=en-US&sort_by=popularity.desc&include_adult=false&include_video=
-  false&page=${rndInt}&vote_average.gte=8&with_original_language=en&vote_count.gte=1000`;
+  const inspireQuery = `language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=${rndInt}&vote_average.gte=8&with_original_language=en&vote_count.gte=1000`;
   const inspirationMovies = await tmdbapiService.discover_search(inspireQuery);
   let inspiryList = false;
   if (inspirationMovies.status == 200) {

@@ -38,7 +38,7 @@ class Recommendations:
                 """
                 print("Checking if we are currently updating the recommendations for user: " + user_id)
                 if stored_reccs[0]['state'] == 'in_progress':
-                    return self.monitor_in_progress(user_id)
+                    return await self.monitor_in_progress(user_id)
 
                 encoded_reccs = JSONEncoder().encode(stored_reccs[0])
                 encoded_reccs = json.loads(encoded_reccs)

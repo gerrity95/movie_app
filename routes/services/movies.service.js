@@ -44,10 +44,11 @@ async function getMovie(req) {
   if (isWatchlist.length == 1) {
     watchlistBool = true;
   }
+  const castList;
   if (movieCast.body.cast.length > 8) {
-    const castList = [0, 1, 2, 3, 4, 5, 6, 7];
+    castList = [0, 1, 2, 3, 4, 5, 6, 7];
   } else {
-    const castList = [];
+    castList = [];
     for (let i = 0; i < movieCast.body.cast.length; i++) {
       castList.push(i);
     }

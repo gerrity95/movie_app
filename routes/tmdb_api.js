@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const tmdbapiController = require('./controllers/tmdbapi.controller');
-const genericHelpers = require('./helpers/genericHelpers');
+const genericHelpers = require('./helpers/generic_helpers');
 
 // GET method routes
 router.get('/user/recommended_shows', genericHelpers.isLoggedIn,

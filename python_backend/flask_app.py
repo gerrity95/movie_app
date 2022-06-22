@@ -52,11 +52,6 @@ async def get_reccs():
         # return a json
         if error:
             return {'status': str(error)}
-<<<<<<< HEAD
-        
-=======
-
->>>>>>> e10b42f02390b89bed31f4b0c9bddf64c9e3f86b
         return {'result': result}
 
     return jsonify({'status': False})
@@ -74,11 +69,6 @@ async def get_watchlist():
         # return a json
         if error:
             return {'status': str(error)}
-<<<<<<< HEAD
-        
-=======
-
->>>>>>> e10b42f02390b89bed31f4b0c9bddf64c9e3f86b
         return {'result': result}
 
     return jsonify({'status': False})
