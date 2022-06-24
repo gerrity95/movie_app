@@ -68,7 +68,7 @@ class RabbitMqClient:
         # TODO VERIFY THIS FUNCTION
         ping = await self.connect()
         
-        return ping
+        return "True", 200
     
     async def publish(self, message: Any, routing_key: str):
         """

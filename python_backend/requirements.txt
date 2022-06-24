@@ -1,5 +1,5 @@
 flask
-motor
+motor==2.5.1
 requests
 asyncio
 aiohttp
@@ -7,3 +7,5 @@ python-dotenv
 flask[async]
 pika
 aio_pika
+pylint
+prometheus-flask-exporter

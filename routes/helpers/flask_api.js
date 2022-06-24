@@ -1,152 +1,143 @@
-const express = require('express');
-const router = express.Router();
-const path = require('path');
-const rater = require("../../models/rated_movies")
-const passport = require("passport");
-const passportLocalMongoose = require("passport-local-mongoose");
 const dotenv = require('dotenv');
-const async = require("async");
 const http = require('http');
 dotenv.config();
 
 const {
   FLASK_HOST,
-  FLASK_PORT
+  FLASK_PORT,
 } = process.env;
 
 
-async function flask_test() {
-  var request_data = {"Hello": "Mark"}
-  var options = {
+async function flaskTest() {
+  const options = {
     host: `${FLASK_HOST}`,
     path: '/param_test',
     port: `${FLASK_PORT}`,
     method: 'POST',
     headers: {
-      "content-type": "application/json"
-    }
+      'content-type': 'application/json',
+    },
   };
-  
-  var body = ""
+
+  let body = '';
   return new Promise((resolve, reject) => {
     const req = http.request(options, (res) => {
-      console.log("Request made to Flask API.");
+      console.log('Request made to Flask API.');
       console.log('statusCode:', res.statusCode);
       console.log('headers:', res.headers);
-    
+
       res.on('data', (chunk) => {
         body += chunk;
       });
       res.on('end', () => {
         try {
-          response_body = JSON.parse(body);
-          resolve({"status": res.statusCode, "body": response_body});
+          const responseBody = JSON.parse(body);
+          resolve({'status': res.statusCode, 'body': responseBody});
         } catch (error) {
-          console.log("Error: " + error + " attempting to parse response from FLASK API.")
-          resolve({"status": res.statusCode, "body": body});
+          console.log('Error: ' + error + ' attempting to parse response from FLASK API.');
+          resolve({'status': res.statusCode, 'body': body});
         }
-      })
+      });
     });
-    
+
     req.on('error', (e) => {
-      console.error("Error queryinwg Flask Server: " + e);
-      reject(e)
+      console.error('Error queryinwg Flask Server: ' + e);
+      reject(e);
     });
-    
-    req.write(JSON.stringify(request_data))
+
     req.end();
   });
 }
 
-async function get_reccomendations(user_id) {
-  var request_data = {"user_id": user_id}
-  var options = {
+async function getRecomendations(userId) {
+  const requestData = {'user_id': userId};
+  const options = {
     host: `${FLASK_HOST}`,
     path: '/get_reccomendations',
     port: `${FLASK_PORT}`,
     method: 'POST',
     headers: {
-      "content-type": "application/json"
-    }
+      'content-type': 'application/json',
+    },
   };
-  console.log("Processing request against backend...");
-  var body = ""
+  console.log('Processing request against backend...');
+  let body = '';
   return new Promise((resolve, reject) => {
     const req = http.request(options, (res) => {
-      console.log("Request made to Flask API.");
+      console.log('Request made to Flask API.');
       console.log('statusCode:', res.statusCode);
       console.log('headers:', res.headers);
-    
+
       res.on('data', (chunk) => {
         body += chunk;
       });
       res.on('end', () => {
         try {
-          response_body = JSON.parse(body);
-          resolve({"status": res.statusCode, "body": response_body});
+          const responseBody = JSON.parse(body);
+          resolve({'status': res.statusCode, 'body': responseBody});
         } catch (error) {
-          console.log("Error: " + error + " attempting to parse response from FLASK API.")
-          resolve({"status": res.statusCode, "body": body});
+          console.log('Error: ' + error + ' attempting to parse response from FLASK API.');
+          resolve({'status': res.statusCode, 'body': body});
         }
-      })
+      });
     });
-    
+
     req.on('error', (e) => {
-      console.error("Error querying Flask Server: " + e);
-      reject(e)
+      console.error('Error querying Flask Server: ' + e);
+      reject(e);
     });
-    
-    req.write(JSON.stringify(request_data))
+
+    req.write(JSON.stringify(requestData));
     req.end();
   });
 }
 
-async function get_watchlist(user_id, movie_list) {
-  var request_data = {"user_id": user_id, "movie_list": movie_list}
-  var options = {
+async function getWatchlist(userId, movieList) {
+  const requestData = {'user_id': userId, 'movie_list': movieList};
+  const options = {
     host: `${FLASK_HOST}`,
     path: '/get_watchlist',
     port: `${FLASK_PORT}`,
     method: 'POST',
     headers: {
-      "content-type": "application/json"
-    }
+      'content-type': 'application/json',
+    },
   };
-  console.log("Processing request against backend...");
-  var body = ""
+  console.log('Processing request against backend...');
+  let body = '';
   return new Promise((resolve, reject) => {
     const req = http.request(options, (res) => {
-      console.log("Request made to Flask API.");
+      console.log('Request made to Flask API.');
       console.log('statusCode:', res.statusCode);
       console.log('headers:', res.headers);
-    
+
       res.on('data', (chunk) => {
         body += chunk;
       });
       res.on('end', () => {
         try {
-          response_body = JSON.parse(body);
-          resolve({"status": res.statusCode, "body": response_body});
+          const responseBody = JSON.parse(body);
+          resolve({'status': res.statusCode, 'body': responseBody});
         } catch (error) {
-          console.log("Error: " + error + " attempting to parse response from FLASK API.")
-          resolve({"status": res.statusCode, "body": body});
+          console.log('Error: ' + error + ' attempting to parse response from FLASK API.');
+          resolve({'status': res.statusCode, 'body': body});
         }
-      })
+      });
     });
-    
+
     req.on('error', (e) => {
-      console.error("Error querying Flask Server: " + e);
-      reject(e)
+      console.error('Error querying Flask Server: ' + e);
+      reject(e);
     });
-    
-    req.write(JSON.stringify(request_data))
+
+    req.write(JSON.stringify(requestData));
     req.end();
   });
 }
 
 
 module.exports = {
-  flask_test: flask_test,
-  get_reccomendations: get_reccomendations,
-  get_watchlist: get_watchlist
+  flask_test: flaskTest,
+  get_reccomendations: getRecomendations,
+  get_watchlist: getWatchlist,
 };

@@ -29,10 +29,10 @@ class MongoClient:
     async def ping(self) -> bool:
         try:
             await self.node_db().list_collection_names()
-            return True
+            return "True", 200
         except Exception as error:
             print(f"Error talking to Mongo: {error}")
-            return False
+            return "Internal Server Error", 500
         
     async def make_request(self, query: list, collection: str, database: str = 'nodejs_db'):
         """
