@@ -23,6 +23,7 @@ const {
   MONGO_HOSTNAME,
   MONGO_PORT,
   MONGO_DB,
+  SESSION_SECRET,
 } = process.env;
 
 const store = new MongoStore({
@@ -36,7 +37,7 @@ const metricsMiddleware = promBundle({
   includePath: true,
   includeStatusCode: true,
   includeUp: true,
-  customLabels: {project_name: 'hello_world', project_type: 'test_metrics_labels'},
+  customLabels: {project_name: 'whattowatch', project_type: 'nodejs_metrics'},
   promClient: {
     collectDefaultMetrics: {
     },
@@ -55,7 +56,7 @@ app.set('view engine', 'pug');
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(session({
-  secret: 'markgerrity',
+  secret: `${SESSION_SECRET}`,
   resave: false,
   saveUninitialized: false,
   store: store,
@@ -83,5 +84,5 @@ app.use(function(err, req, res, next) {
 });
 
 app.listen(port, function() {
-  console.log(`Example app listening on ${port}!`);
+  console.log(`WhatToWatch Movies listening on ${port}!`);
 });

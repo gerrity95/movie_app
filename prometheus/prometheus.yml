@@ -7,9 +7,9 @@ scrape_configs:
         'nodejs:3000',
       ]
         labels:
-          service: 'app-exporter'
-          group: 'testing'
-          name: 'app-exporter'
+          service: 'movie-app'
+          group: 'movie-app'
+          name: 'movie-app'
   
   - job_name: 'flask_api'
     scrape_interval: 5s
@@ -19,6 +19,6 @@ scrape_configs:
         'flask_backend:5000',
       ]
         labels:
-          service: 'app-exporter'
-          group: 'testing'
-          name: 'app-exporter'
+          service: 'flask-api'
+          group: 'flask-api'
+          name: 'flask-api'
