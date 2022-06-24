@@ -10,3 +10,15 @@ scrape_configs:
           service: 'app-exporter'
           group: 'testing'
           name: 'app-exporter'
+  
+  - job_name: 'flask_api'
+    scrape_interval: 5s
+
+    static_configs:
+      - targets: [
+        'flask_backend:5000',
+      ]
+        labels:
+          service: 'app-exporter'
+          group: 'testing'
+          name: 'app-exporter'

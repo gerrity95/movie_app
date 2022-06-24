@@ -22,10 +22,10 @@ class TmdbClient:
                 'Authorization': f"Bearer {self.read_token}"
             }
             requests.get(url=f"{self.api_endpoint}/account", headers=headers)
-            return True
+            return "True", 200
         except Exception as error:
             print(f"Error talking to TMDB: {error}")
-            return False
+            return "Internal Server Error", 500
 
     async def make_movie_request(self, path: str, movie_id: int):
         """

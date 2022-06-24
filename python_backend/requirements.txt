@@ -8,3 +8,4 @@ flask[async]
 pika
 aio_pika
 pylint
+prometheus-flask-exporter
