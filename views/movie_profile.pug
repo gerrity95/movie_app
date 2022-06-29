@@ -7,6 +7,7 @@ block content
   include includes/failed_review_modal.pug
   include includes/failed_watchlist.pug
   - var movie_info = movie_info
+  - var movie_reccs = reccomendations
   - var movie_cast = movie_credits
   - var watch_provider_countries = watch_provider_countries
   - var header_src = `https://image.tmdb.org/t/p/original/${movie_info.backdrop_path}`
@@ -236,6 +237,13 @@ block content
           .row#rent_movies
           h5(style="padding-top: 15px") Purchase
           .row#buy_movies
+
+    .row.movie_interact_box
+      .col-12.col-sm-8.col-md-6.col-lg-6.col-xl-4.offset-lg-0.offset-xl-0.offset-md-1.offset-sm-2.offset-0.align-self-center.rating_column
+      .col-12.col-sm-10.col-md-10.col-lg-6.col-xl-6.offset-lg-0.offset-xl-2.offset-md-1.offset-sm-2.align-self-center.rating_column
+        each val in movie_reccs.results
+          p
+            | #{val.title}
   
   #module.container-fluid
     h2

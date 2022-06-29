@@ -1,0 +1,151 @@
+version: '3'
+
+services:
+
+  prometheus:
+    image: prom/prometheus:v2.20.1
+    container_name: prometheus
+    volumes:
+      - ./prometheus:/etc/prometheus
+      - prometheus_data:/prometheus
+    ports:
+      - 9090:9090
+    expose:
+      - 9090
+    networks:
+      - app-network
+  grafana:
+    image: grafana/grafana:7.1.5
+    container_name: grafana
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning
+    environment:
+      - GF_AUTH_DISABLE_LOGIN_FORM=true
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_SERVER_HTTP_PORT=3003
+    ports:
+      - 3003:3003
+    expose:
+      - 3003
+    networks:
+      - app-network
+
+  flask_backend:
+        image: flask_backend:0.0.1
+        build: 
+          context: ../python_backend/
+          dockerfile: ./docker/Dockerfile_flask
+        volumes: 
+            - ../python_backend/:/usr/src/app/
+        ports: 
+            - 5000:5000
+        depends_on:
+          - rabbitmq
+        environment: 
+            PORT: 5000
+            FLASK_DEBUG: 1
+            PYTHONUNBUFFERED: 1
+        restart: unless-stopped
+        networks:
+          - app-network
+  rmq_client:
+        image: recommendation_backend:0.0.1
+        build: 
+          context: ../python_backend/
+          dockerfile: Dockerfile_RMQ
+        volumes: 
+            - ../python_backend/:/usr/src/app/
+        ports: 
+            - 5001:5001
+        depends_on:
+          - rabbitmq
+        environment: 
+            PORT: 5001
+            FLASK_DEBUG: 1
+            PYTHONUNBUFFERED: 1
+        restart: unless-stopped
+        networks:
+          - app-network
+  nodejs:
+    image: whattowatch:0.0.1
+    build:
+      context: ..
+      dockerfile: ./docker/Dockerfile
+    image: nodejs:14.18.0
+    container_name: nodejs
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      - MONGO_USERNAME=$MONGO_USERNAME
+      - MONGO_PASSWORD=$MONGO_PASSWORD
+      - MONGO_HOSTNAME=db
+      - MONGO_PORT=$MONGO_PORT
+      - MONGO_DB=$MONGO_DB
+    ports:
+      - "3000:3000"
+    volumes:
+      - ..:/home/node/app
+      - /home/node/app/node_modules
+    networks:
+      - app-network
+    command: ./scripts/wait-for.sh db:27017 -- /home/node/app/node_modules/.bin/pm2-runtime start ecosystem.config.js
+  db:
+    image: andresvidal/rpi3-mongodb3
+    container_name: db
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=$MONGO_USERNAME
+      - MONGO_INITDB_ROOT_PASSWORD=$MONGO_PASSWORD
+    volumes:
+      - dbdata:/data/db
+    networks:
+      - app-network
+
+  mongo-express:
+    image: ind3x/rpi-mongo-express
+    container_name: mongo-express
+    environment:
+    - ME_CONFIG_MONGODB_SERVER=db
+    - ME_CONFIG_MONGODB_ENABLE_ADMIN=true
+    - ME_CONFIG_MONGODB_ADMINUSERNAME=$MONGO_USERNAME
+    - ME_CONFIG_MONGODB_ADMINPASSWORD=$MONGO_PASSWORD
+    - ME_CONFIG_BASICAUTH_USERNAME=$MONGO_USERNAME
+    - ME_CONFIG_BASICAUTH_PASSWORD=$MONGO_PASSWORD
+    volumes:
+      - dbdata
+    depends_on:
+      - db
+    networks:
+      - app-network
+    ports:
+      - 8081:8081
+    restart: always
+
+  rabbitmq:
+    container_name: "rabbitmq"
+    image: rabbitmq:3.8-management-alpine
+    environment:
+        - RABBITMQ_DEFAULT_USER=$RMQ_USER
+        - RABBITMQ_DEFAULT_PASS=$RMQ_PASSWORD
+        - RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS=+S 1:1
+    ports:
+        # AMQP protocol port
+        - '5672:5672'
+        # HTTP management UI
+        - '15672:15672'
+    networks:
+        - app-network
+  
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  dbdata:
+  node_modules:
+  prometheus_data: {}
+  grafana_data: {}
