@@ -33,10 +33,10 @@ services:
       - app-network
 
   flask_backend:
-        image: flask_backend:0.0.1
+        image: python_backend:0.0.1
         build: 
           context: ../python_backend/
-          dockerfile: ./docker/Dockerfile_flask
+          dockerfile: ./docker/Dockerfile_Python
         volumes: 
             - ../python_backend/:/usr/src/app/
         ports: 
@@ -50,11 +50,12 @@ services:
         restart: unless-stopped
         networks:
           - app-network
+        command: python -u flask_app.py
   rmq_client:
-        image: recommendation_backend:0.0.1
+        image: python_backend:0.0.1
         build: 
           context: ../python_backend/
-          dockerfile: Dockerfile_RMQ
+          dockerfile: ./docker/Dockerfile_Python
         volumes: 
             - ../python_backend/:/usr/src/app/
         ports: 
@@ -68,12 +69,12 @@ services:
         restart: unless-stopped
         networks:
           - app-network
+        command: python -u async_rmq.py
   nodejs:
     image: whattowatch:0.0.1
     build:
       context: ..
       dockerfile: ./docker/Dockerfile
-    image: nodejs:14.18.0
     container_name: nodejs
     restart: unless-stopped
     env_file: .env

@@ -6,7 +6,6 @@ services:
     build:
       context: ..
       dockerfile: ./docker/Dockerfile
-    image: nodejs:14.18.0
     container_name: nodejs
     restart: unless-stopped
     env_file: .env
