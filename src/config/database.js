@@ -23,4 +23,4 @@ const connection = mongoose.connect(url, options).then( function() {
 
 module.exports = {
   connection: connection,
-}
+};

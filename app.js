@@ -6,7 +6,7 @@ const indexRouter = require('./src/routes/index');
 const movieRouter = require('./src/routes/movies');
 const tmdbRouter = require('./src/routes/tmdb_api');
 const errorRouter = require('./src/routes/error');
-const contactRouter = require('./src/contact');
+const contactRouter = require('./src/routes/contact');
 const passwordRouter = require('./src/routes/password_reset');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
@@ -14,10 +14,10 @@ const User = require('./src/models/user');
 const session = require('express-session');
 const MongoStore = require('connect-mongodb-session')(session);
 const promBundle = require('express-prom-bundle');
-const port = 3000;
 const dbConnection = db.connection;
 
 const {
+  PORT,
   MONGO_USERNAME,
   MONGO_PASSWORD,
   MONGO_HOSTNAME,
@@ -32,17 +32,17 @@ const store = new MongoStore({
 });
 
 // Add the options to the prometheus middleware most option are for http_request_duration_seconds histogram metric
-const metricsMiddleware = promBundle({
-  includeMethod: true,
-  includePath: true,
-  includeStatusCode: true,
-  includeUp: true,
-  customLabels: {project_name: 'whattowatch', project_type: 'nodejs_metrics'},
-  promClient: {
-    collectDefaultMetrics: {
-    },
-  },
-});
+// const metricsMiddleware = promBundle({
+//   includeMethod: true,
+//   includePath: true,
+//   includeStatusCode: true,
+//   includeUp: true,
+//   customLabels: {project_name: 'whattowatch', project_type: 'nodejs_metrics'},
+//   promClient: {
+//     collectDefaultMetrics: {
+//     },
+//   },
+// });
 
 // session encoding
 passport.serializeUser(User.serializeUser());
@@ -65,7 +65,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(metricsMiddleware);
+// app.use(metricsMiddleware);
 app.use('/', indexRouter.router);
 app.use('/', movieRouter.router);
 app.use('/', tmdbRouter.router);
@@ -83,6 +83,6 @@ app.use(function(err, req, res, next) {
   res.render('error', {'error': err});
 });
 
-app.listen(port, function() {
-  console.log(`WhatToWatch Movies listening on ${port}!`);
+app.listen(PORT, function() {
+  console.log(`WhatToWatch Movies listening on ${PORT}!`);
 });

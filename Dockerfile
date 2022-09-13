@@ -22,8 +22,10 @@ RUN npm install
 
 FROM node:14-alpine as main
 
+WORKDIR /home/node/app
+
 COPY --chown=node:node --from=build /home/node/app .
 
-EXPOSE 8080
+#EXPOSE 8080
 
-CMD ["pm2-runtime", "process.yml"]
+#CMD ["pm2-runtime", "process.yml"]

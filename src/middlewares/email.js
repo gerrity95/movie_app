@@ -54,4 +54,4 @@ module.exports = {
   transporter: transporter,
   send_email: sendEmail,
   send_contact_email: sendContactEmail,
-}
+};

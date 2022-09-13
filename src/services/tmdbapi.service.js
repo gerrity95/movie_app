@@ -49,7 +49,7 @@ async function isMovieRated(req, url) {
       'user_id': req.user._id,
     });
     const numRated = ratedCount.length;
-    logger.info("Number of movies rated so far: " + numRated);
+    logger.info('Number of movies rated so far: ' + numRated);
 
     // Stop users from rating movies on the movie page before completing the welcome section
     if (!url.includes('welcome')) {

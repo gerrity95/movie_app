@@ -1,12 +1,12 @@
 version: '3'
 
 services:
-  nodejs:
+  whattowatch:
     image: whattowatch:0.0.1
     build:
-      context: ..
-      dockerfile: ./docker/Dockerfile
-    container_name: nodejs
+      context: .
+      dockerfile: ./Dockerfile
+    container_name: whattowatch
     restart: unless-stopped
     env_file: .env
     environment:
@@ -16,18 +16,18 @@ services:
       - MONGO_PORT=$MONGO_PORT
       - MONGO_DB=$MONGO_DB
     ports:
-      - "3000:3000"
+      - 5000:5000
     volumes:
-      - ..:/home/node/app
+      - .:/home/node/app
       - /home/node/app/node_modules
-    networks:
-      - app-network
-    command: ../scripts/wait-for.sh db:27017 -- /home/node/app/node_modules/.bin/pm2-runtime start ecosystem.config.js
-  
-
+        #    networks:
+        #- app-network
+    command: /home/node/app/node_modules/.bin/pm2-runtime start ecosystem.config.js
+    
 networks:
-  app-network:
-    driver: bridge
+  default:
+    external: true
+    name: app-network
 
 volumes:
   node_modules:

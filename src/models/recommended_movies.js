@@ -1,18 +1,18 @@
-//Import the mongoose module
-var mongoose = require('mongoose');
-const passportLocalMongoose = require("passport-local-mongoose");
+// Import the mongoose module
+const mongoose = require('mongoose');
+const passportLocalMongoose = require('passport-local-mongoose');
 
-//Define a schema
-var Schema = mongoose.Schema;
+// Define a schema
+const Schema = mongoose.Schema;
 
 const reccsSchema = new Schema({
-  user_id: { type: String, default: null },
-  recommendations: { type: Array, default: null}, 
+  user_id: {type: String, default: null},
+  recommendations: {type: Array, default: null},
 },
-{ timestamps: true }
+{timestamps: true},
 );
 
 // Compile model from schema
-var reccsModel = mongoose.model('recommended_movies', reccsSchema );
+const reccsModel = mongoose.model('recommended_movies', reccsSchema );
 
-module.exports = reccsModel
+module.exports = reccsModel;
