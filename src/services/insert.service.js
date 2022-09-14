@@ -1,3 +1,7 @@
+/*
+Used to insert data into the DB
+*/
+
 const logger = require('../middlewares/logger');
 const {getWatchProviders} = require('./tmdbapi.service');
 const watchProvidersModel = require('../models/watch_providers');
