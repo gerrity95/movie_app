@@ -20,6 +20,8 @@ USER node
 
 RUN npm install
 
+COPY --chown=node:node . .
+
 FROM node:14-alpine as main
 
 WORKDIR /home/node/app
