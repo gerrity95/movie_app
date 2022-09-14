@@ -90,13 +90,13 @@ async function ratedMovieDetails(req) {
    * Function to gather movie details needed for submitting a rating
    */
   try {
-    const movieDetails = await get_movie_details(req.body.movie_id);
+    const movieDetails = await getMovieDetails(req.body.movie_id);
     if (movieDetails.status != 200) {
       logger.error('Unable to fulfill request to add movie to DB. Cannot get movie details');
       throw new Error('Unable to fulfill request to add movie to DB. Cannot get movie details');
     };
 
-    const movieCast = await generic_tmdb_query(req.body.movie_id, 'credits');
+    const movieCast = await genericTmdbQuery(req.body.movie_id, 'credits');
     let directorId = '';
     for (const member in movieCast.body.cast) {
       if (movieCast.body.crew[member]['job'] == 'Director') {
@@ -104,7 +104,7 @@ async function ratedMovieDetails(req) {
         break;
       }
     }
-    const movieKeywords = await generic_tmdb_query(req.body.movie_id, 'keywords');
+    const movieKeywords = await genericTmdbQuery(req.body.movie_id, 'keywords');
     if (movieKeywords.status != 200) {
       logger.error('Unable to fulfill request to add movie to DB. Cannot get movie keywords');
       throw new Error('Unable to fulfill request to add movie to DB. Cannot get movie keywords');
@@ -158,7 +158,7 @@ async function submitMovieRating(req, movieDetails, directorId, movieKeywords, n
   }
 }
 
-async function get_movie_details(movieId) {
+async function getMovieDetails(movieId) {
   const options = {
     host: 'api.themoviedb.org',
     path: '/3/movie/' + movieId,
@@ -192,7 +192,7 @@ async function get_movie_details(movieId) {
   });
 }
 
-async function generic_tmdb_query(movieId, queryPath) {
+async function genericTmdbQuery(movieId, queryPath) {
   const options = {
     host: 'api.themoviedb.org',
     path: '/3/movie/' + movieId + '/' + queryPath,
@@ -226,7 +226,41 @@ async function generic_tmdb_query(movieId, queryPath) {
   });
 }
 
-async function tmdb_search(searchQuery) {
+async function getWatchProviders() {
+  const options = {
+    host: 'api.themoviedb.org',
+    path: '/3/watch/providers/regions',
+    port: 443,
+    method: 'GET',
+    headers: {'Authorization': 'Bearer ' + TMDB_READ_TOKEN},
+  };
+
+  let body = '';
+  return new Promise((resolve, reject) => {
+    const req = https.request(options, (res) => {
+      logger.info('Request made to TMDB to get Keywords');
+      logger.info('statusCode:', res.statusCode);
+      logger.info('headers:', res.headers);
+
+      res.on('data', (chunk) => {
+        body += chunk;
+      });
+      res.on('end', () => {
+        const responseBody = JSON.parse(body);
+        resolve({'status': res.statusCode, 'body': responseBody});
+      });
+    });
+
+    req.on('error', (e) => {
+      console.error('Error querying TMDB: ' + e);
+      reject(e);
+    });
+
+    req.end();
+  });
+}
+
+async function tmdbSearch(searchQuery) {
   const parsedQuery = encodeURI(searchQuery);
   const options = {
     host: 'api.themoviedb.org',
@@ -261,7 +295,7 @@ async function tmdb_search(searchQuery) {
   });
 }
 
-async function get_genres() {
+async function getGenres() {
   const options = {
     host: 'api.themoviedb.org',
     path: '/3/genre/movie/list',
@@ -295,7 +329,7 @@ async function get_genres() {
   });
 }
 
-async function discover_search(searchQuery) {
+async function discoverSearch(searchQuery) {
   const options = {
     host: 'api.themoviedb.org',
     path: '/3/discover/movie?' + searchQuery,
@@ -332,9 +366,10 @@ async function discover_search(searchQuery) {
 
 module.exports = {
   submitRatingService,
-  get_movie_details,
-  generic_tmdb_query,
-  search_query: tmdb_search,
-  get_genres,
-  discover_search,
+  getMovieDetails,
+  genericTmdbQuery,
+  search_query: tmdbSearch,
+  getGenres,
+  discoverSearch,
+  getWatchProviders,
 };

@@ -2,9 +2,6 @@
 const mongoose = require('mongoose');
 const passportLocalMongoose = require('passport-local-mongoose');
 
-// Define a schema
-const Schema = mongoose.Schema;
-
 const userSchema = new mongoose.Schema({
   username: {type: String, default: null, unique: true, lowercase: true},
   password: {type: String, default: null},

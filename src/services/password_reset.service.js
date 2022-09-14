@@ -4,7 +4,6 @@ const logger = require('../middlewares/logger');
 const Token = require('../models/token');
 const helpers = require('../utils/generic_helpers');
 const email = require('../middlewares/email');
-const email_transporter = email.transporter;
 const dotenv = require('dotenv');
 dotenv.config();
 
@@ -90,7 +89,7 @@ async function passwordUpdateBack(req) {
 }
 
 
-exports.modules = {
+module.exports = {
   passwordUpdate,
   passwordResetBack,
   passwordUpdateBack,

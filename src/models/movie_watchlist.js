@@ -1,6 +1,5 @@
 // Import the mongoose module
 const mongoose = require('mongoose');
-const passportLocalMongoose = require('passport-local-mongoose');
 
 // Define a schema
 const Schema = mongoose.Schema;

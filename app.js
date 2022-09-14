@@ -8,6 +8,7 @@ const tmdbRouter = require('./src/routes/tmdb_api');
 const errorRouter = require('./src/routes/error');
 const contactRouter = require('./src/routes/contact');
 const passwordRouter = require('./src/routes/password_reset');
+const insertRouter = require('./src/routes/insert');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const User = require('./src/models/user');
@@ -71,6 +72,7 @@ app.use('/', movieRouter.router);
 app.use('/', tmdbRouter.router);
 app.use('/', passwordRouter.router);
 app.use('/', contactRouter.router);
+app.use('/', insertRouter.router);
 app.use('/', errorRouter);
 
 app.use(function(err, req, res, next) {

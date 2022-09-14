@@ -10,18 +10,24 @@ async function getMovie(req) {
   const watchProvidersPath = `${req.params.movie_id}/watch/providers`;
   const [watchProvidersContent, watchProviderCountries, ipInfo, isWatchlist, movieInfo,
     movieCast, movieRecommendations] = await Promise.all([
-    tmdbapiService.get_movie_details(watchProvidersPath),
+    tmdbapiService.getMovieDetails(watchProvidersPath),
     watchProviders.find({}),
     helpers.get_ip_info(),
     watchlistModel.find({user_id: req.user._id, movie_id: req.params.movie_id}),
-    tmdbapiService.get_movie_details(req.params.movie_id),
-    tmdbapiService.generic_tmdb_query(req.params.movie_id, 'credits'),
-    tmdbapiService.generic_tmdb_query(req.params.movie_id, 'recommendations'),
+    tmdbapiService.getMovieDetails(req.params.movie_id),
+    tmdbapiService.genericTmdbQuery(req.params.movie_id, 'credits'),
+    tmdbapiService.genericTmdbQuery(req.params.movie_id, 'recommendations'),
   ]).catch((err) => setImmediate(() => {
     logger.info('Error attempting to get data for Movie ' + req.params.movie_id);
     logger.info(err);
     throw err;
   }));
+
+  if (movieInfo.status === 404) {
+    logger.info(`Unable to find movie in TMDB for ${req.params.movie_id}`);
+    throw new Error('Unable to find movie');
+  }
+
   let director = '';
   let screenplay = '';
   let writer = '';
@@ -54,7 +60,7 @@ async function getMovie(req) {
       castList.push(i);
     }
   }
-  console.log(movieRecommendations.body);
+  // console.log(movieRecommendations.body);
   return {'movie_info': movieInfo.body, 'movie_credits': movieCast.body,
     'director': director, 'screenplay': screenplay, 'writer': writer,
     'is_watchlist': watchlistBool, 'cast_list': castList,

@@ -6,6 +6,12 @@ exports.get_movie = async function(req, res, next) {
     const movieDetails = await moviesService.getMovie(req);
     return res.render('movie_profile', movieDetails);
   } catch (err) {
+    if (err.message === 'Unable to find movie') {
+      logger.error('Unable to find movie in TMDB');
+      res.set('Connection', 'close');
+      res.status(404);
+      return res.render('404error', {user_info: req.user});
+    }
     logger.error('Error attempting to render movie profile');
     logger.error(err);
     return next(err);

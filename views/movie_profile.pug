@@ -272,12 +272,11 @@ block content
 
   script.
 
-    var movie_details = !{JSON.stringify(movie_info)};
-    console.log(movie_details.id);
-
+    var movie_details = !{JSON.stringify(movie_info)}; 
     var wp_countries = !{JSON.stringify(watch_provider_countries)};
     var wp_content = !{JSON.stringify(watch_providers_content)};
     var ip_info = !{JSON.stringify(ip_info)};
+
     // Populate watch provider dropdown
     $(document).ready(function () {
       
@@ -297,10 +296,10 @@ block content
 
         var relevant_results = wp_content.body.results;
         
-        var stream_parent = document.getElementById('streaming_movies');
-        var rent_parent = document.getElementById('rent_movies');
-        var buy_parent = document.getElementById('buy_movies');
-        update_providers(stream_parent, rent_parent, buy_parent, relevant_results, ip_info.body.country, default_country);
+        var streamParent = document.getElementById('streaming_movies');
+        var rentParent = document.getElementById('rent_movies');
+        var buyParent = document.getElementById('buy_movies');
+        update_providers(streamParent, rentParent, buyParent, relevant_results, ip_info.body.country, default_country);
 
       }
 
@@ -322,10 +321,10 @@ block content
       $("#rent_movies").empty();
       $("#buy_movies").empty();
       $("#missing_country").empty();
-      var stream_parent = document.getElementById('streaming_movies');
-      var rent_parent = document.getElementById('rent_movies');
-      var buy_parent = document.getElementById('buy_movies');
-      update_providers(stream_parent, rent_parent, buy_parent, relevant_results, this.value, default_country);
+      var streamParent = document.getElementById('streaming_movies');
+      var rentParent = document.getElementById('rent_movies');
+      var buyParent = document.getElementById('buy_movies');
+      update_providers(streamParent, rentParent, buyParent, relevant_results, this.value, default_country);
 
     });
 

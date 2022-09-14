@@ -27,15 +27,8 @@ function isLoggedIn(req, res, next) {
   }
 }
 
-function existingSession(req) {
-  if (req.user) {
-    return req.user;
-  }
-  return false;
-}
-
 function isValidPassword(password) {
-  const presult = passwordSchema.validate(password, {details: true});
+  const presult = passwordSchema.validate(password, { details: true });
   if (presult.length != 0) {
     return presult;
   } else {
@@ -53,7 +46,7 @@ async function getIPInfo() {
     host: 'ipinfo.io',
     port: 443,
     method: 'GET',
-    headers: {'Authorization': 'Bearer ' + IP_INFO_KEY},
+    headers: { 'Authorization': 'Bearer ' + IP_INFO_KEY },
   };
 
   let body = '';
@@ -68,7 +61,7 @@ async function getIPInfo() {
       });
       res.on('end', () => {
         const responseBody = JSON.parse(body);
-        resolve({'status': res.statusCode, 'body': responseBody});
+        resolve({ 'status': res.statusCode, 'body': responseBody });
       });
     });
 
@@ -107,7 +100,6 @@ function generateResetEmail(user, token) {
 
 module.exports = {
   isLoggedIn,
-  existing_session: existingSession,
   is_valid_password: isValidPassword,
   random_number: randomIntFromInterval,
   get_ip_info: getIPInfo,

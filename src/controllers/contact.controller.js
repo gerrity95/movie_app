@@ -1,11 +1,9 @@
 const contactService = require('../services/contact.service');
 const logger = require('../middlewares/logger');
-const helpers = require('../utils/generic_helpers');
 
 exports.contact = async function(req, res, next) {
   try {
-    const userInfo = helpers.existing_session(req);
-    res.render('contact', {user_info: userInfo});
+    res.render('contact', {user_info: req.user});
   } catch (err) {
     logger.error('Error attempting to render contact page');
     logger.error(err);

@@ -6,8 +6,7 @@ const User = require('../models/user');
 
 exports.home = async function(req, res, next) {
   try {
-    const userInfo = helpers.existing_session(req);
-    res.render('home', {user_info: userInfo});
+    res.render('home', {user_info: req.user});
   } catch (err) {
     logger.error('Error attempting to render index page');
     logger.error(err);
@@ -17,8 +16,7 @@ exports.home = async function(req, res, next) {
 
 exports.about = async function(req, res, next) {
   try {
-    const userInfo = helpers.existing_session(req);
-    res.render('about', {user_info: userInfo});
+    res.render('about', {user_info: req.user});
   } catch (err) {
     logger.error('Error attempting to render about page');
     logger.error(err);
@@ -28,8 +26,7 @@ exports.about = async function(req, res, next) {
 
 exports.login = async function(req, res, next) {
   try {
-    const userInfo = helpers.existing_session(req);
-    res.render('login', {user_info: userInfo});
+    res.render('login', {user_info: req.user});
   } catch (err) {
     logger.error('Error attempting to render movie profile');
     logger.error(err);
@@ -39,8 +36,7 @@ exports.login = async function(req, res, next) {
 
 exports.register = async function(req, res, next) {
   try {
-    const userInfo = helpers.existing_session(req);
-    res.render('register', {user_info: userInfo});
+    res.render('register', {user_info: req.user});
   } catch (err) {
     logger.error('Error attempting to render register page');
     logger.error(err);
@@ -49,14 +45,12 @@ exports.register = async function(req, res, next) {
 };
 
 exports.logout = async function(req, res, next) {
-  try {
-    req.logout();
+  req.logout(function(err) {
+    if (err) {
+      return next(err);
+    }
     res.redirect('/');
-  } catch (err) {
-    logger.error('Error attempting to logout');
-    logger.error(err);
-    return next(err);
-  }
+  });
 };
 
 exports.user_profile = async function(req, res, next) {

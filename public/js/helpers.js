@@ -1,3 +1,5 @@
+/* eslint-disable max-len */
+/* eslint-disable no-unused-vars */
 function getQueryVariable(variable) {
   const query = window.location.search.substring(1);
   const vars = query.split('&');
@@ -19,71 +21,71 @@ $(document).ready(function() {
 
 function timeConverter(minutes) {
   const hours = Math.floor(minutes / 60);
-  const additional_mins = minutes % 60;
+  const additionalMins = minutes % 60;
 
-  return {'hours': hours, 'minutes': additional_mins};
+  return {'hours': hours, 'minutes': additionalMins};
 }
 
-function update_providers(stream_parent, rent_parent, buy_parent, wp_results, country_code, country) {
-  console.log(country_code);
+function update_providers(streamParent, rentParent, buyParent, wpResults, countryCode, country) {
   // Function that updates the watch providers dynamically
-  if (wp_results[country_code] === undefined) {
-    $( '#missing_country' ).append( '<p>Unfortunately we aren\'t able to get provider information for your country. If there is anywhere else you would like to try please select from the list below. 🙂</p>' );
+  if (wpResults[countryCode] === undefined) {
+    $( '#missing_country' ).append( `
+    <p>Unfortunately we aren\'t able to get provider information for your country. 
+    If there is anywhere else you would like to try please select from the list below. 🙂</p>` );
     return;
   }
-  const stream_providers = wp_results[country_code].flatrate;
-  const buy_providers = wp_results[country_code].buy;
-  const rent_providers = wp_results[country_code].rent;
+  const streamProviders = wpResults[countryCode].flatrate;
+  const buyProviders = wpResults[countryCode].buy;
+  const rentProviders = wpResults[countryCode].rent;
 
   // Streaming
-  if (stream_providers === undefined) {
-    var stream_slot = document.createElement('div');
-    stream_slot.classList.add('col-10');
-    stream_slot.innerHTML = '<p>Unfortunately there is nowhere to stream this movie in ' + country + ' 😔';
-    stream_parent.appendChild(stream_slot);
+  if (streamProviders === undefined) {
+    const streamSlot = document.createElement('div');
+    streamSlot.classList.add('col-10');
+    streamSlot.innerHTML = '<p>Unfortunately there is nowhere to stream this movie in ' + country + ' 😔';
+    streamParent.appendChild(streamSlot);
   } else {
-    for (var i=0; i < stream_providers.length; i++) {
-      var img_src = 'https://image.tmdb.org/t/p/w500/' + stream_providers[i].logo_path;
+    for (let i=0; i < streamProviders.length; i++) {
+      const imgSrc = 'https://image.tmdb.org/t/p/w500/' + streamProviders[i].logo_path;
 
-      var stream_slot = document.createElement('div');
-      stream_slot.classList.add('col-xl-2', 'col-lg-2', 'col-md-3', 'col-sm-4', 'col-4'); ;
-      stream_slot.innerHTML = '<img title="' + stream_providers[i].provider_name + '" style="width:60px;border-radius:5px" src="' + img_src + '" alt="' + stream_providers[i].provider_name + '"/>';
-      stream_parent.appendChild(stream_slot);
+      const streamSlot = document.createElement('div');
+      streamSlot.classList.add('col-xl-2', 'col-lg-2', 'col-md-3', 'col-sm-4', 'col-4'); ;
+      streamSlot.innerHTML = '<img title="' + streamProviders[i].provider_name + '" style="width:60px;border-radius:5px" src="' + imgSrc + '" alt="' + streamProviders[i].provider_name + '"/>';
+      streamParent.appendChild(streamSlot);
     }
   }
 
-
   // Rentals
-  if (rent_providers === undefined) {
-    var rent_slot = document.createElement('div');
-    rent_slot.classList.add('col-10');
-    rent_slot.innerHTML = '<p>Unfortunately there is nowhere to rent this movie in ' + country + ' 😔';
-    rent_parent.appendChild(rent_slot);
+  if (rentProviders === undefined) {
+    const rentSlot = document.createElement('div');
+    rentSlot.classList.add('col-10');
+    rentSlot.innerHTML = '<p>Unfortunately there is nowhere to rent this movie in ' + country + ' 😔';
+    rentParent.appendChild(rentSlot);
   } else {
-    for (var i=0; i < rent_providers.length; i++) {
-      var img_src = 'https://image.tmdb.org/t/p/w500/' + rent_providers[i].logo_path;
+    for (let i=0; i < rentProviders.length; i++) {
+      const imgSrc = 'https://image.tmdb.org/t/p/w500/' + rentProviders[i].logo_path;
 
-      var rent_slot = document.createElement('div');
-      rent_slot.classList.add('col-xl-2', 'col-lg-2', 'col-md-3', 'col-sm-4', 'col-4');
-      rent_slot.innerHTML = '<img title="' + rent_providers[i].provider_name + '" style="width:60px;border-radius:5px;padding-top: 10px" src="' + img_src + '" alt="' + rent_providers[i].provider_name + '"/>';
-      rent_parent.appendChild(rent_slot);
+      const rentSlot = document.createElement('div');
+      rentSlot.classList.add('col-xl-2', 'col-lg-2', 'col-md-3', 'col-sm-4', 'col-4');
+      rentSlot.innerHTML = '<img title="' + rentProviders[i].provider_name + '" style="width:60px;border-radius:5px;padding-top: 10px" src="' + imgSrc + '" alt="' + rentProviders[i].provider_name + '"/>';
+      rentParent.appendChild(rentSlot);
     }
   }
 
   // Purchases
-  if (buy_providers === undefined) {
-    var buy_slot = document.createElement('div');
-    buy_slot.classList.add('col-10');
-    buy_slot.innerHTML = '<p>Unfortunately there is nowhere to purchase this movie in ' + country + ' 😔';
-    buy_parent.appendChild(buy_slot);
+  if (buyProviders === undefined) {
+    const buySlot = document.createElement('div');
+    buySlot.classList.add('col-10');
+    buySlot.innerHTML = '<p>Unfortunately there is nowhere to purchase this movie in ' + country + ' 😔';
+    buyParent.appendChild(buySlot);
   } else {
-    for (var i=0; i < buy_providers.length; i++) {
-      var img_src = 'https://image.tmdb.org/t/p/w500/' + buy_providers[i].logo_path;
+    for (let i=0; i < buyProviders.length; i++) {
+      const imgSrc = 'https://image.tmdb.org/t/p/w500/' + buyProviders[i].logo_path;
 
-      var buy_slot = document.createElement('div');
-      buy_slot.classList.add('col-xl-2', 'col-lg-2', 'col-md-3', 'col-sm-4', 'col-4'); ;
-      buy_slot.innerHTML = '<img title="' + buy_providers[i].provider_name + '" style="width:60px;border-radius:10px;padding-bottom: 10px;" src="' + img_src + '" alt="' + buy_providers[i].provider_name + '"/>';
-      buy_parent.appendChild(buy_slot);
+      const buySlot = document.createElement('div');
+      buySlot.classList.add('col-xl-2', 'col-lg-2', 'col-md-3', 'col-sm-4', 'col-4'); ;
+      buySlot.innerHTML = '<img title="' + buyProviders[i].provider_name + '" style="width:60px;border-radius:10px;padding-bottom: 10px;" src="' + imgSrc + '" alt="' + buyProviders[i].provider_name + '"/>';
+      buyParent.appendChild(buySlot);
     }
   }
 }

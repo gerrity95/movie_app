@@ -4,7 +4,6 @@ const ratedModel = require('../models/rated_movies');
 const flaskApi = require('../utils/flask_api');
 const tmdbapiService = require('./tmdbapi.service');
 const passport = require('passport');
-const email = require('../middlewares/email');
 
 async function getUserProfile(req) {
   logger.info('Checking to ensure enough reviews have been processed for the user: ' +
@@ -18,7 +17,7 @@ async function getUserProfile(req) {
   }
   logger.info('Attempting to get movie data...');
   logger.info('Getting genre list..');
-  const genres = await tmdbapiService.get_genres();
+  const genres = await tmdbapiService.getGenres();
   logger.info('Getting shows...');
   const shows = await flaskApi.get_reccomendations(req.user._id);
   // showss = flaskApi.sample_movies()
@@ -61,7 +60,7 @@ async function getWelcome(req) {
   }
   const rndInt = helpers.random_number(1, 8);
   const inspireQuery = `language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=${rndInt}&vote_average.gte=8&with_original_language=en&vote_count.gte=1000`;
-  const inspirationMovies = await tmdbapiService.discover_search(inspireQuery);
+  const inspirationMovies = await tmdbapiService.discoverSearch(inspireQuery);
   let inspiryList = false;
   if (inspirationMovies.status == 200) {
     inspiryList = inspirationMovies.body.results;

@@ -14,6 +14,7 @@ module.exports = {
     'require-jsdoc': ['off'],
     'max-len': ['error', {'code': 100, 'comments': 150}],
     'no-undef': ['error'],
+    'new-cap': ['off'],
 
   },
 };
