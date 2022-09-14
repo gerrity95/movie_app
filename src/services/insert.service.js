@@ -6,7 +6,7 @@ async function watchProviders() {
   logger.info('Attempting to insert watch providers');
   try {
     const providers = await getWatchProviders();
-    if (providers.status !== 200) {
+    if (providers.status === 200) {
       logger.info('Successfully got watch providers. Inserting them into DB.');
       await watchProvidersModel.insertMany(providers.body.results);
     } else {
