@@ -12,7 +12,7 @@ block content
   - var watch_provider_countries = watch_provider_countries
   - var header_src = `https://image.tmdb.org/t/p/original/${movie_info.backdrop_path}`
   - var poster_src = `https://image.tmdb.org/t/p/w500/${movie_info.poster_path}`
-  - var percent_rating = movie_info.vote_average * 10
+  - var percent_rating = Math.round(movie_info.vote_average * 10)
   if (is_watchlist)
     - var watchlist_title = 'Remove From Watchlist'
   else
@@ -237,16 +237,32 @@ block content
           .row#rent_movies
           h5(style="padding-top: 15px") Purchase
           .row#buy_movies
-
-    .row.movie_interact_box
-      .col-12.col-sm-8.col-md-6.col-lg-6.col-xl-4.offset-lg-0.offset-xl-0.offset-md-1.offset-sm-2.offset-0.align-self-center.rating_column
-      .col-12.col-sm-10.col-md-10.col-lg-6.col-xl-6.offset-lg-0.offset-xl-2.offset-md-1.offset-sm-2.align-self-center.rating_column
-        each val in movie_reccs.results
-          p
-            | #{val.title}
   
+    .row.movie_interact_box
+      .container-fluid
+        h3.title_style Similar Movies
+        .scrolling-wrapper.row.flex-row.flex-nowrap.mt-4.pb-4.pt-2.no-gutters
+          each movie in movie_reccs.results.slice(0, 12)
+            - var poster_src = `https://image.tmdb.org/t/p/w500/${movie.poster_path}`
+            - var percent_rating = Math.round(movie.vote_average * 10)
+            a.col-xl-3.col-lg-3.col-md-4.col-sm-6.col-6(style=`background-image:url(${poster_src})` href=`/movies/${movie.id}`).rec_movies
+              .dark_background.d-flex
+                .row(style='min-width: 100%')
+                  .col-10.col-sm-8.col-md-5.col-lg-5.col-xl-5.offset-lg-1.offset-xl-1.offset-md-1.offset-sm-2.offset-1.align-self-center
+                    .c100.p0.blue
+                      span #{percent_rating}%
+                      .slice
+                        .bar
+                        .fill
+                  .col-10.col-sm-8.col-md-6.col-lg-6.col-xl-6.offset-lg-0.offset-xl-0.offset-md-1.offset-sm-2.offset-1.align-self-center
+                    h4.movie_text
+                      | #{movie.original_title}
+                    p.movie_text(style="display: inline")
+                      |  #{movie.release_date}
+
+
   #module.container-fluid
-    h2
+    h3.title_style
       | Top Billed Cast
     .row#collapseExample.collapse(aria-expanded='false')
       
@@ -265,9 +281,6 @@ block content
           
     a.collapsed.btn.custom_button(style="margin-top: 20px;" data-toggle='collapse' href='#collapseExample' role='button' aria-expanded='false' aria-controls='collapseExample')
       | View Cast
-
-
-      
 
 
   script.
