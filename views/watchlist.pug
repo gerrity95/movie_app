@@ -11,11 +11,14 @@ block content
           | Movie Watchlist
     .row(style="margin-top: 20px")#watchlist-desktop
       
-      for movie in watchlist
+      for movie, index in watchlist
         - var img_src = `https://image.tmdb.org/t/p/w500/${movie.backdrop_path}`
         .col-6.col-sm-6.col-md-6.col-lg-5.col-xl-4.offset-lg-1.offset-xl-0.offset-md-0.offset-sm-0.offset-0
           .card(style='width: 100%;margin-bottom: 20px')
-            img.card-img-top(src=img_src alt='...')
+            if index < 7
+              img.card-img-top(src=img_src alt='...')
+            else
+              img.card-img-top.lazy(data-src=img_src alt='...')
             .card-body
               h4.card-title #{movie.title}
               p.text-monospace

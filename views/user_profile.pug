@@ -16,12 +16,16 @@ block content
     .row(style="margin-top: 30px")#movie_update
 
     .row#movie_default
-     for movie in reccs
+     for movie, index in reccs
         - var img_src = `https://image.tmdb.org/t/p/w500/${movie.movie_info.poster_path}`
         .col-6.col-sm-4.col-md-4.col-lg-4.col-xl-3.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0
           .product#product-desktop
-            .imgbox
-              img(src=img_src)
+            if index < 13
+              .imgbox
+                img(src=img_src)
+            else
+              .imgbox
+                img.lazy(data-src=img_src)
             .specifies
               h2
                 | #{movie.movie_info.title}
@@ -39,8 +43,12 @@ block content
 
           a#product-mobile(href=`/movies/${movie.movie_id}`)
             .product
-              .imgbox
-                img(src=img_src)
+              if index < 13
+                .imgbox
+                  img(src=img_src)
+              else
+                .imgbox
+                  img.lazy(data-src=img_src)
               .specifies
                 h2
                   | #{movie.movie_info.title}
@@ -56,7 +64,6 @@ block content
   script.
     var movie_reccs = !{JSON.stringify(reccs)};
     var selected_movies = movie_reccs;
-    console.log(selected_movies);
     const scroll_btn = document.querySelector('#scroll_button_profile');
         // handle button click
         scroll_btn.onclick = function () {
@@ -101,7 +108,11 @@ block content
             products_container.appendChild(product_desktop)
             var img_box = document.createElement('div');
             img_box.classList.add("imgbox");
-            img_box.innerHTML = '<img src="' + img_src + '" />'
+            if (i < 12) {
+              img_box.innerHTML = '<img src="' + img_src + '" />'            
+            } else {
+              img_box.innerHTML = '<img class="lazy" data-src="' + img_src + '" />'
+            }
             product_desktop.appendChild(img_box);
             var specifies = document.createElement('div');
             specifies.classList.add("specifies");
@@ -120,4 +131,59 @@ block content
 
           }
         }
-    });  
+        // Trigger reload for lazy loading
+        window.document.dispatchEvent(new Event("DOMContentLoaded", {
+          bubbles: true,
+          cancelable: true
+        }));
+    });
+
+    //- document.addEventListener("DOMContentLoaded", function() {
+    //-   var lazyloadImages;    
+
+    //-   if ("IntersectionObserver" in window) {
+    //-     lazyloadImages = document.querySelectorAll(".lazy");
+    //-     var imageObserver = new IntersectionObserver(function(entries, observer) {
+    //-       entries.forEach(function(entry) {
+    //-         if (entry.isIntersecting) {
+    //-           var image = entry.target;
+    //-           image.src = image.dataset.src;
+    //-           image.classList.remove("lazy");
+    //-           imageObserver.unobserve(image);
+    //-         }
+    //-       });
+    //-     });
+
+    //-     lazyloadImages.forEach(function(image) {
+    //-       imageObserver.observe(image);
+    //-     });
+    //-   } else {  
+    //-     var lazyloadThrottleTimeout;
+    //-     lazyloadImages = document.querySelectorAll(".lazy");
+        
+    //-     function lazyload () {
+    //-       if(lazyloadThrottleTimeout) {
+    //-         clearTimeout(lazyloadThrottleTimeout);
+    //-       }    
+
+    //-       lazyloadThrottleTimeout = setTimeout(function() {
+    //-         var scrollTop = window.pageYOffset;
+    //-         lazyloadImages.forEach(function(img) {
+    //-             if(img.offsetTop < (window.innerHeight + scrollTop)) {
+    //-               img.src = img.dataset.src;
+    //-               img.classList.remove('lazy');
+    //-             }
+    //-         });
+    //-         if(lazyloadImages.length == 0) { 
+    //-           document.removeEventListener("scroll", lazyload);
+    //-           window.removeEventListener("resize", lazyload);
+    //-           window.removeEventListener("orientationChange", lazyload);
+    //-         }
+    //-       }, 20);
+    //-     }
+
+    //-     document.addEventListener("scroll", lazyload);
+    //-     window.addEventListener("resize", lazyload);
+    //-     window.addEventListener("orientationChange", lazyload);
+    //-   }
+    //- })  
