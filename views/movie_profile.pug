@@ -272,7 +272,7 @@ block content
             - var profile_src = `https://image.tmdb.org/t/p/w500/${movie_cast.cast[val].profile_path}`
           else
             - var profile_src = '/images/headshot.png'
-          img.card-img-top(src=profile_src alt='Card image cap').profile_photo
+          img.lazy.card-img-top(data-src=profile_src alt='Card image cap').profile_photo
           .details
             p #{movie_cast.cast[val].name}
               br

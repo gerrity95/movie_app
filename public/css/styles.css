@@ -947,6 +947,10 @@ a#product-mobile {
 
 /* Movie Page horizontal scrolling */
 
+.lazy {
+  
+}
+
 .rec_movies {
   min-height: 350px;
   border-radius: 10px;
