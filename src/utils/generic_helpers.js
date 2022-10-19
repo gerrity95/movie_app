@@ -46,7 +46,7 @@ async function getIPInfo() {
     host: 'ipinfo.io',
     port: 443,
     method: 'GET',
-    headers: { 'Authorization': 'Bearer ' + IP_INFO_KEY },
+    headers: {'Authorization': 'Bearer ' + IP_INFO_KEY},
   };
 
   let body = '';
@@ -61,7 +61,7 @@ async function getIPInfo() {
       });
       res.on('end', () => {
         const responseBody = JSON.parse(body);
-        resolve({ 'status': res.statusCode, 'body': responseBody });
+        resolve({'status': res.statusCode, 'body': responseBody});
       });
     });
 
