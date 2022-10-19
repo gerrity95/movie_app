@@ -158,13 +158,19 @@ async function submitMovieRating(req, movieDetails, directorId, movieKeywords, n
   }
 }
 
-async function getMovieDetails(movieId) {
+async function getMovieDetails(movieId, isAppended) {
+  let requestPath;
+  if (isAppended) {
+    requestPath = `/3/movie/${movieId}?append_to_response=credits,recommendations`;
+  } else {
+    requestPath = `/3/movie/${movieId}`;
+  }
   const options = {
     host: 'api.themoviedb.org',
-    path: '/3/movie/' + movieId,
+    path: requestPath,
     port: 443,
     method: 'GET',
-    headers: {'Authorization': 'Bearer ' + TMDB_READ_TOKEN},
+    headers: {'Authorization': `Bearer ${TMDB_READ_TOKEN}`},
   };
 
   let body = '';

@@ -8,18 +8,16 @@ const tmdbapiService = require('./tmdbapi.service');
 async function getMovie(req) {
   logger.info('Attempting to get movie detail for ' + req.params.movie_id);
   const watchProvidersPath = `${req.params.movie_id}/watch/providers`;
-  const [watchProvidersContent, watchProviderCountries, ipInfo, isWatchlist, movieInfo,
-    movieCast, movieRecommendations] = await Promise.all([
-    tmdbapiService.getMovieDetails(watchProvidersPath),
+  const [watchProvidersContent, watchProviderCountries, ipInfo, isWatchlist,
+    movieInfo] = await Promise.all([
+    tmdbapiService.getMovieDetails(watchProvidersPath, false),
     watchProviders.find({}),
     helpers.get_ip_info(),
     watchlistModel.find({user_id: req.user._id, movie_id: req.params.movie_id}),
-    tmdbapiService.getMovieDetails(req.params.movie_id),
-    tmdbapiService.genericTmdbQuery(req.params.movie_id, 'credits'),
-    tmdbapiService.genericTmdbQuery(req.params.movie_id, 'recommendations'),
+    tmdbapiService.getMovieDetails(req.params.movie_id, true),
   ]).catch((err) => setImmediate(() => {
-    logger.info('Error attempting to get data for Movie ' + req.params.movie_id);
-    logger.info(err);
+    logger.error('Error attempting to get data for Movie ' + req.params.movie_id);
+    logger.error(err);
     throw err;
   }));
 
@@ -32,7 +30,7 @@ async function getMovie(req) {
   let screenplay = '';
   let writer = '';
   try {
-    movieCast.body.crew.forEach(function(value) {
+    movieInfo.body.credits.crew.forEach(function(value) {
       if (value.job == 'Director') {
         director = value.name;
       }
@@ -52,20 +50,21 @@ async function getMovie(req) {
     watchlistBool = true;
   }
   let castList;
-  if (movieCast.body.cast.length > 8) {
+  if (movieInfo.body.credits.cast.length > 8) {
     castList = [0, 1, 2, 3, 4, 5, 6, 7];
   } else {
     castList = [];
-    for (let i = 0; i < movieCast.body.cast.length; i++) {
+    for (let i = 0; i < movieInfo.body.credits.cast.length; i++) {
       castList.push(i);
     }
   }
-  // console.log(movieRecommendations.body);
-  return {'movie_info': movieInfo.body, 'movie_credits': movieCast.body,
+
+  return {'movie_info': movieInfo.body, 'movie_credits': movieInfo.body.credits,
     'director': director, 'screenplay': screenplay, 'writer': writer,
     'is_watchlist': watchlistBool, 'cast_list': castList,
     'ip_info': ipInfo, 'watch_provider_countries': watchProviderCountries,
-    'watch_providers_content': watchProvidersContent, 'reccomendations': movieRecommendations.body};
+    'watch_providers_content': watchProvidersContent, 
+    'reccomendations': movieInfo.body.recommendations};
 }
 
 async function getWatchlist(req) {
