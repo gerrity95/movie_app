@@ -56,7 +56,7 @@ block content
           var movie_id = ($(this).attr('href'));
           $.ajax({
               type: "POST",
-              url: '/user/addwatchlist',
+              url: '/movies/user/addwatchlist',
               dataType: "json",
               data: {movie_id: movie_id},
               success: function(data){

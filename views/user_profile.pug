@@ -17,6 +17,7 @@ block content
 
     .row#movie_default
      for movie, index in reccs
+        - var movieWeight = Math.round(movie.weight * 10000) / 10000
         - var img_src = `https://image.tmdb.org/t/p/w500/${movie.movie_info.poster_path}`
         .col-6.col-sm-4.col-md-4.col-lg-4.col-xl-3.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0
           .product#product-desktop
@@ -31,7 +32,7 @@ block content
                 | #{movie.movie_info.title}
                 br
                 span Rating: #{movie.movie_info.vote_average} | 
-                span  Weight: #{movie.weight}
+                span  Weight: #{movieWeight}
               br
               label &nbsp;
               ul
