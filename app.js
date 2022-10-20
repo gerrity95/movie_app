@@ -2,13 +2,7 @@ const express = require('express');
 const app = express();
 const path = require('path');
 const db = require('./src/config/database');
-const indexRouter = require('./src/routes/index');
-const movieRouter = require('./src/routes/movies');
-const tmdbRouter = require('./src/routes/tmdb_api');
-const errorRouter = require('./src/routes/error');
-const contactRouter = require('./src/routes/contact');
-const passwordRouter = require('./src/routes/password_reset');
-const insertRouter = require('./src/routes/insert');
+const routes = require('./src/routes');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const User = require('./src/models/user');
@@ -67,13 +61,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // app.use(metricsMiddleware);
-app.use('/', indexRouter.router);
-app.use('/', movieRouter.router);
-app.use('/', tmdbRouter.router);
-app.use('/', passwordRouter.router);
-app.use('/', contactRouter.router);
-app.use('/', insertRouter.router);
-app.use('/', errorRouter);
+app.use('/', routes);
 
 app.use(function(err, req, res, next) {
   // TODO add some monitoring/alerting framework so if we hit this we get alerted

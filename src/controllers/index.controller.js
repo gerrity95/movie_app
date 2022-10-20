@@ -6,6 +6,13 @@ const User = require('../models/user');
 
 exports.home = async function(req, res, next) {
   try {
+    if (req.isAuthenticated()) {
+      const redirect = await indexService.profileRedirect(req);
+      if (redirect.status === 'welcome') {
+        return res.redirect('/welcome');
+      }
+      return res.render('user_profile', redirect.userProfile);
+    }
     res.render('home', {user_info: req.user});
   } catch (err) {
     logger.error('Error attempting to render index page');
@@ -26,6 +33,13 @@ exports.about = async function(req, res, next) {
 
 exports.login = async function(req, res, next) {
   try {
+    if (req.isAuthenticated()) {
+      const redirect = await indexService.profileRedirect(req);
+      if (redirect.status === 'welcome') {
+        return res.redirect('/welcome');
+      }
+      return res.render('user_profile', redirect.userProfile);
+    }
     res.render('login', {user_info: req.user});
   } catch (err) {
     logger.error('Error attempting to render movie profile');
@@ -36,6 +50,13 @@ exports.login = async function(req, res, next) {
 
 exports.register = async function(req, res, next) {
   try {
+    if (req.isAuthenticated()) {
+      const redirect = await indexService.profileRedirect(req);
+      if (redirect.status === 'welcome') {
+        return res.redirect('/welcome');
+      }
+      return res.render('user_profile', redirect.userProfile);
+    }
     res.render('register', {user_info: req.user});
   } catch (err) {
     logger.error('Error attempting to render register page');

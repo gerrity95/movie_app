@@ -1,29 +1,56 @@
 const express = require('express');
+const homeRouter = require('./home.routes');
+const errorRouter = require('./error.routes');
+const contactRouter = require('./contact.routes');
+const insertRouter = require('./insert.routes');
+const movieRouter = require('./movies.routes');
+const tmdbApiRouter = require('./tmdb_api.routes');
+const resetRouter = require('./reset.routes');
+
 const router = express.Router();
 
-const indexController = require('../controllers/index.controller');
-const genericHelpers = require('../utils/generic_helpers');
 
-// GET method routes
-// router.use (function (req, res, next) {
-//   console.log('/' + req.method);
-//   next();
-// });
+const defaultRoutes = [
+  {
+    path: '/',
+    route: homeRouter,
+  },
+  // {
+  //   path: '/error',
+  //   route: errorRouter,
+  // },
+  {
+    path: '/contact',
+    route: contactRouter,
+  },
+  {
+    path: '/insert',
+    route: insertRouter,
+  },
+  {
+    path: '/movies',
+    route: movieRouter,
+  },
+  {
+    path: '/tmdbapi',
+    route: tmdbApiRouter,
+  },
+  {
+    path: '/reset',
+    route: resetRouter,
+  },
+];
 
-router.get('/', indexController.home);
-router.get('/about', indexController.about);
-router.get('/login', indexController.login);
-router.get('/register', indexController.register);
-router.get('/logout', indexController.logout);
+defaultRoutes.forEach((route) => {
+  router.use(route.path, route.route);
+});
 
-router.get('/userprofile', genericHelpers.isLoggedIn, indexController.user_profile);
-router.get('/user/userprofile', genericHelpers.isLoggedIn, indexController.user_profile_ajax);
-router.get('/welcome', genericHelpers.isLoggedIn, indexController.welcome);
+router.get('*', async (req, res, next) => {
+  console.log('Error 404 request made on ' + req.url);
+  res.set('Connection', 'close');
+  res.status(404);
+  res.render('404error', {user_info: req.user});
+});
 
-// POST method routes
-router.post('/login', indexController.login_post);
-router.post('/register', indexController.register_post);
 
-module.exports = {
-  router: router,
-};
+module.exports = router;

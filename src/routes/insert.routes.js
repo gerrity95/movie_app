@@ -9,8 +9,6 @@ const insertController = require('../controllers/insert.controller');
 //   next();
 // });
 
-router.get('/insert/watch_providers', insertController.watchProviders);
+router.get('/watch_providers', insertController.watchProviders);
 
-module.exports = {
-  router: router,
-};
+module.exports = router;

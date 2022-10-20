@@ -5,7 +5,7 @@ const moviesController = require('../controllers/movies.controller');
 const genericHelpers = require('../utils/generic_helpers');
 
 // GET method routes
-router.get('/movies/:movie_id', genericHelpers.isLoggedIn, moviesController.get_movie);
+router.get('/:movie_id', genericHelpers.isLoggedIn, moviesController.get_movie);
 router.get('/user/watchlist', genericHelpers.isLoggedIn, moviesController.get_watchlist);
 
 // POST method routes
@@ -14,6 +14,4 @@ router.post('/welcome/search', genericHelpers.isLoggedIn, moviesController.welco
 router.post('/user/addwatchlist', genericHelpers.isLoggedIn, moviesController.add_watchlist);
 
 
-module.exports = {
-  router: router,
-};
+module.exports = router;

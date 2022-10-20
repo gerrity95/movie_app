@@ -361,7 +361,7 @@ block content
             }
             $.ajax({
                 type: "POST",
-                url: '/user/submit_rating',
+                url: '/tmdbapi/submit_rating',
                 dataType: "json",
                 data: {rating: selectedValue, movie_id: movie_details.id},
                 success: function(data){
@@ -388,7 +388,7 @@ block content
           
           $.ajax({
               type: "POST",
-              url: '/user/addwatchlist',
+              url: '/movies/user/addwatchlist',
               dataType: "json",
               data: {movie_id: movie_details.id},
               success: function(data){

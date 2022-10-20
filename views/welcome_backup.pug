@@ -216,7 +216,7 @@ block content
               console.log(search);
               $.ajax({
                   type: "POST",
-                  url: '/welcome/search',
+                  url: '/movies/welcome/search',
                   dataType: "json",
                   data: {search: search},
                   success: function(data){
@@ -309,7 +309,7 @@ block content
             console.log(selectedValue);
             $.ajax({
                 type: "POST",
-                url: '/user/submit_rating',
+                url: '/tmdbapi/submit_rating',
                 dataType: "json",
                 data: {rating: selectedValue, movie_id: movie_id},
                 success: function(data){

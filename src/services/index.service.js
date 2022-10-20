@@ -110,8 +110,16 @@ function handleRegisterError(err) {
   return {fail_message: '?error=True'};
 }
 
+const profileRedirect = async (req) => {
+  const profileInfo = await getUserProfile(req);
+  if (profileInfo.rated_movies < 5) {
+    return {status: 'welcome'};
+  }
+  return {status: 'profile', userProfile: profileInfo.data};
+};
 
 module.exports = {
+  profileRedirect,
   getUserProfile,
   getUserProfileAjax,
   getWelcome,

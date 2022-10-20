@@ -19,7 +19,7 @@ block content
           p
             | We try our best to ensure our database is updated with all available movies. 
             strong Try another search?
-          form.form-inline.my-2.my-lg-0(action='/search' method='POST')
+          form.form-inline.my-2.my-lg-0(action='/movies/search' method='POST')
                   input.form-control.mr-sm-2(type='search' name="search" placeholder='Search' aria-label='Search' required)
                   button.btn.btn-default(type='submit').search_button
                     i.fas.fa-search
