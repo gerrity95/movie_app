@@ -1,5 +1,5 @@
+/* eslint-disable no-var */
 const logger = require('../middlewares/logger');
-const rater = require('../models/rated_movies');
 const flaskApi = require('../utils/flask_api');
 const dotenv = require('dotenv');
 const https = require('https');
@@ -8,7 +8,15 @@ dotenv.config();
 
 const {
   TMDB_READ_TOKEN,
+  NODE_ENV,
+  API_ENDPOINT,
 } = process.env;
+
+if (NODE_ENV == 'television') {
+  var mediaRateModel = require('../models/tv.rated');
+} else {
+  var mediaRateModel = require('../models/rated_movies');
+}
 
 async function submitRatingService(req) {
   /**
@@ -16,15 +24,15 @@ async function submitRatingService(req) {
    */
   try {
     const url = req.get('referer');
-    const isRated = await isMovieRated(req, url);
+    const isRated = await isMediaRated(req, url);
     if (isRated.updated) {
       return isRated;
     }
-    logger.info('Movie has not already been rated. Appending to movie ratings.');
-    logger.info('Attempting to get movie details for: ' + req.body.movie_id);
-    const movieDetails = await ratedMovieDetails(req);
-    const submitRating = await submitMovieRating(req, movieDetails.movieDetails,
-        movieDetails.directorId, movieDetails.movieKeywords, isRated.numRated, url);
+    logger.info(`${NODE_ENV} has not already been rated. Appending to ${NODE_ENV} ratings.`);
+    logger.info(`Attempting to get ${NODE_ENV} details for: ${req.body.media_id}`);
+    const mediaDetails = await ratedMediaDetails(req);
+    const submitRating = await submitMediaRating(req, mediaDetails.mediaDetails,
+        mediaDetails.directorId, mediaDetails.mediaKeywords, isRated.numRated, url);
 
     // Will attempt to generate reccs in background each time we add a new rating for improved performance
     if (submitRating.meet_requirements) {
@@ -39,39 +47,40 @@ async function submitRatingService(req) {
   }
 }
 
-async function isMovieRated(req, url) {
+async function isMediaRated(req, url) {
   /**
-   * Function to identify if the movie has already been rated
+   * Function to identify if the media has already been rated
    */
   try {
-    logger.info('Checking count of rated movies to see if they\'ve passed the welcome period...');
-    const ratedCount = await rater.find({
+    logger.info(`Checking count of rated ${NODE_ENV} to see if they\'ve passed the welcome period`);
+    const ratedCount = await mediaRateModel.find({
       'user_id': req.user._id,
     });
     const numRated = ratedCount.length;
-    logger.info('Number of movies rated so far: ' + numRated);
+    logger.info('Number of medias rated so far: ' + numRated);
 
-    // Stop users from rating movies on the movie page before completing the welcome section
+    // Stop users from rating medias on the media page before completing the welcome section
     if (!url.includes('welcome')) {
       if (numRated < 5) {
-        logger.error('User tried to work around to the movie page before completing induction..');
+        logger.error('User tried to work around to the media page before completing induction..');
         return {'success': false, 'meet_requirements': false,
           'numRated': numRated, 'updated': true};
       }
     }
 
     logger.info('Checking to see if already rated...');
-    logger.info('Submitted rating: ' + req.body.rating + ' for movie: ' + req.body.movie_id);
-    const isRated = await rater.findOne({
-      'movie_id': req.body.movie_id,
+    logger.info('Submitted rating: ' + req.body.rating + ' for media: ' + req.body.media_id);
+    const idKey = `${NODE_ENV}_id`;
+    const isRated = await mediaRateModel.findOne({
+      [idKey]: req.body.media_id,
       'user_id': req.user._id,
     });
     if (isRated) {
       if (url.includes('welcome')) {
-        logger.info('Movie has already been rated. Must be a new movie during welcome initiaion');
+        logger.info('Media has already been rated. Must be a new media during welcome initiaion');
         return {'success': false, 'is_rated': true, 'updated': true, 'numRated': numRated};
       }
-      logger.info('Movie has already been rated. Updating the rating.');
+      logger.info('Media has already been rated. Updating the rating.');
       isRated.rating = req.body.rating;
       await isRated.save();
       return {'success': true, 'updated': true, 'numRated': numRated};
@@ -79,74 +88,68 @@ async function isMovieRated(req, url) {
 
     return {'updated': false, 'numRated': numRated};
   } catch (e) {
-    logger.error('Error attempting to identify if a movie has already been rated');
+    logger.error('Error attempting to identify if a media has already been rated');
     logger.error(e);
     throw e;
   }
 }
 
-async function ratedMovieDetails(req) {
+async function ratedMediaDetails(req) {
   /**
-   * Function to gather movie details needed for submitting a rating
+   * Function to gather media details needed for submitting a rating
    */
   try {
-    const movieDetails = await getMovieDetails(req.body.movie_id);
-    if (movieDetails.status != 200) {
-      logger.error('Unable to fulfill request to add movie to DB. Cannot get movie details');
-      throw new Error('Unable to fulfill request to add movie to DB. Cannot get movie details');
+    const mediaDetails = await getMediaDetails(req.body.media_id, true);
+    if (mediaDetails.status != 200) {
+      logger.error('Unable to fulfill request to add media to DB. Cannot get media details');
+      throw new Error('Unable to fulfill request to add media to DB. Cannot get media details');
     };
 
-    const movieCast = await genericTmdbQuery(req.body.movie_id, 'credits');
     let directorId = '';
-    for (const member in movieCast.body.cast) {
-      if (movieCast.body.crew[member]['job'] == 'Director') {
-        directorId = movieCast.body.crew[member].id;
-        break;
+    mediaDetails.body.credits.crew.forEach(function(value) {
+      if (value.job == 'Director') {
+        directorId = value.id;
       }
-    }
-    const movieKeywords = await genericTmdbQuery(req.body.movie_id, 'keywords');
-    if (movieKeywords.status != 200) {
-      logger.error('Unable to fulfill request to add movie to DB. Cannot get movie keywords');
-      throw new Error('Unable to fulfill request to add movie to DB. Cannot get movie keywords');
-    };
-    return {'movieDetails': movieDetails, 'movieKeywords': movieKeywords,
-      'movieCast': movieCast, 'directorId': directorId};
+    });
+    return {'mediaDetails': mediaDetails, 'mediaKeywords': mediaDetails.body.keywords,
+      'mediaCast': mediaDetails.body.credits, 'directorId': directorId};
   } catch (e) {
-    logger.error('Error attempting to gather details for movie when rating');
+    logger.error('Error attempting to gather details for media when rating');
     logger.error(e);
     throw e;
   }
 }
 
-async function submitMovieRating(req, movieDetails, directorId, movieKeywords, numRated, url) {
+async function submitMediaRating(req, mediaDetails, directorId, mediaKeywords, numRated, url) {
   /**
    * Function to identify to submit rating for a given user
    */
   try {
     logger.info('Attempting to add show to DB...');
-    const newShow = new rater({
+    const keyId = `${NODE_ENV}_id`;
+    const newShow = new mediaRateModel({
       user_id: req.user._id,
       rating: req.body.rating,
-      movie_id: req.body.movie_id,
-      genres: movieDetails.body.genres,
-      languages: movieDetails.body.original_language,
-      tmdb_rating: movieDetails.body.vote_average,
-      production_companies: movieDetails.body.production_companies,
+      [keyId]: req.body.media_id,
+      genres: mediaDetails.body.genres,
+      languages: mediaDetails.body.original_language,
+      tmdb_rating: mediaDetails.body.vote_average,
+      production_companies: mediaDetails.body.production_companies,
       director: directorId,
-      keywords: movieKeywords.body.keywords,
+      keywords: mediaKeywords,
     });
 
-    await rater.create(newShow);
+    await mediaRateModel.create(newShow);
 
     numRated = numRated + 1;
-    logger.info('Number of movies rated so far: ' + numRated);
+    logger.info('Number of medias rated so far: ' + numRated);
     if (url.includes('welcome')) {
-      // If coming from welcome screen the user will get redirected to their profile once they've rated 5 movies.
+      // If coming from welcome screen the user will get redirected to their profile once they've rated 5 medias.
       if (numRated >= 5) {
-        logger.info('Enough movies rated to start getting recommendations...');
+        logger.info('Enough medias rated to start getting recommendations...');
         return {'success': true, 'meet_requirements': true};
       } else {
-        logger.info('Not enough movies rated to start generating recommendations.');
+        logger.info('Not enough medias rated to start generating recommendations.');
         return {'success': true, 'meet_requirements': false, 'num_rated': numRated};
       }
     }
@@ -154,19 +157,20 @@ async function submitMovieRating(req, movieDetails, directorId, movieKeywords, n
   } catch (e) {
     logger.error('Error attempting to submit rating');
     logger.error(e);
+    console.log(e);
     throw e;
   }
 }
 
-async function getMovieDetails(movieId, isAppended) {
+async function getMediaDetails(mediaId, isAppended) {
   let requestPath;
   if (isAppended) {
-    requestPath = `/3/movie/${movieId}?append_to_response=credits,recommendations`;
+    requestPath = `/3/${NODE_ENV}/${mediaId}?append_to_response=credits,recommendations,keywords`;
   } else {
-    requestPath = `/3/movie/${movieId}`;
+    requestPath = `/3/${NODE_ENV}/${mediaId}`;
   }
   const options = {
-    host: 'api.themoviedb.org',
+    host: API_ENDPOINT,
     path: requestPath,
     port: 443,
     method: 'GET',
@@ -198,10 +202,10 @@ async function getMovieDetails(movieId, isAppended) {
   });
 }
 
-async function genericTmdbQuery(movieId, queryPath) {
+async function genericTmdbQuery(mediaId, queryPath) {
   const options = {
-    host: 'api.themoviedb.org',
-    path: '/3/movie/' + movieId + '/' + queryPath,
+    host: API_ENDPOINT,
+    path: `${mediaId}/${queryPath}`,
     port: 443,
     method: 'GET',
     headers: {'Authorization': 'Bearer ' + TMDB_READ_TOKEN},
@@ -210,7 +214,7 @@ async function genericTmdbQuery(movieId, queryPath) {
   let body = '';
   return new Promise((resolve, reject) => {
     const req = https.request(options, (res) => {
-      logger.info('Request made to TMDB to get Keywords');
+      logger.info(`Request made to TMDB to get ${queryPath}`);
       logger.info('statusCode:', res.statusCode);
       logger.info('headers:', res.headers);
 
@@ -270,7 +274,7 @@ async function tmdbSearch(searchQuery) {
   const parsedQuery = encodeURI(searchQuery);
   const options = {
     host: 'api.themoviedb.org',
-    path: '/3/search/movie?include_adult=false&page=1&query=' + parsedQuery,
+    path: `/3/search/${NODE_ENV}?include_adult=false&page=1&query=${parsedQuery}`,
     port: 443,
     method: 'GET',
     headers: {'Authorization': 'Bearer ' + TMDB_READ_TOKEN},
@@ -304,7 +308,7 @@ async function tmdbSearch(searchQuery) {
 async function getGenres() {
   const options = {
     host: 'api.themoviedb.org',
-    path: '/3/genre/movie/list',
+    path: `/3/genre/${NODE_ENV}/list`,
     port: 443,
     method: 'GET',
     headers: {'Authorization': 'Bearer ' + TMDB_READ_TOKEN},
@@ -338,7 +342,7 @@ async function getGenres() {
 async function discoverSearch(searchQuery) {
   const options = {
     host: 'api.themoviedb.org',
-    path: '/3/discover/movie?' + searchQuery,
+    path: `/3/discover/${NODE_ENV}?${searchQuery}`,
     port: 443,
     method: 'GET',
     headers: {'Authorization': 'Bearer ' + TMDB_READ_TOKEN},
@@ -372,9 +376,8 @@ async function discoverSearch(searchQuery) {
 
 module.exports = {
   submitRatingService,
-  getMovieDetails,
-  genericTmdbQuery,
-  search_query: tmdbSearch,
+  getMediaDetails,
+  tmdbSearch,
   getGenres,
   discoverSearch,
   getWatchProviders,

@@ -19,23 +19,23 @@ block content
           p
             | We try our best to ensure our database is updated with all available movies. 
             strong Try another search?
-          form.form-inline.my-2.my-lg-0(action='/movies/search' method='POST')
+          form.form-inline.my-2.my-lg-0(action='/media/search' method='POST')
                   input.form-control.mr-sm-2(type='search' name="search" placeholder='Search' aria-label='Search' required)
                   button.btn.btn-default(type='submit').search_button
                     i.fas.fa-search
 
-      for movie in search_results
-        if movie.poster_path
-          - var poster_src = `https://image.tmdb.org/t/p/w500/${movie.poster_path}`
+      for media in search_results
+        if media.poster_path
+          - var poster_src = `https://image.tmdb.org/t/p/w500/${media.poster_path}`
         else
           - var poster_src = '/images/missing_image.png'
-        a(href=`/movies/${movie.id}` style="width: 100%")#search_link
+        a(href=`/media/${media.id}` style="width: 100%")#search_link
           .col-12.col-sm-10.col-md-10.col-lg-12.col-xl-12.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0.shadow-lg.search_box
             .img_poster.my-auto
               img(src=poster_src).search_poster
             .search_text
               p.search_title 
-                | #{movie.title}
+                | #{media.title}
               p
-                em Release Date: #{movie.release_date}
-              p.hidden_text #{movie.overview}
+                em Release Date: #{media.release_date}
+              p.hidden_text #{media.overview}

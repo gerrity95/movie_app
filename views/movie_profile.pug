@@ -6,13 +6,13 @@ block content
   include includes/success_watchlist.pug
   include includes/failed_review_modal.pug
   include includes/failed_watchlist.pug
-  - var movie_info = movie_info
-  - var movie_reccs = reccomendations
-  - var movie_cast = movie_credits
+  - var media_info = media_info
+  - var media_reccs = reccomendations
+  - var media_cast = media_credits
   - var watch_provider_countries = watch_provider_countries
-  - var header_src = `https://image.tmdb.org/t/p/original/${movie_info.backdrop_path}`
-  - var poster_src = `https://image.tmdb.org/t/p/w500/${movie_info.poster_path}`
-  - var percent_rating = Math.round(movie_info.vote_average * 10)
+  - var header_src = `https://image.tmdb.org/t/p/original/${media_info.backdrop_path}`
+  - var poster_src = `https://image.tmdb.org/t/p/w500/${media_info.poster_path}`
+  - var percent_rating = Math.round(media_info.vote_average * 10)
   if (is_watchlist)
     - var watchlist_title = 'Remove From Watchlist'
   else
@@ -35,13 +35,13 @@ block content
             .bar
             .fill
         h2.movie_text
-          | #{movie_info.original_title}
-        for genre in movie_info.genres
+          | #{media_info.original_title}
+        for genre in media_info.genres
           h5.movie_text(style="display: inline")
             |  #{genre.name},
         p.movie_text
           br
-          | #{movie_info.tagline}
+          | #{media_info.tagline}
         
         .social-icons
           a#watchlist_button_normal.social-icon.social-icon--codepen
@@ -58,8 +58,8 @@ block content
               th(style="width: 25%") Runtime
           tbody
             tr
-              td #{movie_info.release_date}
-              td #{movie_info.runtime} minutes
+              td #{media_info.release_date}
+              td #{media_info.runtime} minutes
         
         table.table.table-borderless.movie_text
           thead
@@ -82,13 +82,13 @@ block content
             .fill
       .col-12.col-sm-10.col-md-5.col-lg-7.col-xl-7.offset-lg-0.offset-xl-0.offset-md-1.offset-sm-1.offset-0.align-self-center
         h2.movie_text
-          | #{movie_info.original_title}
-        for genre in movie_info.genres
+          | #{media_info.original_title}
+        for genre in media_info.genres
           h5.movie_text(style="display: inline")
             |  #{genre.name},
         p.movie_text
           br
-          | #{movie_info.tagline}
+          | #{media_info.tagline}
         
         .social-icons
           a#watchlist_button_mobile.social-icon.social-icon--codepen
@@ -105,8 +105,8 @@ block content
               th(style="width: 25%") Runtime
           tbody
             tr
-              td #{movie_info.release_date}
-              td #{movie_info.runtime} minutes
+              td #{media_info.release_date}
+              td #{media_info.runtime} minutes
         table.table.table-borderless.movie_text
           thead
             tr
@@ -223,7 +223,7 @@ block content
         .additional_options
           h3.title_style Overview
           p
-            | #{movie_info.overview}
+            | #{media_info.overview}
     .row.movie_interact_box
       .col-12.col-sm-8.col-md-6.col-lg-6.col-xl-4.offset-lg-0.offset-xl-0.offset-md-1.offset-sm-2.offset-0.align-self-center.rating_column
       .col-12.col-sm-10.col-md-10.col-lg-6.col-xl-6.offset-lg-0.offset-xl-2.offset-md-1.offset-sm-2.align-self-center.rating_column
@@ -242,10 +242,10 @@ block content
       .container-fluid
         h3.title_style Similar Movies
         .scrolling-wrapper.row.flex-row.flex-nowrap.mt-4.pb-4.pt-2.no-gutters
-          each movie in movie_reccs.results.slice(0, 12)
-            - var poster_src = `https://image.tmdb.org/t/p/w500/${movie.poster_path}`
-            - var percent_rating = Math.round(movie.vote_average * 10)
-            a.col-xl-3.col-lg-3.col-md-4.col-sm-6.col-6(style=`background-image:url(${poster_src})` href=`/movies/${movie.id}`).rec_movies
+          each media in media_reccs.results.slice(0, 12)
+            - var poster_src = `https://image.tmdb.org/t/p/w500/${media.poster_path}`
+            - var percent_rating = Math.round(media.vote_average * 10)
+            a.col-xl-3.col-lg-3.col-md-4.col-sm-6.col-6(style=`background-image:url(${poster_src})` href=`/media/${media.id}`).rec_movies
               .dark_background.d-flex
                 .row(style='min-width: 100%')
                   .col-10.col-sm-8.col-md-5.col-lg-5.col-xl-5.offset-lg-1.offset-xl-1.offset-md-1.offset-sm-2.offset-1.align-self-center
@@ -256,9 +256,9 @@ block content
                         .fill
                   .col-10.col-sm-8.col-md-6.col-lg-6.col-xl-6.offset-lg-0.offset-xl-0.offset-md-1.offset-sm-2.offset-1.align-self-center
                     h4.movie_text
-                      | #{movie.original_title}
+                      | #{media.original_title}
                     p.movie_text(style="display: inline")
-                      |  #{movie.release_date}
+                      |  #{media.release_date}
 
 
   #module.container-fluid
@@ -268,16 +268,16 @@ block content
       
       each val in cast_list
         .col-xl-2.col-lg-2.col-md-3.col-sm-5.col-5.offset-0.offset-sm-2.credit_details.text-center.shadow-lg
-          if movie_cast.cast[val].profile_path
-            - var profile_src = `https://image.tmdb.org/t/p/w500/${movie_cast.cast[val].profile_path}`
+          if media_cast.cast[val].profile_path
+            - var profile_src = `https://image.tmdb.org/t/p/w500/${media_cast.cast[val].profile_path}`
           else
             - var profile_src = '/images/headshot.png'
           img.lazy.card-img-top(data-src=profile_src alt='Card image cap').profile_photo
           .details
-            p #{movie_cast.cast[val].name}
+            p #{media_cast.cast[val].name}
               br
               b
-                | #{movie_cast.cast[val].character}
+                | #{media_cast.cast[val].character}
           
     a.collapsed.btn.custom_button(style="margin-top: 20px;" data-toggle='collapse' href='#collapseExample' role='button' aria-expanded='false' aria-controls='collapseExample')
       | View Cast
@@ -285,7 +285,7 @@ block content
 
   script.
 
-    var movie_details = !{JSON.stringify(movie_info)}; 
+    var media_details = !{JSON.stringify(media_info)}; 
     var wp_countries = !{JSON.stringify(watch_provider_countries)};
     var wp_content = !{JSON.stringify(watch_providers_content)};
     var ip_info = !{JSON.stringify(ip_info)};
@@ -363,7 +363,7 @@ block content
                 type: "POST",
                 url: '/tmdbapi/submit_rating',
                 dataType: "json",
-                data: {rating: selectedValue, movie_id: movie_details.id},
+                data: {rating: selectedValue, media_id: media_details.id},
                 success: function(data){
                   console.log(data);
                   if (!data.meet_requirements) {
@@ -388,9 +388,9 @@ block content
           
           $.ajax({
               type: "POST",
-              url: '/movies/user/addwatchlist',
+              url: '/media/user/addwatchlist',
               dataType: "json",
-              data: {movie_id: movie_details.id},
+              data: {media_id: media_details.id},
               success: function(data){
                 if (data.success) {
                   if (data.removed) {

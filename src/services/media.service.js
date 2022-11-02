@@ -1,36 +1,48 @@
+/* eslint-disable no-var */
 const logger = require('../middlewares/logger');
 const helpers = require('../utils/generic_helpers');
-const watchlistModel = require('../models/movie_watchlist');
 const watchProviders = require('../models/watch_providers');
 const flaskApi = require('../utils/flask_api');
 const tmdbapiService = require('./tmdbapi.service');
+const dotenv = require('dotenv');
+dotenv.config();
+const {
+  NODE_ENV,
+} = process.env;
 
-async function getMovie(req) {
-  logger.info('Attempting to get movie detail for ' + req.params.movie_id);
-  const watchProvidersPath = `${req.params.movie_id}/watch/providers`;
+if (NODE_ENV == 'television') {
+  var watchlistModel = require('../models/tv.watchlist');
+} else {
+  var watchlistModel = require('../models/movie_watchlist');
+}
+const idKey = `${NODE_ENV}_id`;
+
+async function getMedia(req) {
+  logger.info('Attempting to get media detail for ' + req.params.media_id);
+  const watchProvidersPath = `${req.params.media_id}/watch/providers`;
   const [watchProvidersContent, watchProviderCountries, ipInfo, isWatchlist,
-    movieInfo] = await Promise.all([
-    tmdbapiService.getMovieDetails(watchProvidersPath, false),
+    mediaInfo] = await Promise.all([
+    tmdbapiService.getMediaDetails(watchProvidersPath, false),
     watchProviders.find({}),
     helpers.get_ip_info(),
-    watchlistModel.find({user_id: req.user._id, movie_id: req.params.movie_id}),
-    tmdbapiService.getMovieDetails(req.params.movie_id, true),
+    watchlistModel.find({user_id: req.user._id, [idKey]: req.params.media_id}),
+    tmdbapiService.getMediaDetails(req.params.media_id, true),
   ]).catch((err) => setImmediate(() => {
-    logger.error('Error attempting to get data for Movie ' + req.params.movie_id);
+    logger.error('Error attempting to get data for Media ' + req.params.media_id);
     logger.error(err);
     throw err;
   }));
 
-  if (movieInfo.status === 404) {
-    logger.info(`Unable to find movie in TMDB for ${req.params.movie_id}`);
-    throw new Error('Unable to find movie');
+  if (mediaInfo.status === 404) {
+    logger.info(`Unable to find media in TMDB for ${req.params.media_id}`);
+    throw new Error('Unable to find media');
   }
 
   let director = '';
   let screenplay = '';
   let writer = '';
   try {
-    movieInfo.body.credits.crew.forEach(function(value) {
+    mediaInfo.body.credits.crew.forEach(function(value) {
       if (value.job == 'Director') {
         director = value.name;
       }
@@ -42,7 +54,7 @@ async function getMovie(req) {
       }
     });
   } catch (e) {
-    logger.info('Error: ' + e + ' attempting to get movie details');
+    logger.info('Error: ' + e + ' attempting to get media details');
     throw e;
   }
   let watchlistBool = false;
@@ -50,28 +62,28 @@ async function getMovie(req) {
     watchlistBool = true;
   }
   let castList;
-  if (movieInfo.body.credits.cast.length > 8) {
+  if (mediaInfo.body.credits.cast.length > 8) {
     castList = [0, 1, 2, 3, 4, 5, 6, 7];
   } else {
     castList = [];
-    for (let i = 0; i < movieInfo.body.credits.cast.length; i++) {
+    for (let i = 0; i < mediaInfo.body.credits.cast.length; i++) {
       castList.push(i);
     }
   }
 
-  return {'movie_info': movieInfo.body, 'movie_credits': movieInfo.body.credits,
+  return {'media_info': mediaInfo.body, 'media_credits': mediaInfo.body.credits,
     'director': director, 'screenplay': screenplay, 'writer': writer,
     'is_watchlist': watchlistBool, 'cast_list': castList,
     'ip_info': ipInfo, 'watch_provider_countries': watchProviderCountries,
     'watch_providers_content': watchProvidersContent, 
-    'reccomendations': movieInfo.body.recommendations};
+    'reccomendations': mediaInfo.body.recommendations};
 }
 
 async function getWatchlist(req) {
   try {
     logger.info('Attempting to render watchlist for user ' + req.user._id);
-    const watchlistMovies = await watchlistModel.find({user_id: req.user._id});
-    const renderedWatchlist = await flaskApi.get_watchlist(req.user._id, watchlistMovies);
+    const watchlistMedia = await watchlistModel.find({user_id: req.user._id});
+    const renderedWatchlist = await flaskApi.get_watchlist(req.user._id, watchlistMedia);
     logger.info('Successfully got response back from server when getting watchlist..');
     return {'watchlist': renderedWatchlist.body.result};
   } catch (err) {
@@ -81,10 +93,10 @@ async function getWatchlist(req) {
   }
 }
 
-async function searchMovies(req) {
+async function searchMedia(req) {
   try {
     logger.info('Attempting to process search search...');
-    const searchResult = await tmdbapiService.search_query(req.body.search);
+    const searchResult = await tmdbapiService.tmdbSearch(req.body.search);
     return {'results': searchResult.body.results, 'query': req.body.search};
   } catch (err) {
     logger.error('Error attempting search request');
@@ -95,33 +107,33 @@ async function searchMovies(req) {
 
 async function addToWatchlist(req) {
   try {
-    logger.info('Attempting to Add movie to the watchlist...');
+    logger.info('Attempting to Add media to the watchlist...');
     const existingWatchlist = await watchlistModel.find({
       user_id: req.user._id,
-      movie_id: req.body.movie_id,
+      [idKey]: req.body.media_id,
     });
     if (existingWatchlist.length != 0) {
-      logger.info(`Movie has already been added to the watchlist for this user. 
+      logger.info(`Media has already been added to the watchlist for this user. 
       Attempting to Remove...`);
-      const deleteWatchlist = await watchlistModel.deleteOne({user_id: req.user._id, movie_id:
-        req.body.movie_id});
+      const deleteWatchlist = await watchlistModel.deleteOne({user_id: req.user._id, [idKey]:
+        req.body.media_id});
       if (deleteWatchlist.deletedCount == 1) {
-        logger.info('Succesfully deleted movie from watchlist');
+        logger.info('Succesfully deleted media from watchlist');
         return {'success': true, 'removed': true};
       }
-      logger.info('Issue seen attempting to remove movie from watchlist...');
+      logger.info('Issue seen attempting to remove media from watchlist...');
       return {'success': false, 'removed': true};
     }
-    logger.info(`Movie not yet added to watchlist for user ${req.user._id} attempting to add now.`);
+    logger.info(`Media not yet added to watchlist for user ${req.user._id} attempting to add now.`);
     const newWatchlist = new watchlistModel({
       user_id: req.user._id,
-      movie_id: req.body.movie_id,
+      [idKey]: req.body.media_id,
     });
     await watchlistModel.create(newWatchlist);
 
     return {'success': true, 'removed': false};
   } catch (err) {
-    logger.error('Error attempting to add movie to watchlist');
+    logger.error('Error attempting to add media to watchlist');
     logger.error(err);
     throw err;
   }
@@ -129,8 +141,8 @@ async function addToWatchlist(req) {
 
 
 module.exports = {
-  getMovie,
+  getMedia,
   getWatchlist,
-  searchMovies,
+  searchMedia,
   addToWatchlist,
 };

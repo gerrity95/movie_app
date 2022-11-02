@@ -1,9 +1,9 @@
-const moviesService = require('../services/movies.service');
+const mediaService = require('../services/media.service');
 const logger = require('../middlewares/logger');
 
-exports.get_movie = async function(req, res, next) {
+exports.getMedia = async function(req, res, next) {
   try {
-    const movieDetails = await moviesService.getMovie(req);
+    const movieDetails = await mediaService.getMedia(req);
     return res.render('movie_profile', movieDetails);
   } catch (err) {
     if (err.message === 'Unable to find movie') {
@@ -20,7 +20,7 @@ exports.get_movie = async function(req, res, next) {
 
 exports.get_watchlist = async function(req, res, next) {
   try {
-    const watchlistDetails = await moviesService.getWatchlist(req);
+    const watchlistDetails = await mediaService.getWatchlist(req);
     return res.render('watchlist', watchlistDetails);
   } catch (err) {
     logger.error('Error attempting to render watchlist');
@@ -31,7 +31,7 @@ exports.get_watchlist = async function(req, res, next) {
 
 exports.search = async function(req, res, next) {
   try {
-    const searchResults = await moviesService.searchMovies(req);
+    const searchResults = await mediaService.searchMedia(req);
     return res.render('search', searchResults);
   } catch (err) {
     logger.error('Error attempting to search for movies');
@@ -42,7 +42,7 @@ exports.search = async function(req, res, next) {
 
 exports.welcome_search = async function(req, res, next) {
   try {
-    const searchResults = await moviesService.searchMovies(req);
+    const searchResults = await mediaService.searchMedia(req);
     return res.json(searchResults);
   } catch (err) {
     logger.error('Error attempting to search for movies');
@@ -53,7 +53,7 @@ exports.welcome_search = async function(req, res, next) {
 
 exports.add_watchlist = async function(req, res, next) {
   try {
-    const watchlisResults = await moviesService.addToWatchlist(req);
+    const watchlisResults = await mediaService.addToWatchlist(req);
     return res.json(watchlisResults);
   } catch (err) {
     logger.error('Error attempting to add movie to watchlist');
