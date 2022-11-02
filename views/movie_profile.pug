@@ -241,7 +241,7 @@ block content
     .row.movie_interact_box
       .container-fluid
         h3.title_style Similar Movies
-        .scrolling-wrapper.row.flex-row.flex-nowrap.mt-4.pb-4.pt-2.no-gutters
+        .scrolling-wrapper.row.flex-nowrap.mt-4.pb-4.pt-2.no-gutters
           each movie in movie_reccs.results.slice(0, 12)
             - var poster_src = `https://image.tmdb.org/t/p/w500/${movie.poster_path}`
             - var percent_rating = Math.round(movie.vote_average * 10)

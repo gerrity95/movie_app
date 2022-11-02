@@ -42,7 +42,7 @@ html(lang="en")
     
     .wrapper
       // Sidebar
-      nav#sidebar
+      nav#sidebar.desktop_show
         .sidebar-header
           a.home_click#logo_btn(style="cursor: pointer;")
             img(src='/images/what_to_watch_black.png' alt="What To Watch Icon" style="width: 80%")
@@ -66,7 +66,7 @@ html(lang="en")
       #content
         nav.navbar.navbar-expand-lg.navbar-light.bg-light
           .container-fluid
-            button#sidebarCollapse.sidebar_collapse.btn.custom_button(type='button')
+            button#sidebarCollapse.sidebar_collapse.btn.custom_button.desktop_show(type='button')
               i.fas.fa-align-left(style="margin-right: 5px")
               span Toggle Sidebar
             button.btn.btn-dark.sidebar_collapse.d-inline-block.d-lg-none.ml-auto(type='button' data-toggle='collapse' data-target='#navbarSupportedContent' aria-controls='navbarSupportedContent' aria-expanded='false' aria-label='Toggle navigation')
@@ -81,6 +81,12 @@ html(lang="en")
 
                 li.nav-item.active
                   a.home_click.nav-link#dash_btn(href="/userprofile") Dashboard
+                li.nav-item.mobile_show
+                  a.nav-link(href="/movies/user/watchlist") Watchlist
+                li.nav-item.mobile_show
+                  a.nav-link(href="/about") About
+                li.nav-item.mobile_show
+                  a.nav-link(href="/contact") Contact
                 li.nav-item
                   a.nav-link(href="/logout") Logout
 

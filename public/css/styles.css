@@ -41,6 +41,16 @@ html {
     max-width: 80%;
   }
 
+  /* Show/Hide Desktop vs Mobile */
+
+  .desktop_show { display: block;}
+  .mobile_show { display: none;}
+
+  @media (max-width: 768px) {  
+    .desktop_show { display: none;}
+    .mobile_show { display: flex;}
+  }
+
   /* Sticky footer styles
 -------------------------------------------------- */
 
@@ -86,7 +96,8 @@ html {
   padding-bottom: 5%;
   padding-left: 10%;
   padding-right: 10%;
-  width: 90%
+  width: 90%;
+  margin-top: 20px
 }
 
 @media screen and (max-width: 768px) {
