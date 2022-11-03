@@ -265,7 +265,13 @@ block content
                           var movie_loop = data.results.length
                         }
                         for (var i = 0; i < movie_loop; i++) {
-                          var poster_src = 'https://image.tmdb.org/t/p/w500/' + data.results[i].poster_path
+                          let poster_src = '';
+                          if (data.results[i].poster_path) {
+                            poster_src = 'https://image.tmdb.org/t/p/w500/' + data.results[i].poster_path;
+                          }
+                          else {
+                            poster_src = '/images/missing_image.png';
+                          }
                           $('#movie' + i).css({"display": ""});
                           $('#movie_id' + i).html(data.results[i].id);
                           $('#movie_title' + i).html(data.results[i].title);
