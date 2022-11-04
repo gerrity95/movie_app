@@ -1,6 +1,7 @@
 /* eslint-disable no-var */
 const logger = require('../middlewares/logger');
 const helpers = require('../utils/generic_helpers');
+const { parseMediaOutput, parseReccs } = require('../utils/media.helpers');
 const watchProviders = require('../models/watch_providers');
 const flaskApi = require('../utils/flask_api');
 const tmdbapiService = require('./tmdbapi.service');
@@ -38,45 +39,17 @@ async function getMedia(req) {
     throw new Error('Unable to find media');
   }
 
-  let director = '';
-  let screenplay = '';
-  let writer = '';
-  try {
-    mediaInfo.body.credits.crew.forEach(function(value) {
-      if (value.job == 'Director') {
-        director = value.name;
-      }
-      if (value.job == 'Screenplay') {
-        screenplay = value.name;
-      }
-      if (value.job == 'Writer') {
-        writer = value.name;
-      }
-    });
-  } catch (e) {
-    logger.info('Error: ' + e + ' attempting to get media details');
-    throw e;
-  }
-  let watchlistBool = false;
-  if (isWatchlist.length == 1) {
-    watchlistBool = true;
-  }
-  let castList;
-  if (mediaInfo.body.credits.cast.length > 8) {
-    castList = [0, 1, 2, 3, 4, 5, 6, 7];
-  } else {
-    castList = [];
-    for (let i = 0; i < mediaInfo.body.credits.cast.length; i++) {
-      castList.push(i);
-    }
-  }
+  logger.info('Attempting to parse response for output');
+  const mediaParsed = parseMediaOutput(mediaInfo);
+  const recommendations = parseReccs(mediaInfo.body.recommendations);
+  const watchlistBool = isWatchlist.length == 1 ? true : false;
 
-  return {'media_info': mediaInfo.body, 'media_credits': mediaInfo.body.credits,
-    'director': director, 'screenplay': screenplay, 'writer': writer,
-    'is_watchlist': watchlistBool, 'cast_list': castList,
+  console.log(recommendations);
+
+  return {'media_info': mediaParsed, 'is_watchlist': watchlistBool,
     'ip_info': ipInfo, 'watch_provider_countries': watchProviderCountries,
-    'watch_providers_content': watchProvidersContent, 
-    'reccomendations': mediaInfo.body.recommendations};
+    'watch_providers_content': watchProvidersContent,
+    'recommendations': recommendations};
 }
 
 async function getWatchlist(req) {
