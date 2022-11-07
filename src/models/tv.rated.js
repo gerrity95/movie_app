@@ -7,7 +7,7 @@ const Schema = mongoose.Schema;
 const ratedSchema = new Schema({
   user_id: {type: String, default: null},
   rating: {type: Number, default: null},
-  television_id: {type: Number, default: null},
+  tv_id: {type: Number, default: null},
   genres: {type: Array, default: null},
   languages: {type: Array, default: null},
   tmdb_rating: {type: Number, default: null},

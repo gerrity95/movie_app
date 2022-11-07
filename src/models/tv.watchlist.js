@@ -6,7 +6,7 @@ const Schema = mongoose.Schema;
 
 const watchlistSchema = new Schema({
   user_id: {type: String, default: null},
-  show_id: {type: Number, default: null},
+  tv_id: {type: Number, default: null},
 },
 {timestamps: true},
 );

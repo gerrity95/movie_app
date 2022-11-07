@@ -34,8 +34,14 @@ block content
             .img_poster.my-auto
               img(src=poster_src).search_poster
             .search_text
-              p.search_title 
-                | #{media.title}
+              p.search_title
+                if media.title 
+                  | #{media.title}
+                else
+                  | #{media.name}
               p
-                em Release Date: #{media.release_date}
+                if media.release_date
+                  em Release Date: #{media.release_date}
+                else
+                  em Air Date: #{media.first_air_date}
               p.hidden_text #{media.overview}

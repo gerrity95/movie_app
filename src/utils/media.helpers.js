@@ -11,11 +11,13 @@ const parseMediaOutput = (mediaInfo) => {
   const formattedObject = {};
 
   // Elements with the same name
+  formattedObject.mediaId = mediaInfo.body.id;
   formattedObject.imageSection = {poster: mediaInfo.body.poster_path, backdrop: mediaInfo.body.backdrop_path};
   formattedObject.genreSection = mediaInfo.body.genres;
   formattedObject.taglineSection = mediaInfo.body.tagline;
   formattedObject.ratingSection = mediaInfo.body.vote_average;
   formattedObject.overviewSection = mediaInfo.body.overview;
+  formattedObject.keywordsSection = mediaInfo.body.keywords.results;
   const castList = [];
   if (mediaInfo.body.credits.cast.length > 8) {
     for (const x of Array(8).keys()) {

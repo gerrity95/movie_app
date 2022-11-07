@@ -11,7 +11,7 @@ const {
   NODE_ENV,
 } = process.env;
 
-if (NODE_ENV == 'television') {
+if (NODE_ENV == 'tv') {
   var watchlistModel = require('../models/tv.watchlist');
 } else {
   var watchlistModel = require('../models/movie_watchlist');
@@ -44,8 +44,6 @@ async function getMedia(req) {
   const recommendations = parseReccs(mediaInfo.body.recommendations);
   const watchlistBool = isWatchlist.length == 1 ? true : false;
 
-  console.log(recommendations);
-
   return {'media_info': mediaParsed, 'is_watchlist': watchlistBool,
     'ip_info': ipInfo, 'watch_provider_countries': watchProviderCountries,
     'watch_providers_content': watchProvidersContent,
@@ -56,6 +54,7 @@ async function getWatchlist(req) {
   try {
     logger.info('Attempting to render watchlist for user ' + req.user._id);
     const watchlistMedia = await watchlistModel.find({user_id: req.user._id});
+    console.log(watchlistMedia);
     const renderedWatchlist = await flaskApi.get_watchlist(req.user._id, watchlistMedia);
     logger.info('Successfully got response back from server when getting watchlist..');
     return {'watchlist': renderedWatchlist.body.result};
@@ -81,6 +80,8 @@ async function searchMedia(req) {
 async function addToWatchlist(req) {
   try {
     logger.info('Attempting to Add media to the watchlist...');
+    console.log(req.body);
+    console.log(idKey);
     const existingWatchlist = await watchlistModel.find({
       user_id: req.user._id,
       [idKey]: req.body.media_id,

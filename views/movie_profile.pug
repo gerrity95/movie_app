@@ -217,8 +217,15 @@ block content
           p
             | #{media_info.overviewSection}
     .row.movie_interact_box
-      .col-12.col-sm-8.col-md-6.col-lg-6.col-xl-4.offset-lg-0.offset-xl-0.offset-md-1.offset-sm-2.offset-0.align-self-center.rating_column
-      .col-12.col-sm-10.col-md-10.col-lg-6.col-xl-6.offset-lg-0.offset-xl-2.offset-md-1.offset-sm-2.align-self-center.rating_column
+
+      .col-12.col-sm-8.col-md-6.col-lg-6.col-xl-6.offset-lg-0.offset-xl-0.offset-md-1.offset-sm-2.offset-0.rating_column
+        .additional_options
+          h3.title_style Keywords
+        .row(style="padding: 5%")
+          each keyword in media_info.keywordsSection
+            btn.btn.btn-outline-secondary(style="margin: 10px;")
+              | #{keyword.name}
+      .col-12.col-sm-10.col-md-10.col-lg-6.col-xl-6.offset-lg-0.offset-xl-0.offset-md-1.offset-sm-2.align-self-center.rating_column
         .additional_options
           h3.title_style Where To Watch
           #missing_country
@@ -355,7 +362,7 @@ block content
                 type: "POST",
                 url: '/tmdbapi/submit_rating',
                 dataType: "json",
-                data: {rating: selectedValue, media_id: media_details.id},
+                data: {rating: selectedValue, media_id: media_details.mediaId},
                 success: function(data){
                   console.log(data);
                   if (!data.meet_requirements) {
@@ -382,7 +389,7 @@ block content
               type: "POST",
               url: '/media/user/addwatchlist',
               dataType: "json",
-              data: {media_id: media_details.id},
+              data: {media_id: media_details.mediaId},
               success: function(data){
                 if (data.success) {
                   if (data.removed) {
