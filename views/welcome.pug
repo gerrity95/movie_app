@@ -38,7 +38,7 @@ block content
         h4.text-center.title_style(style="color: #fff")
           | Looking for inspiration
         p.white_text 
-          | Can't think of what movies you want to rate? Hover over any of the movies here to get an idea from some of our favorite movies! 
+          | Can't think of what titles you want to rate? Hover over any of the pictures here to get an idea from some of our favorite titles! 
 
       .col-12.col-sm-12.col-md-6.col-lg-6.col-xl-6.offset-xl-3.offset-lg-3.offset-md-3.offset-0.align-self-center.row_style
         .row
@@ -53,15 +53,15 @@ block content
         h4.text-center.white_text
           | Let's Get Started
         p.white_text 
-          | In order to start generating recommendations you must rate at least 5 movies. But the more you review,
+          | In order to start generating recommendations you must rate at least 5 titles. But the more you review,
           b
             |  the better the suggestions!
         p.white_text
-          | To get started search for one of your favorites movies here to rate it.
+          | To get started search for one of your favorites titles here to rate it.
         p#remaining_media_num.white_text
           | You currently have 
           b #{remaining_medias} 
-          | movies left to rate.
+          | titles left to rate.
         .welcome-search.search_bar_alignment.my-2.my-lg-0
                   input.form-control.mr-sm-2(type='search' id="welcome_search_submit" placeholder='Search' aria-label='Search' required)
                   button.btn.btn-default(type='submit').search_button#welcome_search(style="color: #fff")
@@ -265,11 +265,13 @@ block content
                           var movie_loop = data.results.length
                         }
                         for (var i = 0; i < movie_loop; i++) {
+                          const title = typeof data.results[i].title != 'undefined' ? data.results[i].title : data.results[i].name;
+                          const airDate = typeof data.results[i].release_date != 'undefined' ? data.results[i].release_date : data.results[i].first_air_date; 
                           var poster_src = 'https://image.tmdb.org/t/p/w500/' + data.results[i].poster_path
                           $('#movie' + i).css({"display": ""});
                           $('#media_id' + i).html(data.results[i].id);
-                          $('#movie_title' + i).html(data.results[i].title);
-                          $('#movie_date' + i).html(data.results[i].release_date);
+                          $('#movie_title' + i).html(title);
+                          $('#movie_date' + i).html(airDate);
                           $('#movie_overview' + i).addClass('hidden_text')
                           $('#movie_overview' + i).html(data.results[i].overview);
                           $('#input_media_id').val(data.results[i].id);
@@ -365,7 +367,7 @@ block content
                   else if (!data.success) {
                     $("#failedReview").modal('show');
                     if (data.is_rated) {
-                      $("#failed_review").html("This movie has already been rated. Please try another.")
+                      $("#failed_review").html("This title has already been rated. Please try another.")
                     }
                     $('#movie_info_popup').hide();                        
                     }

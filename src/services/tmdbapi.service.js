@@ -12,7 +12,7 @@ const {
   API_ENDPOINT,
 } = process.env;
 
-if (NODE_ENV == 'television') {
+if (NODE_ENV == 'tv') {
   var mediaRateModel = require('../models/tv.rated');
 } else {
   var mediaRateModel = require('../models/rated_movies');
@@ -106,11 +106,15 @@ async function ratedMediaDetails(req) {
     };
 
     let directorId = '';
-    mediaDetails.body.credits.crew.forEach(function(value) {
-      if (value.job == 'Director') {
-        directorId = value.id;
-      }
-    });
+    if (NODE_ENV == 'tv') {
+      directorId = mediaDetails.body.created_by[0].name;
+    } else {
+      mediaDetails.body.credits.crew.forEach(function(value) {
+        if (value.job == 'Director') {
+          directorId = value.id;
+        }
+      });
+    }
     return {'mediaDetails': mediaDetails, 'mediaKeywords': mediaDetails.body.keywords,
       'mediaCast': mediaDetails.body.credits, 'directorId': directorId};
   } catch (e) {

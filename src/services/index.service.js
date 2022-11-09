@@ -9,7 +9,7 @@ dotenv.config();
 const {
   NODE_ENV,
 } = process.env;
-if (NODE_ENV == 'television') {
+if (NODE_ENV == 'tv') {
   var ratedModel = require('../models/tv.rated');
 } else {
   var ratedModel = require('../models/rated_movies');
