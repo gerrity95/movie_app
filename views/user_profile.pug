@@ -2,13 +2,15 @@ extends layout
 
 block content
   title What To Watch - Profile
-  - var reccs = media_info
+  - var reccs = media_info.reccomendations.recommendations
   if node_env == 'tv'
-    - var idKey = 'television_id'
-    - var infoKey = 'television_info'
+    - var idKey = 'tv_id'
+    - var infoKey = 'tv_info'
+    - var titleKey = 'name'
   else
     - var idKey = 'movie_id'
     - var infoKey = 'movie_info'
+    - var titleKey = 'title'
   - var genres = genres
   
   .container-fluid
@@ -36,7 +38,7 @@ block content
                 img.lazy(data-src=img_src)
             .specifies
               h2
-                | #{media[infoKey].title}
+                | #{media[infoKey][titleKey]}
                 br
                 span Rating: #{media[infoKey].vote_average} | 
                 span  Weight: #{mediaWeight}
@@ -59,7 +61,7 @@ block content
                   img.lazy(data-src=img_src)
               .specifies
                 h2
-                  | #{media[infoKey].title}
+                  | #{media[infoKey][titleKey]}
                   br
                   span Rating: #{media[infoKey].vote_average} | 
                   span  Weight: #{media.weight}
@@ -71,6 +73,9 @@ block content
 
   script.
     var media_reccs = !{JSON.stringify(reccs)};
+    var infoKey = !{JSON.stringify(infoKey)};
+    var titleKey = !{JSON.stringify(titleKey)};
+    var idKey = !{JSON.stringify(idKey)};
     console.log(media_reccs);
     var selected_medias = media_reccs;
     const scroll_btn = document.querySelector('#scroll_button_profile');
@@ -91,7 +96,7 @@ block content
         else {
           var selected_medias = []
           for(i=0;i<media_reccs.length;i++) {
-            if (media_reccs[i].media_info.genre_ids.includes(parseInt(selected_genre))) {
+            if (media_reccs[i][infoKey].genre_ids.includes(parseInt(selected_genre))) {
               selected_medias.push(media_reccs[i]);
             }
           }
@@ -104,7 +109,7 @@ block content
         }
         else {
           for(i=0;i<selected_medias.length;i++) {
-            var img_src = 'https://image.tmdb.org/t/p/w500/' + selected_medias[i].media_info.poster_path;
+            var img_src = 'https://image.tmdb.org/t/p/w500/' + selected_medias[i][infoKey].poster_path;
             
             var products_container = document.createElement('div');
             products_container.classList.add("col-6", "col-sm-4", "col-md-4", "col-lg-4", "col-xl-3", "offset-lg-0", "offset-xl-0", "offset-md-0", "offset-sm-0", "offset-0")
@@ -125,14 +130,14 @@ block content
             product_desktop.appendChild(img_box);
             var specifies = document.createElement('div');
             specifies.classList.add("specifies");
-            specifies.innerHTML = '<h2>' + selected_medias[i].media_info.title + '<br><b><span> Rating: ' + selected_medias[i].media_info.vote_average + ' | </span><span>Weight: ' + selected_medias[i].weight + '</span></b></h2><br><label> &nbsp;</label><ul><li>&nbsp;</li></ul><label></label><ul class="colors"><li></li></ul><a class="btn custom_button" href="/media/' + selected_medias[i].media_id + '">Find Out More</a>'
+            specifies.innerHTML = '<h2>' + selected_medias[i][infoKey][titleKey] + '<br><b><span> Rating: ' + selected_medias[i][infoKey].vote_average + ' | </span><span>Weight: ' + selected_medias[i].weight + '</span></b></h2><br><label> &nbsp;</label><ul><li>&nbsp;</li></ul><label></label><ul class="colors"><li></li></ul><a class="btn custom_button" href="/media/' + selected_medias[i][idKey] + '">Find Out More</a>'
             product_desktop.appendChild(specifies);
 
             // Structure for Mobile
             var product_mobile = document.createElement('a');
             product_mobile.setAttribute('id', 'product-mobile')
-            product_mobile.setAttribute('href', '/media/' + selected_medias[i].media_id);
-            product_mobile.innerHTML = '<div class="product"><div class="imgbox"><img src="' + img_src + '" /></div><div class="specifies"><h2>' + selected_medias[i].media_info.title + '<br><b><span> Rating: ' + selected_medias[i].media_info.vote_average + ' | </span><span>Weight: ' + selected_medias[i].weight + '</span></b></h2></div></div>';
+            product_mobile.setAttribute('href', '/media/' + selected_medias[i][idKey]);
+            product_mobile.innerHTML = '<div class="product"><div class="imgbox"><img src="' + img_src + '" /></div><div class="specifies"><h2>' + selected_medias[i][infoKey][titleKey] + '<br><b><span> Rating: ' + selected_medias[i][infoKey].vote_average + ' | </span><span>Weight: ' + selected_medias[i].weight + '</span></b></h2></div></div>';
             products_container.appendChild(product_mobile);
             
             

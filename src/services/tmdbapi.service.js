@@ -115,7 +115,7 @@ async function ratedMediaDetails(req) {
         }
       });
     }
-    return {'mediaDetails': mediaDetails, 'mediaKeywords': mediaDetails.body.keywords,
+    return {'mediaDetails': mediaDetails, 'mediaKeywords': mediaDetails.body.keywords.results,
       'mediaCast': mediaDetails.body.credits, 'directorId': directorId};
   } catch (e) {
     logger.error('Error attempting to gather details for media when rating');
