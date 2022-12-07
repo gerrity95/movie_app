@@ -74,13 +74,13 @@ block content
             .fill
       .col-12.col-sm-10.col-md-5.col-lg-7.col-xl-7.offset-lg-0.offset-xl-0.offset-md-1.offset-sm-1.offset-0.align-self-center
         h2.movie_text
-          | #{media_info.original_title}
+          | #{media_info.titleSection}
         for genre in media_info.genreSection
           h5.movie_text(style="display: inline")
             |  #{genre.name},
         p.movie_text
           br
-          | #{media_info.tagline}
+          | #{media_info.taglineSection}
         
         .social-icons
           a#watchlist_button_mobile.social-icon.social-icon--codepen
@@ -103,11 +103,11 @@ block content
           thead
             tr
               th(style="width: 25%") Director
-              th(style="width: 25%") #{media_info.statusWriterSection}
+              th(style="width: 25%") #{media_info.statusWriterSection.title}
           tbody
             tr
               td #{media_info.directorSection}
-              td #{media_info.statusWriterSection}
+              td #{media_info.statusWriterSection.value}
 
   .container-fluid.movie_interact_container
     .row.movie_interact_box
