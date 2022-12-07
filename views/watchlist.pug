@@ -4,6 +4,14 @@ block content
   include includes/failed_watchlist.pug
   title What To Watch - Watchlist
   - var watchlist = watchlist  
+  if node_env == 'tv'
+    - var idKey = 'tv_id'
+    - var releaseDate = 'first_air_date'
+    - var titleKey = 'name'
+  else
+    - var idKey = 'movie_id'
+    - var releaseDate = 'release_date'
+    - var titleKey = 'title'
   .container-fluid
     .row
      .col-12.d-flex.justify-content-center
@@ -20,13 +28,13 @@ block content
             else
               img.card-img-top.lazy(data-src=img_src alt='...')
             .card-body
-              h4.card-title #{media.title}
+              h4.card-title #{media[titleKey]}
               p.text-monospace
                 | #{media.tagline}
               b
                 span Rating: #{media.vote_average}
                 br
-                span Running Time: #{media.runtime} Minutes
+                span Release Date: #{media[releaseDate]}
               a(href=`${media.id}`)#watchlist_button_normal.social-icon.social-icon--codepen(style="margin-top:10px")
                 i.far.fa-bookmark.fa-stack-1x(style="color: white")
                 .tooltip#watchlist_todo Remove From Watchlist

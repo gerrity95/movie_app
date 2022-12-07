@@ -57,7 +57,8 @@ async function getWatchlist(req) {
     console.log(watchlistMedia);
     const renderedWatchlist = await flaskApi.get_watchlist(req.user._id, watchlistMedia);
     logger.info('Successfully got response back from server when getting watchlist..');
-    return {'watchlist': renderedWatchlist.body.result};
+    console.log(renderedWatchlist.body.result);
+    return {watchlist: renderedWatchlist.body.result, node_env: NODE_ENV};
   } catch (err) {
     logger.error('Error attempting to render watchlist');
     logger.error(err);
