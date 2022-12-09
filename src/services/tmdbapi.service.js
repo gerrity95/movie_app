@@ -105,17 +105,20 @@ async function ratedMediaDetails(req) {
       throw new Error('Unable to fulfill request to add media to DB. Cannot get media details');
     };
 
+    let mediaKeywords = [];
     let directorId = '';
     if (NODE_ENV == 'tv') {
       directorId = mediaDetails.body.created_by[0].name;
+      mediaKeywords = mediaDetails.body.keywords.results;
     } else {
       mediaDetails.body.credits.crew.forEach(function(value) {
         if (value.job == 'Director') {
           directorId = value.id;
         }
       });
+      mediaKeywords = mediaDetails.body.keywords.keywords;
     }
-    return {'mediaDetails': mediaDetails, 'mediaKeywords': mediaDetails.body.keywords.results,
+    return {'mediaDetails': mediaDetails, 'mediaKeywords': mediaKeywords,
       'mediaCast': mediaDetails.body.credits, 'directorId': directorId};
   } catch (e) {
     logger.error('Error attempting to gather details for media when rating');

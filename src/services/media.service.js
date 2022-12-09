@@ -43,7 +43,7 @@ async function getMedia(req) {
   const mediaParsed = parseMediaOutput(mediaInfo);
   const recommendations = parseReccs(mediaInfo.body.recommendations);
   const watchlistBool = isWatchlist.length == 1 ? true : false;
-
+  
   return {'media_info': mediaParsed, 'is_watchlist': watchlistBool,
     'ip_info': ipInfo, 'watch_provider_countries': watchProviderCountries,
     'watch_providers_content': watchProvidersContent,

@@ -5,7 +5,7 @@ const mediaController = require('../controllers/media.controller');
 const genericHelpers = require('../utils/generic_helpers');
 
 // GET method routes
-router.get('/:media_id', mediaController.getMedia);
+router.get('/:media_id', genericHelpers.isLoggedIn, mediaController.getMedia);
 router.get('/user/watchlist', genericHelpers.isLoggedIn, mediaController.get_watchlist);
 
 // POST method routes
