@@ -55,7 +55,7 @@ html(lang="en")
           li
             a(href='/contact') Contact
           li
-            a(href='/movies/user/watchlist') Watch List
+            a(href='/media/user/watchlist') Watch List
         ul.list-unstyled.CTAs
           li
             //button.submit.btn.alt_button(style="width: 100%" href='https://bootstrapious.com/tutorial/files/sidebar.zip') Download source
@@ -74,8 +74,8 @@ html(lang="en")
             #navbarSupportedContent.collapse.navbar-collapse
 
               ul.nav.navbar-nav.ml-auto
-                form.search_bar_alignment.my-2.my-lg-0(action='/movies/search' method='POST')
-                  input.form-control.mr-sm-2(type='search' name="search" placeholder='Search For Movies...' aria-label='Search' required)
+                form.search_bar_alignment.my-2.my-lg-0(action='/media/search' method='POST')
+                  input.form-control.mr-sm-2(type='search' name="search" placeholder='Search For Titles...' aria-label='Search' required)
                   button.btn.btn-default(type='submit').search_button
                     i.fas.fa-search
 

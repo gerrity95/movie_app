@@ -1,19 +1,30 @@
+/* eslint-disable no-var */
 const logger = require('../middlewares/logger');
 const helpers = require('../utils/generic_helpers');
-const ratedModel = require('../models/rated_movies');
 const flaskApi = require('../utils/flask_api');
 const tmdbapiService = require('./tmdbapi.service');
 const passport = require('passport');
+const dotenv = require('dotenv');
+dotenv.config();
+const {
+  NODE_ENV,
+} = process.env;
+if (NODE_ENV == 'tv') {
+  var ratedModel = require('../models/tv.rated');
+} else {
+  var ratedModel = require('../models/rated_movies');
+}
+
 
 async function getUserProfile(req) {
   logger.info('Checking to ensure enough reviews have been processed for the user: ' +
   req.user._id);
-  const ratedMovies = await ratedModel.find({
+  const ratedMedia = await ratedModel.find({
     user_id: req.user._id,
   });
-  if (ratedMovies.length < 5) {
+  if (ratedMedia.length < 5) {
     logger.info('Not enough movies have been rated by user: ' + req.user._id);
-    return {rated_movies: ratedMovies.length, data: {}};
+    return {rated_media: ratedMedia.length, data: {}};
   }
   logger.info('Attempting to get movie data...');
   logger.info('Getting genre list..');
@@ -22,52 +33,52 @@ async function getUserProfile(req) {
   const shows = await flaskApi.get_reccomendations(req.user._id);
   // showss = flaskApi.sample_movies()
   if (shows.status == 200) {
-    return {rated_movies: ratedMovies.length, data: {
-      user_info: req.user, movie_info: shows.body.result, genres: genres.body.genres}};
+    return {rated_media: ratedMedia.length, data: {node_env: NODE_ENV,
+      user_info: req.user, media_info: shows.body.result, genres: genres.body.genres}};
   } else {
-    return {rated_movies: ratedMovies.length, data: {user_info: req.user, movie_info: 'Bad',
-      genres: genres.body.genres}};
+    return {rated_media: ratedMedia.length, data: {node_env: NODE_ENV, user_info: req.user,
+      media_info: 'Bad', genres: genres.body.genres}};
   }
 }
 
 async function getUserProfileAjax(req) {
   logger.info('AJAX request made to get user profile...');
   logger.info('Checking to ensure enough reviews have been processed for user: ' + req.user._id);
-  const ratedMovies = await ratedModel.find({
+  const ratedMedia = await ratedModel.find({
     user_id: req.user._id,
   });
-  if (ratedMovies.length < 5) {
+  if (ratedMedia.length < 5) {
     logger.info('Not enough movies have been rated by user: ' + req.user._id);
-    return {'success': false, 'movies_rated': false, 'movie_count': ratedMovies.length};
+    return {'success': false, 'media_rated': false, 'media_count': ratedMedia.length};
   }
   logger.info('Attempting to get movie data...');
   const shows = await flaskApi.get_reccomendations(req.user._id);
   // shows = flaskApi.sample_movies()
   if (shows.status == 200) {
-    return {'success': true, 'movies_rated': true};
+    return {'node_env': NODE_ENV, 'success': true, 'media_rated': true};
   } else {
-    return {'success': false, 'movies_rated': true};
+    return {'node_env': NODE_ENV, 'success': false, 'media_rated': true};
   }
 }
 
 async function getWelcome(req) {
   logger.info('Attempting to render welcome page...');
-  const ratedMovies = await ratedModel.find({
+  const ratedMedia = await ratedModel.find({
     user_id: req.user._id,
   });
-  if (ratedMovies.length > 5) {
-    return {rated_movies: ratedMovies.length, data: {}};
+  if (ratedMedia.length > 5) {
+    return {rated_media: ratedMedia.length, data: {}};
   }
   const rndInt = helpers.random_number(1, 8);
   const inspireQuery = `language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=${rndInt}&vote_average.gte=8&with_original_language=en&vote_count.gte=1000`;
-  const inspirationMovies = await tmdbapiService.discoverSearch(inspireQuery);
+  const inspirationMedia = await tmdbapiService.discoverSearch(inspireQuery);
   let inspiryList = false;
-  if (inspirationMovies.status == 200) {
-    inspiryList = inspirationMovies.body.results;
+  if (inspirationMedia.status == 200) {
+    inspiryList = inspirationMedia.body.results;
   }
 
-  return {rated_movies: ratedMovies.length, data: {'user_info': req.user, 'movie_info': 'Bad',
-    'movie_count': ratedMovies.length, 'inspire_movies': inspiryList}};
+  return {rated_media: ratedMedia.length, data: {'user_info': req.user, 'node_env': NODE_ENV,
+    'media_info': 'Bad', 'media_count': ratedMedia.length, 'inspire_medias': inspiryList}};
 }
 
 async function loginPost(req) {
@@ -112,7 +123,7 @@ function handleRegisterError(err) {
 
 const profileRedirect = async (req) => {
   const profileInfo = await getUserProfile(req);
-  if (profileInfo.rated_movies < 5) {
+  if (profileInfo.rated_media < 5) {
     return {status: 'welcome'};
   }
   return {status: 'profile', userProfile: profileInfo.data};

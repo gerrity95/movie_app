@@ -4,15 +4,23 @@ block content
   include includes/failed_watchlist.pug
   title What To Watch - Watchlist
   - var watchlist = watchlist  
+  if node_env == 'tv'
+    - var idKey = 'tv_id'
+    - var releaseDate = 'first_air_date'
+    - var titleKey = 'name'
+  else
+    - var idKey = 'movie_id'
+    - var releaseDate = 'release_date'
+    - var titleKey = 'title'
   .container-fluid
     .row
      .col-12.d-flex.justify-content-center
         h2.title_style
-          | Movie Watchlist
+          | Watchlist
     .row(style="margin-top: 20px")#watchlist-desktop
       
-      for movie, index in watchlist
-        - var img_src = `https://image.tmdb.org/t/p/w500/${movie.backdrop_path}`
+      for media, index in watchlist
+        - var img_src = `https://image.tmdb.org/t/p/w500/${media.backdrop_path}`
         .col-6.col-sm-6.col-md-6.col-lg-5.col-xl-4.offset-lg-1.offset-xl-0.offset-md-0.offset-sm-0.offset-0
           .card(style='width: 100%;margin-bottom: 20px')
             if index < 7
@@ -20,45 +28,45 @@ block content
             else
               img.card-img-top.lazy(data-src=img_src alt='...')
             .card-body
-              h4.card-title #{movie.title}
+              h4.card-title #{media[titleKey]}
               p.text-monospace
-                | #{movie.tagline}
+                | #{media.tagline}
               b
-                span Rating: #{movie.vote_average}
+                span Rating: #{media.vote_average}
                 br
-                span Running Time: #{movie.runtime} Minutes
-              a(href=`${movie.id}`)#watchlist_button_normal.social-icon.social-icon--codepen(style="margin-top:10px")
+                span Release Date: #{media[releaseDate]}
+              a(href=`${media.id}`)#watchlist_button_normal.social-icon.social-icon--codepen(style="margin-top:10px")
                 i.far.fa-bookmark.fa-stack-1x(style="color: white")
                 .tooltip#watchlist_todo Remove From Watchlist
               br
-              a.btn.btn-block.custom_button(href=`/movies/${movie.id}`) Find Out More
+              a.btn.btn-block.custom_button(href=`/media/${media.id}`) Find Out More
 
     .row(style="margin-top: 20px")#watchlist-mobile
-      for movie in watchlist
-        - var img_src = `https://image.tmdb.org/t/p/w500/${movie.backdrop_path}`
-        a(href=`/movies/${movie.id}` style="width: 100%")#search_link
+      for media in watchlist
+        - var img_src = `https://image.tmdb.org/t/p/w500/${media.backdrop_path}`
+        a(href=`/media/${media.id}` style="width: 100%")#search_link
           .col-12.col-sm-10.col-md-10.col-lg-12.col-xl-12.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0.shadow-lg(style=`background-image:url(${img_src})`).watchlist_header_image
             .watchlist_box
               .search_text.white_text
                 h4(style="letter-spacing: 1px;") 
-                  | #{movie.title}
+                  | #{media[titleKey]}
                 p
-                  em Rating: #{movie.vote_average}
+                  em Rating: #{media.vote_average}
                 p
-                  | #{movie.tagline}
-              a.btn.btn-block.custom_button(href=`/movies/${movie.id}`) Find Out More
+                  | #{media.tagline}
+              a.btn.btn-block.custom_button(href=`/media/${media.id}`) Find Out More
   script.
 
     const watchlist_btn = document.querySelector('#watchlist_button')
         // handle button click
       $("#watchlist_button_normal").click(function(e) {
           e.preventDefault();
-          var movie_id = ($(this).attr('href'));
+          var media_id = ($(this).attr('href'));
           $.ajax({
               type: "POST",
-              url: '/movies/user/addwatchlist',
+              url: '/media/user/addwatchlist',
               dataType: "json",
-              data: {movie_id: movie_id},
+              data: {media_id: media_id},
               success: function(data){
                 if (data.success) {
                   if (data.removed) {

@@ -2,7 +2,15 @@ extends layout
 
 block content
   title What To Watch - Profile
-  - var reccs = movie_info
+  - var reccs = media_info.reccomendations.recommendations
+  if node_env == 'tv'
+    - var idKey = 'tv_id'
+    - var infoKey = 'tv_info'
+    - var titleKey = 'name'
+  else
+    - var idKey = 'movie_id'
+    - var infoKey = 'movie_info'
+    - var titleKey = 'title'
   - var genres = genres
   
   .container-fluid
@@ -16,9 +24,10 @@ block content
     .row(style="margin-top: 30px")#movie_update
 
     .row#movie_default
-     for movie, index in reccs
-        - var movieWeight = Math.round(movie.weight * 10000) / 10000
-        - var img_src = `https://image.tmdb.org/t/p/w500/${movie.movie_info.poster_path}`
+     for media, index in reccs
+        p
+        - var mediaWeight = Math.round(media.weight * 10000) / 10000
+        - var img_src = `https://image.tmdb.org/t/p/w500/${media[infoKey].poster_path}`
         .col-6.col-sm-4.col-md-4.col-lg-4.col-xl-3.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0
           .product#product-desktop
             if index < 13
@@ -29,10 +38,10 @@ block content
                 img.lazy(data-src=img_src)
             .specifies
               h2
-                | #{movie.movie_info.title}
+                | #{media[infoKey][titleKey]}
                 br
-                span Rating: #{movie.movie_info.vote_average} | 
-                span  Weight: #{movieWeight}
+                span Rating: #{media[infoKey].vote_average} | 
+                span  Weight: #{mediaWeight}
               br
               label &nbsp;
               ul
@@ -40,9 +49,9 @@ block content
               label
               ul.colors
                 li 
-              a.btn.custom_button(href=`/movies/${movie.movie_id}`) Find Out More
+              a.btn.custom_button(href=`/media/${media[idKey]}`) Find Out More
 
-          a#product-mobile(href=`/movies/${movie.movie_id}`)
+          a#product-mobile(href=`/media/${media[idKey]}`)
             .product
               if index < 13
                 .imgbox
@@ -52,10 +61,10 @@ block content
                   img.lazy(data-src=img_src)
               .specifies
                 h2
-                  | #{movie.movie_info.title}
+                  | #{media[infoKey][titleKey]}
                   br
-                  span Rating: #{movie.movie_info.vote_average} | 
-                  span  Weight: #{movie.weight}
+                  span Rating: #{media[infoKey].vote_average} | 
+                  span  Weight: #{media.weight}
 
   .social-icons.profile_scroll_button
     a#scroll_button_profile.social-icon.social-icon--codepen.mx-auto(style="height: 50px;width:50px;background:#a178cf")
@@ -63,8 +72,12 @@ block content
 
 
   script.
-    var movie_reccs = !{JSON.stringify(reccs)};
-    var selected_movies = movie_reccs;
+    var media_reccs = !{JSON.stringify(reccs)};
+    var infoKey = !{JSON.stringify(infoKey)};
+    var titleKey = !{JSON.stringify(titleKey)};
+    var idKey = !{JSON.stringify(idKey)};
+    console.log(media_reccs);
+    var selected_medias = media_reccs;
     const scroll_btn = document.querySelector('#scroll_button_profile');
         // handle button click
         scroll_btn.onclick = function () {
@@ -78,25 +91,25 @@ block content
         $("#movie_default").css('display', 'none');
         var selected_genre = this.value;
         if (selected_genre == 'all') {
-          var selected_movies = movie_reccs
+          var selected_medias = media_reccs
         }
         else {
-          var selected_movies = []
-          for(i=0;i<movie_reccs.length;i++) {
-            if (movie_reccs[i].movie_info.genre_ids.includes(parseInt(selected_genre))) {
-              selected_movies.push(movie_reccs[i]);
+          var selected_medias = []
+          for(i=0;i<media_reccs.length;i++) {
+            if (media_reccs[i][infoKey].genre_ids.includes(parseInt(selected_genre))) {
+              selected_medias.push(media_reccs[i]);
             }
           }
         }
         var update_div = document.getElementById('movie_update');
-        if (selected_movies.length == 0) {
-          var no_movies = document.createElement('div')
-          no_movies.innerHTML = "<h2>Sorry. No Movies Found. 😥</h2><p>Not to worry though. If you would be interested to see more movies of this type, start rating some of your favorites and then any ones we recommend will be sure to pop up!</p>";
-          update_div.appendChild(no_movies);
+        if (selected_medias.length == 0) {
+          var no_medias = document.createElement('div')
+          no_medias.innerHTML = "<h2>Sorry. We couldn't find anything. 😥</h2><p>Not to worry though. If you would be interested to see more media of this type, start rating some of your favorites and then any ones we recommend will be sure to pop up!</p>";
+          update_div.appendChild(no_medias);
         }
         else {
-          for(i=0;i<selected_movies.length;i++) {
-            var img_src = 'https://image.tmdb.org/t/p/w500/' + selected_movies[i].movie_info.poster_path;
+          for(i=0;i<selected_medias.length;i++) {
+            var img_src = 'https://image.tmdb.org/t/p/w500/' + selected_medias[i][infoKey].poster_path;
             
             var products_container = document.createElement('div');
             products_container.classList.add("col-6", "col-sm-4", "col-md-4", "col-lg-4", "col-xl-3", "offset-lg-0", "offset-xl-0", "offset-md-0", "offset-sm-0", "offset-0")
@@ -117,14 +130,14 @@ block content
             product_desktop.appendChild(img_box);
             var specifies = document.createElement('div');
             specifies.classList.add("specifies");
-            specifies.innerHTML = '<h2>' + selected_movies[i].movie_info.title + '<br><b><span> Rating: ' + selected_movies[i].movie_info.vote_average + ' | </span><span>Weight: ' + selected_movies[i].weight + '</span></b></h2><br><label> &nbsp;</label><ul><li>&nbsp;</li></ul><label></label><ul class="colors"><li></li></ul><a class="btn custom_button" href="/movies/' + selected_movies[i].movie_id + '">Find Out More</a>'
+            specifies.innerHTML = '<h2>' + selected_medias[i][infoKey][titleKey] + '<br><b><span> Rating: ' + selected_medias[i][infoKey].vote_average + ' | </span><span>Weight: ' + selected_medias[i].weight + '</span></b></h2><br><label> &nbsp;</label><ul><li>&nbsp;</li></ul><label></label><ul class="colors"><li></li></ul><a class="btn custom_button" href="/media/' + selected_medias[i][idKey] + '">Find Out More</a>'
             product_desktop.appendChild(specifies);
 
             // Structure for Mobile
             var product_mobile = document.createElement('a');
             product_mobile.setAttribute('id', 'product-mobile')
-            product_mobile.setAttribute('href', '/movies/' + selected_movies[i].movie_id);
-            product_mobile.innerHTML = '<div class="product"><div class="imgbox"><img src="' + img_src + '" /></div><div class="specifies"><h2>' + selected_movies[i].movie_info.title + '<br><b><span> Rating: ' + selected_movies[i].movie_info.vote_average + ' | </span><span>Weight: ' + selected_movies[i].weight + '</span></b></h2></div></div>';
+            product_mobile.setAttribute('href', '/media/' + selected_medias[i][idKey]);
+            product_mobile.innerHTML = '<div class="product"><div class="imgbox"><img src="' + img_src + '" /></div><div class="specifies"><h2>' + selected_medias[i][infoKey][titleKey] + '<br><b><span> Rating: ' + selected_medias[i][infoKey].vote_average + ' | </span><span>Weight: ' + selected_medias[i].weight + '</span></b></h2></div></div>';
             products_container.appendChild(product_mobile);
             
             

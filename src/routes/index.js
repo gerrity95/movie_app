@@ -3,9 +3,15 @@ const homeRouter = require('./home.routes');
 const errorRouter = require('./error.routes');
 const contactRouter = require('./contact.routes');
 const insertRouter = require('./insert.routes');
-const movieRouter = require('./movies.routes');
+const mediaRouter = require('./media.routes');
 const tmdbApiRouter = require('./tmdb_api.routes');
 const resetRouter = require('./reset.routes');
+const dotenv = require('dotenv');
+dotenv.config();
+const {
+  NODE_ENV,
+} = process.env;
+
 
 const router = express.Router();
 
@@ -28,8 +34,8 @@ const defaultRoutes = [
     route: insertRouter,
   },
   {
-    path: '/movies',
-    route: movieRouter,
+    path: `/media`,
+    route: mediaRouter,
   },
   {
     path: '/tmdbapi',

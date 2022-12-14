@@ -2,15 +2,19 @@ extends welcome_layout
 
 block content
   title What To Watch - Welcome
-  - var reccs = movie_info
-  - var remaining_movies = 5 - movie_count
-  - var inspired_movies = inspire_movies
+  - var reccs = media_info
+  - var remaining_medias = 5 - media_count
+  - var inspired_medias = inspire_medias
   include includes/success_review_modal.pug
   include includes/failed_review_modal.pug
   include includes/generating_reccs_modal.pug
+  if node_env == 'tv'
+    - var titleKey = 'name'
+  else
+    - var titleKey = 'title'
   
-  .container-fluid(style="padding-top: 20px;background-image: url('/images/about_blank.webp')")
-    .row.curved-div(style="padding-top: 40px;")
+  .container-fluid(style="padding-top: 10px;background-image: url('/images/about_blank.webp')")
+    .row.curved-div(style="padding-top: 10px;")
       .col-10.col-sm-10.col-md-5.col-lg-3.col-xl-3.offset-xl-2.offset-lg-2.offset-md-1.offset-1.align-self-center.row_style.mobile_padding
         img(src='/images/what_to_watch_white1.webp', style="width:100%")
       .col-10.col-sm-10.col-md-5.col-lg-5.col-xl-5.offset-xl-1.offset-lg-1.offset-md-1.offset-1.align-self-center.row_style
@@ -38,30 +42,30 @@ block content
         h4.text-center.title_style(style="color: #fff")
           | Looking for inspiration
         p.white_text 
-          | Can't think of what movies you want to rate? Hover over any of the movies here to get an idea from some of our favorite movies! 
+          | Can't think of what titles you want to rate? Hover over any of the pictures here to get an idea from some of our favorite titles! 
 
       .col-12.col-sm-12.col-md-6.col-lg-6.col-xl-6.offset-xl-3.offset-lg-3.offset-md-3.offset-0.align-self-center.row_style
         .row
-          for movie in inspired_movies
-            - var img_src = `https://image.tmdb.org/t/p/w500/${movie.poster_path}`
+          for media in inspired_medias
+            - var img_src = `https://image.tmdb.org/t/p/w500/${media.poster_path}`
             .col-3.col-sm-4.col-md-2.col-lg-2.col-xl-2.poster_container
               img(src=img_src).inspire_poster
-              .tooltip #{movie.original_title}
+              .tooltip #{media[titleKey]}
 
     .row.curved-div(style="margin-top: 0px;padding-top: 40px;margin-bottom: 20px")
       .col-10.col-sm-10.col-md-5.col-lg-5.col-xl-5.offset-xl-1.offset-lg-1.offset-md-1.offset-1.align-self-center.row_style
         h4.text-center.white_text
           | Let's Get Started
         p.white_text 
-          | In order to start generating recommendations you must rate at least 5 movies. But the more you review,
+          | In order to start generating recommendations you must rate at least 5 titles. But the more you review,
           b
             |  the better the suggestions!
         p.white_text
-          | To get started search for one of your favorites movies here to rate it.
-        p#remaining_movie_num.white_text
+          | To get started search for one of your favorites titles here to rate it.
+        p#remaining_media_num.white_text
           | You currently have 
-          b #{remaining_movies} 
-          | movies left to rate.
+          b #{remaining_medias} 
+          | titles left to rate.
         .welcome-search.search_bar_alignment.my-2.my-lg-0
                   input.form-control.mr-sm-2(type='search' id="welcome_search_submit" placeholder='Search' aria-label='Search' required)
                   button.btn.btn-default(type='submit').search_button#welcome_search(style="color: #fff")
@@ -84,47 +88,47 @@ block content
             .col-9.col-sm-10.col-md-10.col-lg-9.col-xl-10.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0
               .search_text
                 h3#movie_title0
-                p#movie_id0(style="display: none")
+                p#media_id0(style="display: none")
                 p#movie_date0
                 p#movie_overview0.hidden_text
           .row.movie_item#movie1.movie_list
             .col-3.col-sm-2.col-md-2.col-lg-3.col-xl-2.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0
-              .img_poster(style="padding-right: 10px")
+              .img_poster(style="padding-right: 10px;padding-left: 10px")
                 img.search_poster#search_poster1.d-block
             .col-9.col-sm-10.col-md-10.col-lg-9.col-xl-10.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0
               .search_text
                 h3#movie_title1
-                p#movie_id1(style="display: none")
+                p#media_id1(style="display: none")
                 p#movie_date1
                 p#movie_overview1.hidden_text
           .row.movie_item#movie2.movie_list
             .col-3.col-sm-2.col-md-2.col-lg-3.col-xl-2.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0
-              .img_poster(style="padding-right: 10px")
+              .img_poster(style="padding-right: 10px;padding-left: 10px")
                 img.search_poster#search_poster2.d-block
             .col-9.col-sm-10.col-md-10.col-lg-9.col-xl-10.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0
               .search_text
                 h3#movie_title2
-                p#movie_id2(style="display: none")
+                p#media_id2(style="display: none")
                 p#movie_date2
                 p#movie_overview2.hidden_text
           .row.movie_item#movie3.movie_list
             .col-3.col-sm-2.col-md-2.col-lg-3.col-xl-2.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0
-              .img_poster(style="padding-right: 10px")
+              .img_poster(style="padding-right: 10px;padding-left: 10px")
                 img.search_poster#search_poster3.d-block
             .col-9.col-sm-10.col-md-10.col-lg-9.col-xl-10.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0
               .search_text
                 h3#movie_title3
-                p#movie_id3(style="display: none")
+                p#media_id3(style="display: none")
                 p#movie_date3
                 p#movie_overview3.hidden_text
           .row.movie_item#movie4.movie_list
             .col-3.col-sm-2.col-md-2.col-lg-3.col-xl-2.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0
-                .img_poster(style="padding-right: 10px")
+                .img_poster(style="padding-right: 10px;padding-left: 10px")
                   img.search_poster#search_poster4.d-block
             .col-9.col-sm-10.col-md-10.col-lg-9.col-xl-10.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0
               .search_text
                 h3#movie_title4
-                p#movie_id4(style="display: none")
+                p#media_id4(style="display: none")
                 p#movie_date4
                 p#movie_overview4.hidden_text
 
@@ -132,7 +136,7 @@ block content
         .feedback
           h5 Submit Rating
           .rating
-            input#input_movie_id(style="display: none", name="input_movie_name" value="")
+            input#input_media_id(style="display: none", name="input_media_name" value="")
             input#rating-10(type='radio' name='rating' value="10")
             label(for='rating-10')
             input#rating-9(type='radio' name='rating' value="9")
@@ -247,7 +251,7 @@ block content
               console.log(search);
               $.ajax({
                   type: "POST",
-                  url: '/movies/welcome/search',
+                  url: '/media/welcome/search',
                   dataType: "json",
                   data: {search: search},
                   success: function(data){
@@ -265,20 +269,16 @@ block content
                           var movie_loop = data.results.length
                         }
                         for (var i = 0; i < movie_loop; i++) {
-                          let poster_src = '';
-                          if (data.results[i].poster_path) {
-                            poster_src = 'https://image.tmdb.org/t/p/w500/' + data.results[i].poster_path;
-                          }
-                          else {
-                            poster_src = '/images/missing_image.png';
-                          }
+                          const title = typeof data.results[i].title != 'undefined' ? data.results[i].title : data.results[i].name;
+                          const airDate = typeof data.results[i].release_date != 'undefined' ? data.results[i].release_date : data.results[i].first_air_date; 
+                          var poster_src = 'https://image.tmdb.org/t/p/w500/' + data.results[i].poster_path
                           $('#movie' + i).css({"display": ""});
-                          $('#movie_id' + i).html(data.results[i].id);
-                          $('#movie_title' + i).html(data.results[i].title);
-                          $('#movie_date' + i).html(data.results[i].release_date);
+                          $('#media_id' + i).html(data.results[i].id);
+                          $('#movie_title' + i).html(title);
+                          $('#movie_date' + i).html(airDate);
                           $('#movie_overview' + i).addClass('hidden_text')
                           $('#movie_overview' + i).html(data.results[i].overview);
-                          $('#input_movie_id').val(data.results[i].id);
+                          $('#input_media_id').val(data.results[i].id);
                           $("#search_poster" + i).attr("src", poster_src);
                           $('.feedback').show();
                         }
@@ -295,7 +295,7 @@ block content
                         $('input[name="rating"]').prop("disabled", true);
                         $('.feedback').hide();
                         $('#movie_date0').html("");
-                        $('#input_movie_id').val("");
+                        $('#input_media_id').val("");
                         $("#search_poster0").removeAttr('src');
                         $('#movie_title0').html("Hmm... No results found for " + search + ".");
                         $('#movie_overview0').removeClass('hidden_text')
@@ -334,8 +334,8 @@ block content
         // handle button click
         rating_btn.onclick = function () {
             console.log("CHecking for data....");
-            const movie_id = $('#input_movie_id').val();
-            console.log(movie_id);
+            const media_id = $('#input_media_id').val();
+            console.log(media_id);
             const rbs = document.querySelectorAll('input[name="rating"]');
             let selectedValue;
             console.log(rbs);
@@ -351,7 +351,7 @@ block content
                 type: "POST",
                 url: '/tmdbapi/submit_rating',
                 dataType: "json",
-                data: {rating: selectedValue, movie_id: movie_id},
+                data: {rating: selectedValue, media_id: media_id},
                 success: function(data){
                   console.log(data);
                   if (data.meet_requirements) {
@@ -366,12 +366,12 @@ block content
                     $("#successReview").modal('show');
                     $('#movie_info_popup').hide();
                     var left_to_rate = 5 - data.num_rated
-                    $("#remaining_movie_num").html("You currently have <b>" + left_to_rate + "</b> movies left to rate")
+                    $("#remaining_media_num").html("You currently have <b>" + left_to_rate + "</b> movies left to rate")
                   }
                   else if (!data.success) {
                     $("#failedReview").modal('show');
                     if (data.is_rated) {
-                      $("#failed_review").html("This movie has already been rated. Please try another.")
+                      $("#failed_review").html("This title has already been rated. Please try another.")
                     }
                     $('#movie_info_popup').hide();                        
                     }
@@ -410,11 +410,11 @@ block content
         $('input[name="rating"]').prop("disabled", false);
         $('button[id="rating_button"]').prop("disabled", true);
         
-        // Assigns the movie_id for the selected movie to a var that is passed into the AJAX Request
+        // Assigns the media_id for the selected movie to a var that is passed into the AJAX Request
         var lastChar = clickedBtnID[clickedBtnID.length -1];
-        var movie_id_div = "movie_id" + lastChar;
-        var movie_id_val = $('#' + movie_id_div).text();
-        $('#input_movie_id').val(movie_id_val)
+        var media_id_div = "media_id" + lastChar;
+        var media_id_val = $('#' + media_id_div).text();
+        $('#input_media_id').val(media_id_val)
 
         // Removes any rating that might have been added before selecting a different movie
         for (var i = 1; i <= 10; i++) {

@@ -77,7 +77,7 @@ exports.logout = async function(req, res, next) {
 exports.user_profile = async function(req, res, next) {
   try {
     const profileInfo = await indexService.getUserProfile(req);
-    if (profileInfo.rated_movies < 5) {
+    if (profileInfo.rated_media < 5) {
       return res.redirect('/welcome');
     }
     return res.render('user_profile', profileInfo.data);
@@ -102,7 +102,7 @@ exports.user_profile_ajax = async function(req, res, next) {
 exports.welcome = async function(req, res, next) {
   try {
     const profileInfo = await indexService.getWelcome(req);
-    if (profileInfo.rated_movies > 5) {
+    if (profileInfo.rated_media > 5) {
       return res.redirect('/userprofile');
     }
     return res.render('welcome', profileInfo.data);
