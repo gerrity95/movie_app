@@ -10,24 +10,29 @@ block content
   include includes/generating_reccs_modal.pug
   if node_env == 'tv'
     - var titleKey = 'name'
+    - var keyword = 'TV show'
   else
     - var titleKey = 'title'
+    - var keyword = 'movie'
   
   .container-fluid(style="padding-top: 10px;background-image: url('/images/about_blank.webp')")
     .row.curved-div(style="padding-top: 10px;")
       .col-10.col-sm-10.col-md-5.col-lg-3.col-xl-3.offset-xl-2.offset-lg-2.offset-md-1.offset-1.align-self-center.row_style.mobile_padding
-        img(src='/images/what_to_watch_white1.webp', style="width:100%")
+        if node_env == 'tv'
+          img(src='/images/what_to_watchtv_white.webp', style="width:100%")
+        else
+          img(src='/images/what_to_watch_white1.webp', style="width:100%")
       .col-10.col-sm-10.col-md-5.col-lg-5.col-xl-5.offset-xl-1.offset-lg-1.offset-md-1.offset-1.align-self-center.row_style
         h4.text-center.white_text
           | What do we do?
         p.white_text
-          | Our aim is to provide a simple way to generate movie recommendations tailored to each individual user. Everyone has at spent at least an evening or two scrolling through movies on Netflix or Amazon Prime not knowing what to watch. We want to make this as easy as possible.   
+          | Our aim is to provide a simple way to generate #{keyword} recommendations tailored to each individual user. Everyone has at spent at least an evening or two scrolling through #{keyword}s on Netflix or Amazon Prime not knowing what to watch. We want to make this as easy as possible.   
         p.white_text
-          | What we do is ask every user to rate five of their favorite movies. Once we get that many we can start generating recommendations. 
+          | What we do is ask every user to rate five of their favorite #{keyword}s. Once we get that many we can start generating recommendations. 
         p.white_text
-          | As with anything, the more you rate, the more accurate we get. This works for movies you dont like as well. Not a fan of Marvel? If we can identify these kind of trends we'll try our best to avoid recommending similar movies.
+          | As with anything, the more you rate, the more accurate we get. This works for #{keyword}s you dont like as well. Not a fan of Marvel? If we can identify these kind of trends we'll try our best to avoid recommending similar #{keyword}s.
         p.white_text
-          | All the recommended movies are assigned a weight. This weight indicates how much we think you'd enjoy the movie. The higher the weight, the more we think you'll like it. As you rate more movies the weight will change for each of the movies you haven't yet rated. 
+          | All the recommended #{keyword}s are assigned a weight. This weight indicates how much we think you'd enjoy the #{keyword}. The higher the weight, the more we think you'll like it. As you rate more #{keyword}s the weight will change for each of the #{keyword}s you haven't yet rated. 
         h5.white_text(style="letter-spacing: 2px;").text-center
           | Scroll down to get started!
         .social-icons
@@ -73,12 +78,15 @@ block content
         p.password_error#bad_welcome_search
         
       .col-10.col-sm-10.col-md-5.col-lg-3.col-xl-3.offset-xl-2.offset-lg-2.offset-md-1.offset-1.align-self-center.row_style
-        img(src='/images/movie_list_snippet1.webp', style="width:100%")
+        if node_env == 'tv'
+          img(src='/images/tv_show_snippet.webp', style="width:100%")
+        else
+          img(src='/images/movie_list_snippet1.webp', style="width:100%")
 
     .row.align-items-center#movie_info_popup.welcome_message.shadow-lg(style="display: none; margin-top: 30px; background-color: #fff")
       .col-12.col-sm-12.col-md-12.col-lg-7.col-xl-7.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0.align-text-center
         p(style="padding-bottom: 20px;font-size: 20px")
-          |  Click the movie you want to rate.
+          |  Click the #{keyword} you want to rate.
           span(style="margin-left: 10px;").far.fa-check-square
         .row.align-items-center.my-auto.welcome_list#welcome_movies
           .row.movie_item#movie0.movie_list
@@ -237,6 +245,8 @@ block content
 
   script.
 
+    var keyword = !{JSON.stringify(keyword)};
+
     $(".header_search").prop('disabled', true);
     $('input[name="search"]').prop("disabled", true);
 
@@ -366,7 +376,7 @@ block content
                     $("#successReview").modal('show');
                     $('#movie_info_popup').hide();
                     var left_to_rate = 5 - data.num_rated
-                    $("#remaining_media_num").html("You currently have <b>" + left_to_rate + "</b> movies left to rate")
+                    $("#remaining_media_num").html("You currently have <b>" + left_to_rate + "</b> titles left to rate")
                   }
                   else if (!data.success) {
                     $("#failedReview").modal('show');

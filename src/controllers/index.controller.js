@@ -3,6 +3,11 @@ const helpers = require('../utils/generic_helpers');
 const logger = require('../middlewares/logger');
 const passport = require('passport');
 const User = require('../models/user');
+const dotenv = require('dotenv');
+dotenv.config();
+const {
+  NODE_ENV,
+} = process.env;
 
 exports.home = async function(req, res, next) {
   try {
@@ -13,7 +18,8 @@ exports.home = async function(req, res, next) {
       }
       return res.render('user_profile', redirect.userProfile);
     }
-    res.render('home', {user_info: req.user});
+    if (NODE_ENV === 'tv') {return res.render('home_tv', {user_info: req.user});}
+    return res.render('home', {user_info: req.user});
   } catch (err) {
     logger.error('Error attempting to render index page');
     logger.error(err);
@@ -23,7 +29,8 @@ exports.home = async function(req, res, next) {
 
 exports.about = async function(req, res, next) {
   try {
-    res.render('about', {user_info: req.user});
+    if (NODE_ENV === 'tv') {return res.render('about_tv', {user_info: req.user});}
+    return res.render('about', {user_info: req.user});
   } catch (err) {
     logger.error('Error attempting to render about page');
     logger.error(err);

@@ -15,6 +15,7 @@ module.exports = {
     'max-len': ['error', {'code': 100, 'comments': 150}],
     'no-undef': ['error'],
     'new-cap': ['off'],
+    'brace-style': ['off'],
 
   },
 };

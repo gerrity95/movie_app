@@ -2,9 +2,12 @@
 
 #swup.transition-fade.nav.navbar.navbar-expand-md.navbar-light.bg-light.mb-3.fixed-top.shadow
   .container-fluid
-    button.navbar-toggler(type='button' data-toggle='collapse' data-target='#navbarCollapse')
-      span.navbar-toggler-icon
-    #navbarCollapse.collapse.navbar-collapse
+    a.navbar-brand(href='/')
+      img(src='/images/what_to_watch_logo_only.webp' alt='What To Watch Logo' height='36')
+
+    button.btn.btn-dark.sidebar_collapse.d-inline-block.d-lg-none.ml-auto(type='button' data-toggle='collapse' data-target='#navbarSupportedContent' aria-controls='navbarSupportedContent' aria-expanded='false' aria-label='Toggle navigation')
+      i.fas.fa-align-justify
+    #navbarSupportedContent.collapse.navbar-collapse
       .navbar-nav
         if !user_info
           a.nav-item.nav-link(href='/') Home

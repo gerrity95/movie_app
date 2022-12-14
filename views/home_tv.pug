@@ -1,19 +1,19 @@
 extends home_layout
 
 block content
-  title - What To Watch Movies - Home
+  title - What To Watch TV - Home
   include includes/loading_modal.pug
   // Full Page Image Header with Vertically Centered Content
   #loader(style="display:none")
   header.home_masthead#masthead_load(style="background-image: url('/images/movie_background.webp')")
     .container-fluid.h-100.align-items-center(style="display: flex")
       .row.header_text.shadow-lg.mx-auto#form_background
-        .col-xl-5.col-lg-6.col-md-7.col-sm-10.col-12.offset-0.offset-sm-1.offset-md-0.offset-xl-0.offset-lg-0.text-center
-          img(src='/images/what_to_watch_black.webp' alt="What To Watch Icon" style="width: 80%")
-          h2.fw-light Movie Recommendations For You. 🎞️
-          p.lead.home_title(style="margin-top: 20px") WhatToWatch is the best place for you to get recommendations for movies we know you will love.
-          p.lead.home_title(style="margin-top: 20px") Want to know what to watch on TV?&nbsp; #[a(href="https://whattowatchtv.mggert.com/" target="_blank") Check our TV recommendations app here.]  
-        .col-xl-5.col-lg-6.col-md-6.col-sm-10.offset-sm-1.offset-md-0.offset-xl-0.offset-lg-0
+        .col-xl-6.col-lg-6.col-md-6.col-sm-10.col-12.offset-0.offset-sm-1.offset-md-0.offset-xl-0.offset-lg-0.text-center
+          img(src='/images/what_to_watchtv_black.webp' alt="What To Watch Icon" style="width: 80%")
+          h2.fw-light Television Recommendations For You. 📺
+          p.lead.home_title(style="margin-top: 20px") WhatToWatch is the best place for you to get recommendations for TV shows we know you will love.
+          p.lead.home_title(style="margin-top: 20px") Want to know what movies to watch?&nbsp; #[a(href="https://whattowatch.mggert.com/" target="_blank") Check our Movie recommendations app here.]  
+        .col-xl-6.col-lg-6.col-md-6.col-sm-10.offset-sm-1.offset-md-0.offset-xl-0.offset-lg-0
           h4.title_style.text-center
             | Sign in
           div.message.alert.alert-danger(style="display:none;")
@@ -38,14 +38,14 @@ block content
   .container-fluid(style="padding-top: 30px;padding-bottom: 40px;")
     .row.curved-div(style="padding-top: 20px;")
       .col-12.col-sm-10.col-md-5.col-lg-4.col-xl-4.offset-xl-1.offset-lg-1.offset-md-1.offset-0.align-self-center.row_style.mobile_padding
-        img(src='/images/movie_back_small.webp', alt="Cinema seat background" style="width:100%;border-radius:5px")
+        img(src='/images/tv_posters_gradient.webp', alt="Cinema seat background" style="width:100%;border-radius:5px")
       .col-12.col-sm-10.col-md-5.col-lg-5.col-xl-5.offset-xl-1.offset-lg-1.offset-md-1.offset-0.align-self-center.row_style
         h1.title_style
-          | The Easiest Way To Find A Movie. 🍿
+          | The Easiest Way To Find A New TV Show. 🎥 
         p
-          | Our aim is to provide a simple way to generate movie recommendations tailored to each individual user. Everyone has at spent at least an evening or two scrolling through movies on Netflix or Amazon Prime not knowing what to watch. We want to make this as easy as possible.   
+          | Our aim is to provide a simple way to generate TV recommendations tailored to each individual user. Everyone has at spent at least an evening or two scrolling through different TV shows on Netflix or Amazon Prime not knowing what to watch. We want to make this as easy as possible.   
         p
-          | All we ask is for you to rate five of your favorite movies. That's it! Once you do this, there'll be a personal list of movies tailored just for you. As with anything, the more you rate, the more accurate we get. We also know that not everyone is a fan of every type of movie. If you give us an idea of what you don't like, we'll take this into consideration too! 📽️
+          | All we ask is for you to rate five of your favorite TV shows. That's it! Once you do this, there'll be a personal list of shows tailored just for you. As with anything, the more you rate, the more accurate we get. We also know that not everyone is a fan of every type of show. If you give us an idea of what you don't like, we'll take this into consideration too! 🍿
         p
           | To get started all you need to do is&nbsp; #[a(href="/register") Sign up here.] If you would like to find out a little bit more info about the app you can&nbsp; #[a(href="/about") read about us here.]
 

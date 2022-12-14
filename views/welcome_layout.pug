@@ -26,9 +26,8 @@ html(lang="en")
     // Page Content
     nav.navbar.navbar-expand-lg.navbar-light.bg-light(style="margin-bottom:0px")
       .container-fluid
-        //- button#sidebarCollapse.sidebar_collapse.btn.custom_button.desktop_show(type='button')
-        //-   i.fas.fa-align-left(style="margin-right: 5px")
-        //-   span Toggle Sidebar
+        a.navbar-brand(href='/')
+          img(src='/images/what_to_watch_logo_only.webp' alt='What To Watch Logo' height='36')
         button.btn.btn-dark.sidebar_collapse.d-inline-block.d-lg-none.ml-auto(type='button' data-toggle='collapse' data-target='#navbarSupportedContent' aria-controls='navbarSupportedContent' aria-expanded='false' aria-label='Toggle navigation')
           i.fas.fa-align-justify
         #navbarSupportedContent.collapse.navbar-collapse
