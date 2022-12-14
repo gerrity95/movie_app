@@ -1,25 +1,25 @@
 extends home_layout
 
 block content
-  title What To Watch Movies - About
+  title What To Watch TV - About
   - var logo = logo
   .container-fluid(style="padding-top: 60px;background-image: url('/images/about_blank.webp')")
     .row.curved-div(style="padding-top: 40px;")
       .col-10.col-sm-10.col-md-5.col-lg-4.col-xl-4.offset-xl-1.offset-lg-1.offset-md-1.offset-1.align-self-center.row_style.mobile_padding
-        img(src='/images/movie_list_snippet1.webp', style="width:100%")
+        img(src='/images/tv_show_snippet.webp', style="width:100%")
       .col-12.col-sm-10.col-md-5.col-lg-5.col-xl-5.offset-xl-1.offset-lg-1.offset-md-1.offset-0.align-self-center.row_style
         h4.text-center.white_text
           | What do we do? 🎬
         p.white_text
-          | Our aim is to provide a simple way to generate movie recommendations tailored to each individual user. Everyone has at spent at least an evening or two scrolling through movies on Netflix or Amazon Prime not knowing what to watch. We want to make this as easy as possible.   
+          | Our aim is to provide a simple way to generate TV recommendations tailored to each individual user. Everyone has at spent at least an evening or two scrolling through Netflix or Amazon Prime not knowing what to watch. We want to make this as easy as possible.   
         p.white_text
-          | What we do is ask every user to rate five of their favorite movies. Once we get that many we can start generating recommendations. 
+          | What we do is ask every user to rate five of their favorite TV shows. Once we get that many we can start generating recommendations. 
         p.white_text
           | As with anything, the more you rate, the more accurate we get. This works for movies you dont like as well. Not a fan of Marvel? If we can identify these kind of trends we'll try our best to avoid recommending similar movies.
         p.white_text
-          | All the recommended movies are assigned a weight. This weight indicates how much we think you'd enjoy the movie. The higher the weight, the more we think you'll like it. As you rate more movies the weight will change for each of the movies you haven't yet rated. 
+          | All the recommended shows are assigned a weight. This weight indicates how much we think you'd enjoy the movie. The higher the weight, the more we think you'll like it. As you rate more movies the weight will change for each of the movies you haven't yet rated. 
         p.white_text.text-center
-          img(src='/images/what_to_watch_white1.png' alt="What To Watch Icon" style="width: 70%")
+          img(src='/images/what_to_watchtv_white.webp' alt="What To Watch Icon" style="width: 70%")
                   
         
       svg(xmlns='http://www.w3.org/2000/svg' viewbox='0 0 1440 470' style="background-image: url('/images/top2.webp')").parallax
@@ -30,13 +30,13 @@ block content
         h4.text-center.white_text
           | Where do we get the data? 💾
         p.white_text
-          | We use the&nbsp; #[a(href="https://developers.themoviedb.org/3/getting-started/introduction" target="_blank") TMDB API] to get our data on millions of movies. It's one of the worlds largest movie and TV databases that gives us access to an unreal amount of content.
+          | We use the&nbsp; #[a(href="https://developers.themoviedb.org/3/getting-started/introduction" target="_blank") TMDB API] to get our data on millions of different shows. It's one of the worlds largest movie and TV databases that gives us access to an unreal amount of content.
         p.white_text
           | We also use&nbsp; #[a(href="https://www.justwatch.com/" target="_blank") JustWatch] help us with our data around watch providers. They provide the ability, through TMDB, to get the watch providers for streaming, renting and buying for many many countries.
         p.white_text
-          | Combining this API with information given from you we can calculate the movies we think you would like. The calculations used are constantly evolving and so we are always looking for feedback on how well it works.
+          | Combining this API with information given from you we can calculate the TV shows we think you would like. The calculations used are constantly evolving and so we are always looking for feedback on how well it works.
         p.white_text  
-          | We are also conscious that when signing up no one wants to spend half their evening rating movies. This is why we start gives recommendations after only rating 5 movies.
+          | We are also conscious that when signing up no one wants to spend half their evening rating different shows. This is why we start gives recommendations after only rating 5 shows.
         p.white_text  
           | We have a lot of people to thank for some of the content we use, no more so than TMDB but also a lot of the content creators over on #[a(href="https://unsplash.com/" target="_blank") Unsplash]. 
 
@@ -51,7 +51,7 @@ block content
         h4.text-center
           | Who am I? 👨‍💻
         p
-          | I started building this app due to the amount of time I spent searching through movie lists and not knowing what to watch. I built out a basic way to recommend movies that I would like and kept building up from there.
+          | I started building this app due to the amount of time I spent searching through movie and TV lists and not knowing what to watch. I built out a basic way to recommend shows that I would like and kept building up from there.
         p
           | This app is a side project and so we always welcome feedback and contributions. If you have some features you'd like to see please <a href="/contact">contact us here.</a> 
         p  
