@@ -28,7 +28,7 @@ function isLoggedIn(req, res, next) {
 }
 
 function isValidPassword(password) {
-  const presult = passwordSchema.validate(password, { details: true });
+  const presult = passwordSchema.validate(password, {details: true});
   if (presult.length != 0) {
     return presult;
   } else {

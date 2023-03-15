@@ -1,19 +1,20 @@
 const {createLogger, format, transports} = require('winston');
+const {combine, timestamp, colorize, errors} = format;
 
-module.exports = createLogger({
-  transports: [
-    new transports.File({
-      filename: 'logs/server.log',
-      format: format.combine(
-          format.timestamp({format: 'MMM-DD-YYYY HH:mm:ss'}),
-          format.align(),
-          format.printf((info) => `${info.level}: ${[info.timestamp]}: ${info.message}`),
-      )}),
-    new transports.Console({
-      format: format.combine(
-          format.timestamp({format: 'MMM-DD-YYYY HH:mm:ss'}),
-          format.align(),
-          format.printf((info) => `${info.level}: ${[info.timestamp]}: ${info.message}`),
-      )}),
-  ],
+const logger = createLogger({
+  format: combine(
+      errors({stack: true}), // <-- use errors format
+      colorize(),
+      timestamp(),
+      format.printf(({level, message, timestamp, stack}) => {
+        if (stack) {
+          // print log trace
+          return `${timestamp} ${level}: ${message} - ${stack}`;
+        }
+        return `${timestamp} ${level}: ${message}`;
+      }),
+  ),
+  transports: [new transports.Console(), new transports.File({filename: 'logs/server.log'})],
 });
+
+module.exports = logger;

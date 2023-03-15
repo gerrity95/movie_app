@@ -5,9 +5,7 @@ const passport = require('passport');
 const User = require('../models/user');
 const dotenv = require('dotenv');
 dotenv.config();
-const {
-  NODE_ENV,
-} = process.env;
+const {NODE_ENV} = process.env;
 
 exports.home = async function(req, res, next) {
   try {
@@ -18,7 +16,9 @@ exports.home = async function(req, res, next) {
       }
       return res.render('user_profile', redirect.userProfile);
     }
-    if (NODE_ENV === 'tv') {return res.render('home_tv', {user_info: req.user});}
+    if (NODE_ENV === 'tv') {
+      return res.render('home_tv', {user_info: req.user});
+    }
     return res.render('home', {user_info: req.user});
   } catch (err) {
     logger.error('Error attempting to render index page');
@@ -29,7 +29,9 @@ exports.home = async function(req, res, next) {
 
 exports.about = async function(req, res, next) {
   try {
-    if (NODE_ENV === 'tv') {return res.render('about_tv', {user_info: req.user});}
+    if (NODE_ENV === 'tv') {
+      return res.render('about_tv', {user_info: req.user});
+    }
     return res.render('about', {user_info: req.user});
   } catch (err) {
     logger.error('Error attempting to render about page');
@@ -137,7 +139,7 @@ exports.login_post = async function(req, res, next) {
       }
       req.logIn(user, function(err) {
         if (err) {
-          throw (err);
+          throw err;
         }
         logger.info('Successfully logged in for user: ' + req.user.email);
         return res.redirect('/userprofile');
@@ -159,31 +161,35 @@ exports.register_post = async function(req, res, next) {
       logger.info('Password does not meet requirements.');
       return {fail_message: isValidPword};
     }
-    await User.register(new User({
-      username: req.body.username,
-      email: req.body.email,
-      first_name: req.body.first_name,
-      last_name: req.body.last_name}),
-    req.body.password, function(err, user) {
-      if (err) {
-        console.log(err);
-        const errMessage = indexService.handleRegisterError(err);
-        return res.redirect(url + errMessage.fail_message);
-      }
-      logger.info('Successfully created user: ' + user.email);
-      // helpers.generateEmailMessage(req);
-      // await email.send_email(user.email, "Welcome To What To Watch 🍿", html_message);
-      passport.authenticate('local')(req, res, function() {
-        console.log('User successfully registered...');
-        req.logIn(user, function(err) {
+    await User.register(
+        new User({
+          username: req.body.username,
+          email: req.body.email,
+          first_name: req.body.first_name,
+          last_name: req.body.last_name,
+        }),
+        req.body.password,
+        function(err, user) {
           if (err) {
-            throw err;
+            console.log(err);
+            const errMessage = indexService.handleRegisterError(err);
+            return res.redirect(url + errMessage.fail_message);
           }
-          console.log('Successfully logged in for user: ' + req.user.email);
-          return res.redirect('/userprofile');
-        });
-      });
-    });
+          logger.info('Successfully created user: ' + user.email);
+          // helpers.generateEmailMessage(req);
+          // await email.send_email(user.email, "Welcome To What To Watch 🍿", html_message);
+          passport.authenticate('local')(req, res, function() {
+            console.log('User successfully registered...');
+            req.logIn(user, function(err) {
+              if (err) {
+                throw err;
+              }
+              console.log('Successfully logged in for user: ' + req.user.email);
+              return res.redirect('/userprofile');
+            });
+          });
+        },
+    );
   } catch (err) {
     logger.error('Error attempting to register...');
     logger.error(err);
