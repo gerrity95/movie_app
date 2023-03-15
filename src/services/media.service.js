@@ -1,7 +1,7 @@
 /* eslint-disable no-var */
 const logger = require('../middlewares/logger');
 const helpers = require('../utils/generic_helpers');
-const { parseMediaOutput, parseReccs } = require('../utils/media.helpers');
+const {parseMediaOutput, parseReccs} = require('../utils/media.helpers');
 const watchProviders = require('../models/watch_providers');
 const flaskApi = require('../utils/flask_api');
 const tmdbapiService = require('./tmdbapi.service');
@@ -43,7 +43,7 @@ async function getMedia(req) {
   const mediaParsed = parseMediaOutput(mediaInfo);
   const recommendations = parseReccs(mediaInfo.body.recommendations);
   const watchlistBool = isWatchlist.length == 1 ? true : false;
-  
+
   return {'media_info': mediaParsed, 'is_watchlist': watchlistBool,
     'ip_info': ipInfo, 'watch_provider_countries': watchProviderCountries,
     'watch_providers_content': watchProvidersContent,

@@ -11,7 +11,6 @@ exports.contact = async function(req, res, next) {
   }
 };
 
-
 exports.contact_post = async function(req, res, next) {
   try {
     const contactPost = await contactService.contactPost(req);

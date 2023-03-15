@@ -22,6 +22,7 @@ const {
 } = process.env;
 
 const store = new MongoStore({
+  // eslint-disable-next-line max-len
   uri: `mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOSTNAME}:${MONGO_PORT}/${MONGO_DB}?authSource=${MONGO_DB}`,
   collection: 'sessions',
 });

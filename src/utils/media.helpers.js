@@ -10,7 +10,7 @@ const parseMediaOutput = (mediaInfo) => {
   // A function that receives the mediaInfo and will determine how to format it for TV vs Movies
   const formattedObject = {};
   const keywords = (typeof mediaInfo.body.keywords.keywords != 'undefined') ? mediaInfo.body.keywords.keywords : mediaInfo.body.keywords.results;
-  
+
   // Elements with the same name
   formattedObject.mediaId = mediaInfo.body.id;
   formattedObject.imageSection = {poster: mediaInfo.body.poster_path, backdrop: mediaInfo.body.backdrop_path};
@@ -50,7 +50,7 @@ const parseMediaOutput = (mediaInfo) => {
       formattedObject.runtimeSection = `${mediaInfo.body.runtime} Minutes`;
       formattedObject.releaseSection = mediaInfo.body.release_date;
       formattedObject.productionSection = {name: mediaInfo.body.production_companies[0].name, logo: mediaInfo.body.production_companies[0].logo_path};
-      if (value.job == 'Director') { formattedObject.directorSection = value.name };
+      if (value.job == 'Director') {formattedObject.directorSection = value.name;};
       if (value.job == 'Screenplay') {
         formattedObject.statusWriterSection = {title: 'Screenplay', value: value.name};
       }
