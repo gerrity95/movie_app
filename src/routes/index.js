@@ -6,6 +6,7 @@ const insertRouter = require('./insert.routes');
 const mediaRouter = require('./media.routes');
 const tmdbApiRouter = require('./tmdb_api.routes');
 const resetRouter = require('./reset.routes');
+const statusRouter = require('./status.routes');
 const dotenv = require('dotenv');
 dotenv.config();
 const {
@@ -44,6 +45,10 @@ const defaultRoutes = [
   {
     path: '/reset',
     route: resetRouter,
+  },
+  {
+    path: '/status',
+    route: statusRouter,
   },
 ];
 
