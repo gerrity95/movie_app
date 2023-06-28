@@ -66,7 +66,7 @@ async function getWelcome(req) {
   const ratedMedia = await ratedModel.find({
     user_id: req.user._id,
   });
-  if (ratedMedia.length > 5) {
+  if (ratedMedia.length >= 5) {
     return {rated_media: ratedMedia.length, data: {}};
   }
   const rndInt = helpers.random_number(1, 8);
