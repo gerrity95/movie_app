@@ -43,7 +43,7 @@ async function submitRatingService(req) {
   } catch (e) {
     logger.error('Error attempting to add show to the DB.');
     logger.error(e);
-    return {'success': false, 'meet_requirements': false};
+    return {'success': false, 'meet_requirements': true};
   }
 }
 
@@ -108,7 +108,8 @@ async function ratedMediaDetails(req) {
     let mediaKeywords = [];
     let directorId = '';
     if (NODE_ENV == 'tv') {
-      directorId = mediaDetails.body.created_by[0].name;
+      // directorId = mediaDetails.body.created_by[0].name;
+      directorId = getTvDirector(mediaDetails);
       mediaKeywords = mediaDetails.body.keywords.results;
     } else {
       mediaDetails.body.credits.crew.forEach(function(value) {
@@ -379,6 +380,21 @@ async function discoverSearch(searchQuery) {
     req.end();
   });
 }
+
+const getTvDirector = (mediaDetails) => {
+  // A function to extract the director/creator for a TV show
+  try {
+    return mediaDetails.body.created_by[0].name;
+  } catch (err) {
+    logger.error(`No defined creator for show: ${mediaDetails.body.name}. Will use a directors`);
+    mediaDetails.body.credits.crew.forEach(function(value) {
+      if (value.job == 'Creator') {
+        return value.id;
+      }
+    });
+  }
+  return '';
+};
 
 
 module.exports = {

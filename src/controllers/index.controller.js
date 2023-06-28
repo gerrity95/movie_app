@@ -111,7 +111,7 @@ exports.user_profile_ajax = async function(req, res, next) {
 exports.welcome = async function(req, res, next) {
   try {
     const profileInfo = await indexService.getWelcome(req);
-    if (profileInfo.rated_media > 5) {
+    if (profileInfo.rated_media >= 5) {
       return res.redirect('/userprofile');
     }
     return res.render('welcome', profileInfo.data);
