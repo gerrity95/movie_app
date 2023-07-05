@@ -8,9 +8,13 @@ block content
   include includes/failed_watchlist.pug
   - var media_reccs = reccomendations
   - var media_cast = media_info.castSection
+  - var percent_rating = Math.round(media_info.ratingSection * 10)
   - var header_src = `https://image.tmdb.org/t/p/original/${media_info.imageSection.backdrop}`
   - var poster_src = `https://image.tmdb.org/t/p/w500/${media_info.imageSection.poster}`
-  - var percent_rating = Math.round(media_info.ratingSection * 10)
+  if (media_info.imageSection.poster)
+    - var poster_src = `https://image.tmdb.org/t/p/w500/${media_info.imageSection.poster}`
+  else
+    - var poster_src = '/images/missing_image.png'
   if (is_watchlist)
     - var watchlist_title = 'Remove From Watchlist'
   else

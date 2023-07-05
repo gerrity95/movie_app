@@ -3,16 +3,16 @@ const logger = require('../middlewares/logger');
 
 exports.getMedia = async function(req, res, next) {
   try {
-    const movieDetails = await mediaService.getMedia(req);
-    return res.render('movie_profile', movieDetails);
+    const mediaDetails = await mediaService.getMedia(req);
+    return res.render('media_profile', mediaDetails);
   } catch (err) {
-    if (err.message === 'Unable to find movie') {
-      logger.error('Unable to find movie in TMDB');
+    if (err.message === 'Unable to find media') {
+      logger.error('Unable to find media in TMDB');
       res.set('Connection', 'close');
       res.status(404);
       return res.render('404error', {user_info: req.user});
     }
-    logger.error('Error attempting to render movie profile');
+    logger.error('Error attempting to render media profile');
     logger.error(err);
     return next(err);
   }
