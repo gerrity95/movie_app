@@ -2,6 +2,8 @@ extends layout
 
 block content
   title What To Watch - Profile
+  include includes/success_watchlist.pug
+  include includes/failed_watchlist.pug
   - var reccs = media_info.reccomendations.recommendations
   if node_env == 'tv'
     - var idKey = 'tv_id'
@@ -46,10 +48,10 @@ block content
               ul
                 li
                   .social-icons
-                    a(id=`${media[idKey]}`).watchlist_button_normal.social-icon_profile.social-icon--codepen
+                    a(id=`${media[idKey]}`).watchlist_button.social-icon_profile.social-icon--codepen
                       i.far.fa-bookmark.fa-stack-1x(style="color: white")
                       .tooltip#watchlist_todo Add To Watchlist
-                    a(href="#").social-icon_profile.social-icon--codepen
+                    a(id=`${media[idKey]}`).blocklist_button.social-icon_profile.social-icon--codepen
                       i.far.fa-trash-alt.fa-stack-1x(style="color: white")
                       .tooltip Add To Blocklist
               label
@@ -141,9 +143,9 @@ block content
                                   <span>Weight: ${selected_medias[i].weight}</span>
                                   </b></h2><br><ul><li>
                                       <div class="social-icons">
-                                        <a id=${selected_medias[i][idKey]} class="watchlist_button_normal social-icon_profile social-icon--codepen"><i class="far fa-bookmark fa-stack-1x" style="color: white"></i>
+                                        <a id=${selected_medias[i][idKey]} class="watchlist_button social-icon_profile social-icon--codepen"><i class="far fa-bookmark fa-stack-1x" style="color: white"></i>
                                         <div class="tooltip" id="watchlist_todo">Add To Watchlist</div></a>
-                                        <a class="social-icon_profile social-icon--codepen" href="#"><i class="far fa-trash-alt fa-stack-1x" style="color: white"></i>
+                                        <a id=${selected_medias[i][idKey]} class="blocklist_button social-icon_profile social-icon--codepen" href="#"><i class="far fa-trash-alt fa-stack-1x" style="color: white"></i>
                                         <div class="tooltip">Add To Blocklist</div></a>
                                       </div>
                                   </li></ul><label></label><ul class="colors"></ul>
@@ -176,38 +178,41 @@ block content
     });
 
       // handle button click
-    $(document).on('click', '.watchlist_button_normal', function(event) {
-      console.log('WATCHLIST BABY')
-      console.log(this.id)
-        
-        //- $.ajax({
-        //-     type: "POST",
-        //-     url: '/media/user/addwatchlist',
-        //-     dataType: "json",
-        //-     data: {media_id: media_details.mediaId},
-        //-     success: function(data){
-        //-       if (data.success) {
-        //-         if (data.removed) {
-        //-           $('#watchlist_message').text('Successfully removed from watchlist.');
-        //-           $('#watchlist_todo, #watchlist_todo_mobile').text('Add To Watchlist');
-        //-         }
-        //-         else {
-        //-           $('#watchlist_message').text('Successfully added to watchlist.');
-        //-           $('#watchlist_todo, #watchlist_todo_mobile').text('Remove From Watchlist');
-        //-         }
-        //-          $("#successWatchlist").modal('show');
-        //-       }
-        //-       else {
-        //-         $("#failedWatchlist").modal('show');
-        //-       }
-        //-     },
-        //-     error: function(jqXHR, textStatus, errorThrown){
-        //-       console.log("FAILURE")
-        //-       console.log(errorThrown);
-        //-       $("#failedWatchlist").modal('show');
+    $(document).on('click', '.watchlist_button', function(event) {        
+      $.ajax({
+          type: "POST",
+          url: '/media/user/addwatchlist',
+          dataType: "json",
+          data: {media_id: this.id},
+          success: function(data){
+            if (data.success) {
+              if (data.removed) {
+                $('#watchlist_message').text('Successfully removed from watchlist.');
+                $('#watchlist_todo, #watchlist_todo_mobile').text('Add To Watchlist');
+              }
+              else {
+                $('#watchlist_message').text('Successfully added to watchlist.');
+                $('#watchlist_todo, #watchlist_todo_mobile').text('Remove From Watchlist');
+              }
+                $("#successWatchlist").modal('show');
+            }
+            else {
+              $("#failedWatchlist").modal('show');
+            }
+          },
+          error: function(jqXHR, textStatus, errorThrown){
+            console.log("FAILURE")
+            console.log(errorThrown);
+            $("#failedWatchlist").modal('show');
 
-        //-     }              
-        //- });
+          }              
+      });
+    });
+
+    $(document).on('click', '.blocklist_button', function(event) {
+      console.log('BLOCKLIST BABY')
+      console.log(this.id)
+
     });
 
     //- document.addEventListener("DOMContentLoaded", function() {
