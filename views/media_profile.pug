@@ -19,6 +19,10 @@ block content
     - var watchlist_title = 'Remove From Watchlist'
   else
     - var watchlist_title = 'Add To Watchlist'
+  if (is_blocklist)
+    - var blocklist_title = 'Remove From Blocklist'
+  else
+    - var blocklist_title = 'Add To Blocklist'
 
   .container-fluid(style=`background-image:url(${header_src})`).movie_header_image
     .row.movie_darken#movie-desktop
@@ -43,9 +47,9 @@ block content
           a#watchlist_button_normal.social-icon.social-icon--codepen
             i.far.fa-bookmark.fa-stack-1x(style="color: white")
             .tooltip#watchlist_todo #{watchlist_title}
-          a(href="#").social-icon.social-icon--codepen
+          a#blocklist_button_normal.social-icon.social-icon--codepen
             i.far.fa-trash-alt.fa-stack-1x(style="color: white")
-            .tooltip Add To Blocklist
+            .tooltip#blocklist_todo #{blocklist_title}
 
         table.table.table-borderless.movie_text
           thead
@@ -90,9 +94,9 @@ block content
           a#watchlist_button_mobile.social-icon.social-icon--codepen
             i.far.fa-bookmark.fa-stack-1x(style="color: white")
             .tooltip#watchlist_todo_mobile #{watchlist_title}
-          a(href="#").social-icon.social-icon--codepen
+          a#blocklist_button_mobile.social-icon.social-icon--codepen
             i.far.fa-trash-alt.fa-stack-1x(style="color: white")
-            .tooltip Add To Blocklist
+            .tooltip#blocklist_todo_modile #{blocklist_title}
 
         table.table.table-borderless.movie_text
           thead
@@ -386,35 +390,67 @@ block content
         };
 
     const watchlist_btn = document.querySelector('#watchlist_button')
-        // handle button click
-      $("#watchlist_button_normal, #watchlist_button_mobile").click(function () {
-          
-          $.ajax({
-              type: "POST",
-              url: '/media/user/addwatchlist',
-              dataType: "json",
-              data: {media_id: media_details.mediaId},
-              success: function(data){
-                if (data.success) {
-                  if (data.removed) {
-                    $('#watchlist_message').text('Successfully removed from watchlist.');
-                    $('#watchlist_todo, #watchlist_todo_mobile').text('Add To Watchlist');
-                  }
-                  else {
-                    $('#watchlist_message').text('Successfully added to watchlist.');
-                    $('#watchlist_todo, #watchlist_todo_mobile').text('Remove From Watchlist');
-                  }
-                   $("#successWatchlist").modal('show');
+      // handle button click
+    $("#watchlist_button_normal, #watchlist_button_mobile").click(function () {
+        $.ajax({
+            type: "POST",
+            url: '/media/user/addwatchlist',
+            dataType: "json",
+            data: {media_id: media_details.mediaId},
+            success: function(data){
+              if (data.success) {
+                if (data.removed) {
+                  $('#watchlist_message').text('Successfully removed from watchlist.');
+                  $('#watchlist_todo, #watchlist_todo_mobile').text('Add To Watchlist');
                 }
                 else {
-                  $("#failedWatchlist").modal('show');
+                  $('#watchlist_message').text('Successfully added to watchlist.');
+                  $('#watchlist_todo, #watchlist_todo_mobile').text('Remove From Watchlist');
                 }
-              },
-              error: function(jqXHR, textStatus, errorThrown){
-                console.log("FAILURE")
-                console.log(errorThrown);
+                  $("#successWatchlist").modal('show');
+              }
+              else {
                 $("#failedWatchlist").modal('show');
+              }
+            },
+            error: function(jqXHR, textStatus, errorThrown){
+              console.log("FAILURE")
+              console.log(errorThrown);
+              $("#failedWatchlist").modal('show');
 
-              }              
-          });
+            }              
+        });
+    });
+
+    $("#blocklist_button_normal, #blocklist_button_mobile").click(function () {
+      $.ajax({
+          type: "POST",
+          url: '/media/user/addblocklist',
+          dataType: "json",
+          data: {media_id: media_details.mediaId},
+          success: function(data){
+            if (data.success) {
+              if (data.removed) {
+                $('#watchlist_message').text('Successfully removed from blocklist.');
+                $('#blocklist_todo, #blocklist_todo_mobile').text('Add To Blocklist');
+                $('#linktowatchlist').hide();
+              }
+              else {
+                $('#watchlist_message').text('Successfully added to blocklist.');
+                $('#blocklist_todo, #blocklist_todo_mobile').text('Remove From Blocklist');
+                $('#linktowatchlist').hide();
+              }
+                $("#successWatchlist").modal('show');
+            }
+            else {
+              $("#failedWatchlist").modal('show');
+            }
+          },
+          error: function(jqXHR, textStatus, errorThrown){
+            console.log("FAILURE")
+            console.log(errorThrown);
+            $("#failedWatchlist").modal('show');
+
+          }              
+      });
       });

@@ -53,10 +53,21 @@ exports.welcome_search = async function(req, res, next) {
 
 exports.add_watchlist = async function(req, res, next) {
   try {
-    const watchlisResults = await mediaService.addToWatchlist(req);
+    const watchlisResults = await mediaService.updateListModel(req, 'watchlist');
     return res.json(watchlisResults);
   } catch (err) {
     logger.error('Error attempting to add movie to watchlist');
+    logger.error(err);
+    return next(err);
+  }
+};
+
+exports.add_blocklist = async function(req, res, next) {
+  try {
+    const blocklistResult = await mediaService.updateListModel(req, 'blocklist');
+    return res.json(blocklistResult);
+  } catch (err) {
+    logger.error('Error attempting to add movie to blocklist');
     logger.error(err);
     return next(err);
   }

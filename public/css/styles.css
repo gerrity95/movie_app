@@ -983,7 +983,7 @@ a#product-mobile {
   text-decoration: none;
 }
 
-.social-icon:hover,
+.social-icon:hover .tooltip,
 .social-icon_profile:hover .tooltip {
   visibility: visible;
   opacity: 1;

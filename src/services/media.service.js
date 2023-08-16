@@ -13,8 +13,10 @@ const {
 
 if (NODE_ENV == 'tv') {
   var watchlistModel = require('../models/tv.watchlist');
+  var blocklistModel = require('../models/tv.blocklist');
 } else {
   var watchlistModel = require('../models/movie_watchlist');
+  var blocklistModel = require('../models/movie.blocklist');
 }
 const idKey = `${NODE_ENV}_id`;
 
@@ -22,11 +24,12 @@ async function getMedia(req) {
   logger.info('Attempting to get media detail for ' + req.params.media_id);
   const watchProvidersPath = `${req.params.media_id}/watch/providers`;
   const [watchProvidersContent, watchProviderCountries, ipInfo, isWatchlist,
-    mediaInfo] = await Promise.all([
+    isBlocklist, mediaInfo] = await Promise.all([
     tmdbapiService.getMediaDetails(watchProvidersPath, false),
     watchProviders.find({}),
     helpers.get_ip_info(),
     watchlistModel.find({user_id: req.user._id, [idKey]: req.params.media_id}),
+    blocklistModel.find({user_id: req.user._id, [idKey]: req.params.media_id}),
     tmdbapiService.getMediaDetails(req.params.media_id, true),
   ]).catch((err) => setImmediate(() => {
     logger.error('Error attempting to get data for Media ' + req.params.media_id);
@@ -43,8 +46,9 @@ async function getMedia(req) {
   const mediaParsed = parseMediaOutput(mediaInfo);
   const recommendations = parseReccs(mediaInfo.body.recommendations);
   const watchlistBool = isWatchlist.length == 1 ? true : false;
+  const blocklistBool = isBlocklist.length == 1 ? true : false;
 
-  return {'media_info': mediaParsed, 'is_watchlist': watchlistBool,
+  return {'media_info': mediaParsed, 'is_watchlist': watchlistBool, 'is_blocklist': blocklistBool,
     'ip_info': ipInfo, 'watch_provider_countries': watchProviderCountries,
     'watch_providers_content': watchProvidersContent,
     'recommendations': recommendations};
@@ -114,10 +118,68 @@ async function addToWatchlist(req) {
   }
 }
 
+const updateListModel = async (req, modelType) => {
+  try {
+    let chosenModel;
+    let updateType;
+    if (modelType == 'watchlist') {
+      chosenModel = watchlistModel;
+    } else {
+      chosenModel = blocklistModel;
+    }
+
+    logger.info(`Attempting to Add media to the ${modelType}...`);
+    console.log(req.body);
+    console.log(idKey);
+    const isExisting = await chosenModel.find({
+      user_id: req.user._id,
+      [idKey]: req.body.media_id,
+    });
+    if (isExisting.length != 0) {
+      updateType = false;
+      logger.info(`Media has already been added to the ${modelType} for this user. 
+      Attempting to Remove...`);
+      const deleteMedia = await chosenModel.deleteOne({user_id: req.user._id, [idKey]:
+        req.body.media_id});
+      if (deleteMedia.deletedCount == 1) {
+        logger.info(`Succesfully deleted media from ${modelType}`);
+        // If blocklist, send a request to the backend in the background to update the recommendations
+        if (modelType == 'blocklist') {
+          logger.info('Sending request to backend to update recommendations with blocklist...');
+          flaskApi.updateBlocklist(req.user._id, req.body.media_id, updateType);
+        }
+        return {'success': true, 'removed': true};
+      }
+      logger.info(`Issue seen attempting to remove media from ${modelType}...`);
+      return {'success': false, 'removed': true};
+    }
+    updateType = true;
+    logger.info(`Media not yet added to ${modelType} for user ${req.user._id}, adding now.`);
+    const newBlockList = new chosenModel({
+      user_id: req.user._id,
+      [idKey]: req.body.media_id,
+    });
+    await chosenModel.create(newBlockList);
+
+    // If blocklist, send a request to the backend in the background to update the recommendations
+    if (modelType == 'blocklist') {
+      logger.info('Sending request to backend to update recommendations with blocklist...');
+      flaskApi.updateBlocklist(req.user._id, req.body.media_id, updateType);
+    }
+
+    return {'success': true, 'removed': false};
+  } catch (err) {
+    logger.error(`Error attempting to add media to ${modelType}`);
+    logger.error(err);
+    throw err;
+  }
+};
+
 
 module.exports = {
   getMedia,
   getWatchlist,
   searchMedia,
   addToWatchlist,
+  updateListModel,
 };

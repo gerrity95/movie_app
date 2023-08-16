@@ -210,9 +210,37 @@ block content
     });
 
     $(document).on('click', '.blocklist_button', function(event) {
-      console.log('BLOCKLIST BABY')
-      console.log(this.id)
+      $.ajax({
+          type: "POST",
+          url: '/media/user/addblocklist',
+          dataType: "json",
+          data: {media_id: this.id},
+          success: function(data){
+            if (data.success) {
+              if (data.removed) {
+                $('#watchlist_message').text('Successfully removed from blocklist.');
+                $('#watchlist_todo, #watchlist_todo_mobile').text('Add To Blocklist');
+                $('#linktowatchlist').hide();
+              }
+              else {
+                $('#watchlist_message').text('Successfully added to blocklist.');
+                $('#watchlist_todo, #watchlist_todo_mobile').text('Remove From Blocklist');
+                $('#linktowatchlist').hide();
+              }
+                $("#successWatchlist").modal('show');
+                setInterval('location.reload()', 1000);
+            }
+            else {
+              $("#failedWatchlist").modal('show');
+            }
+          },
+          error: function(jqXHR, textStatus, errorThrown){
+            console.log("FAILURE")
+            console.log(errorThrown);
+            $("#failedWatchlist").modal('show');
 
+          }              
+      });
     });
 
     //- document.addEventListener("DOMContentLoaded", function() {

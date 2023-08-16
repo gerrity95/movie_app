@@ -82,7 +82,22 @@ const parseReccs = (reccs) => {
   return reccs.results;
 };
 
+const filterBlocklist = (reccObject) => {
+  // Function that will remove movies in the blocklist from the recommendations
+  // eslint-disable-next-line prefer-const
+  let filteredReccs =[];
+  const mediaRecommendations = reccObject.reccomendations.recommendations;
+  for (let i = 0; i < mediaRecommendations.length; i++) {
+    if (!mediaRecommendations[i]['blocklist'] || !mediaRecommendations[i]['blocklist'] === undefined) {
+      filteredReccs.push(mediaRecommendations[i]);
+    }
+  }
+  reccObject.reccomendations.recommendations = [...filteredReccs];
+  return reccObject;
+};
+
 module.exports = {
   parseMediaOutput,
   parseReccs,
+  filterBlocklist,
 };

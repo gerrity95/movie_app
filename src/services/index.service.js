@@ -1,6 +1,7 @@
 /* eslint-disable no-var */
 const logger = require('../middlewares/logger');
 const helpers = require('../utils/generic_helpers');
+const {filterBlocklist} = require('../utils/media.helpers');
 const flaskApi = require('../utils/flask_api');
 const tmdbapiService = require('./tmdbapi.service');
 const passport = require('passport');
@@ -33,8 +34,9 @@ async function getUserProfile(req) {
   const shows = await flaskApi.get_reccomendations(req.user._id);
   // showss = flaskApi.sample_movies()
   if (shows.status == 200) {
+    const filteredShows = filterBlocklist(shows.body.result);
     return {rated_media: ratedMedia.length, data: {node_env: NODE_ENV,
-      user_info: req.user, media_info: shows.body.result, genres: genres.body.genres}};
+      user_info: req.user, media_info: filteredShows, genres: genres.body.genres}};
   } else {
     return {rated_media: ratedMedia.length, data: {node_env: NODE_ENV, user_info: req.user,
       media_info: 'Bad', genres: genres.body.genres}};

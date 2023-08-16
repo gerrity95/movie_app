@@ -12,6 +12,7 @@ router.get('/user/watchlist', genericHelpers.isLoggedIn, mediaController.get_wat
 router.post('/search', genericHelpers.isLoggedIn, mediaController.search);
 router.post('/welcome/search', genericHelpers.isLoggedIn, mediaController.welcome_search);
 router.post('/user/addwatchlist', genericHelpers.isLoggedIn, mediaController.add_watchlist);
+router.post('/user/addblocklist', genericHelpers.isLoggedIn, mediaController.add_blocklist);
 
 
 module.exports = router;
