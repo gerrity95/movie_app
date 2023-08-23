@@ -10,8 +10,12 @@ router.get('/login', indexController.login);
 router.get('/register', indexController.register);
 router.get('/logout', indexController.logout);
 
-router.get('/userprofile', genericHelpers.isLoggedIn, indexController.user_profile);
-router.get('/user/userprofile', genericHelpers.isLoggedIn, indexController.user_profile_ajax);
+router.get('/userprofile',
+    [genericHelpers.isLoggedIn, genericHelpers.enoughMediaRated],
+    indexController.user_profile);
+router.get('/user/userprofile',
+    [genericHelpers.isLoggedIn, genericHelpers.enoughMediaRated],
+    indexController.user_profile_ajax);
 router.get('/welcome', genericHelpers.isLoggedIn, indexController.welcome);
 
 // POST method routes

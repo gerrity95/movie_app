@@ -18,15 +18,6 @@ if (NODE_ENV == 'tv') {
 
 
 async function getUserProfile(req) {
-  logger.info('Checking to ensure enough reviews have been processed for the user: ' +
-  req.user._id);
-  const ratedMedia = await ratedModel.find({
-    user_id: req.user._id,
-  });
-  if (ratedMedia.length < 5) {
-    logger.info('Not enough movies have been rated by user: ' + req.user._id);
-    return {rated_media: ratedMedia.length, data: {}};
-  }
   logger.info('Attempting to get movie data...');
   logger.info('Getting genre list..');
   const genres = await tmdbapiService.getGenres();
@@ -35,24 +26,16 @@ async function getUserProfile(req) {
   // showss = flaskApi.sample_movies()
   if (shows.status == 200) {
     const filteredShows = filterBlocklist(shows.body.result);
-    return {rated_media: ratedMedia.length, data: {node_env: NODE_ENV,
+    return {data: {node_env: NODE_ENV,
       user_info: req.user, media_info: filteredShows, genres: genres.body.genres}};
   } else {
-    return {rated_media: ratedMedia.length, data: {node_env: NODE_ENV, user_info: req.user,
+    return {data: {node_env: NODE_ENV, user_info: req.user,
       media_info: 'Bad', genres: genres.body.genres}};
   }
 }
 
 async function getUserProfileAjax(req) {
   logger.info('AJAX request made to get user profile...');
-  logger.info('Checking to ensure enough reviews have been processed for user: ' + req.user._id);
-  const ratedMedia = await ratedModel.find({
-    user_id: req.user._id,
-  });
-  if (ratedMedia.length < 5) {
-    logger.info('Not enough movies have been rated by user: ' + req.user._id);
-    return {'success': false, 'media_rated': false, 'media_count': ratedMedia.length};
-  }
   logger.info('Attempting to get movie data...');
   const shows = await flaskApi.get_reccomendations(req.user._id);
   // shows = flaskApi.sample_movies()

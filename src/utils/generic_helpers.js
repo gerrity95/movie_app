@@ -1,3 +1,4 @@
+/* eslint-disable no-var */
 const passwordValidator = require('password-validator');
 const https = require('https');
 const dotenv = require('dotenv');
@@ -6,8 +7,14 @@ dotenv.config();
 
 const {
   IP_INFO_KEY,
+  NODE_ENV,
 } = process.env;
 
+if (NODE_ENV == 'tv') {
+  var ratedModel = require('../models/tv.rated');
+} else {
+  var ratedModel = require('../models/rated_movies');
+}
 
 const passwordSchema = new passwordValidator();
 passwordSchema
@@ -25,6 +32,19 @@ function isLoggedIn(req, res, next) {
     logger.info('No user is currently logged in.');
     return res.redirect('/login');
   }
+}
+
+// Function to check if enough media was rated by the user before allowing them to certain sections of the app
+async function enoughMediaRated(req, res, next) {
+  logger.info('Checking if a user has rated enough media');
+  const ratedMedia = await ratedModel.find({
+    user_id: req.user._id,
+  });
+  if (ratedMedia.length < 5) {
+    logger.info('Not enough movies have been rated by user: ' + req.user._id);
+    return res.redirect('/welcome');
+  }
+  return next();
 }
 
 function isValidPassword(password) {
@@ -105,4 +125,5 @@ module.exports = {
   get_ip_info: getIPInfo,
   generateEmailMessage,
   generateResetEmail,
+  enoughMediaRated,
 };
