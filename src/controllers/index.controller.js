@@ -86,9 +86,6 @@ exports.logout = async function(req, res, next) {
 exports.user_profile = async function(req, res, next) {
   try {
     const profileInfo = await indexService.getUserProfile(req);
-    if (profileInfo.rated_media < 5) {
-      return res.redirect('/welcome');
-    }
     return res.render('user_profile', profileInfo.data);
   } catch (err) {
     logger.error('Error attempting to render user profile');

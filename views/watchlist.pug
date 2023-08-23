@@ -35,7 +35,7 @@ block content
                 span Rating: #{media.vote_average}
                 br
                 span Release Date: #{media[releaseDate]}
-              a(href=`${media.id}`)#watchlist_button_normal.social-icon.social-icon--codepen(style="margin-top:10px")
+              a(id=`${media.id}`).watchlist_button_normal.social-icon.social-icon--codepen(style="margin-top:10px")
                 i.far.fa-bookmark.fa-stack-1x(style="color: white")
                 .tooltip#watchlist_todo Remove From Watchlist
               br
@@ -56,37 +56,32 @@ block content
                   | #{media.tagline}
               a.btn.btn-block.custom_button(href=`/media/${media.id}`) Find Out More
   script.
-
-    const watchlist_btn = document.querySelector('#watchlist_button')
-        // handle button click
-      $("#watchlist_button_normal").click(function(e) {
-          e.preventDefault();
-          var media_id = ($(this).attr('href'));
-          $.ajax({
-              type: "POST",
-              url: '/media/user/addwatchlist',
-              dataType: "json",
-              data: {media_id: media_id},
-              success: function(data){
-                if (data.success) {
-                  if (data.removed) {
-                    $('#watchlist_message').text('Successfully removed from watchlist.');
-                    location.reload(true);
-                  }
-                  else {
-                    $("#failedWatchlist").modal('show');
-                  }
-                }
-                else {
-                  $("#failedWatchlist").modal('show');
-                }
-              },
-              error: function(jqXHR, textStatus, errorThrown){
-                console.log("FAILURE")
-                console.log(errorThrown);
+    $(document).on('click', '.watchlist_button_normal', function(event) {
+      console.log("BOOM")        
+      $.ajax({
+          type: "POST",
+          url: '/media/user/addwatchlist',
+          dataType: "json",
+          data: {media_id: this.id},
+          success: function(data){
+            if (data.success) {
+              if (data.removed) {
+                $('#watchlist_message').text('Successfully removed from watchlist.');
+                location.reload(true);
+              }
+              else {
                 $("#failedWatchlist").modal('show');
-
-              }              
-          });
+              }
+            }
+            else {
+              $("#failedWatchlist").modal('show');
+            }
+          },
+          error: function(jqXHR, textStatus, errorThrown){
+            console.log("FAILURE")
+            console.log(errorThrown);
+            $("#failedWatchlist").modal('show');
+          }            
       });
+    });
 

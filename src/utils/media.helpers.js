@@ -46,10 +46,14 @@ const parseMediaOutput = (mediaInfo) => {
     const status = mediaInfo.body.in_production === false ? 'Finished' : 'Ongoing';
     formattedObject.statusWriterSection = {title: 'Status', value: status};
   } else {
-    mediaInfo.body.credits.crew.forEach(function(value) {
-      formattedObject.runtimeSection = `${mediaInfo.body.runtime} Minutes`;
-      formattedObject.releaseSection = mediaInfo.body.release_date;
+    formattedObject.runtimeSection = `${mediaInfo.body.runtime} Minutes`;
+    formattedObject.releaseSection = mediaInfo.body.release_date;
+    if (mediaInfo.body.production_companies.length == 0) {
+      formattedObject.productionSection = {name: '', logo: null};
+    } else {
       formattedObject.productionSection = {name: mediaInfo.body.production_companies[0].name, logo: mediaInfo.body.production_companies[0].logo_path};
+    }
+    mediaInfo.body.credits.crew.forEach(function(value) {
       if (value.job == 'Director') {formattedObject.directorSection = value.name;};
       if (value.job == 'Screenplay') {
         formattedObject.statusWriterSection = {title: 'Screenplay', value: value.name};
@@ -78,7 +82,22 @@ const parseReccs = (reccs) => {
   return reccs.results;
 };
 
+const filterBlocklist = (reccObject) => {
+  // Function that will remove movies in the blocklist from the recommendations
+  // eslint-disable-next-line prefer-const
+  let filteredReccs =[];
+  const mediaRecommendations = reccObject.reccomendations.recommendations;
+  for (let i = 0; i < mediaRecommendations.length; i++) {
+    if (!mediaRecommendations[i]['blocklist'] || !mediaRecommendations[i]['blocklist'] === undefined) {
+      filteredReccs.push(mediaRecommendations[i]);
+    }
+  }
+  reccObject.reccomendations.recommendations = [...filteredReccs];
+  return reccObject;
+};
+
 module.exports = {
   parseMediaOutput,
   parseReccs,
+  filterBlocklist,
 };

@@ -3,16 +3,16 @@ const logger = require('../middlewares/logger');
 
 exports.getMedia = async function(req, res, next) {
   try {
-    const movieDetails = await mediaService.getMedia(req);
-    return res.render('movie_profile', movieDetails);
+    const mediaDetails = await mediaService.getMedia(req);
+    return res.render('media_profile', mediaDetails);
   } catch (err) {
-    if (err.message === 'Unable to find movie') {
-      logger.error('Unable to find movie in TMDB');
+    if (err.message === 'Unable to find media') {
+      logger.error('Unable to find media in TMDB');
       res.set('Connection', 'close');
       res.status(404);
       return res.render('404error', {user_info: req.user});
     }
-    logger.error('Error attempting to render movie profile');
+    logger.error('Error attempting to render media profile');
     logger.error(err);
     return next(err);
   }
@@ -53,10 +53,21 @@ exports.welcome_search = async function(req, res, next) {
 
 exports.add_watchlist = async function(req, res, next) {
   try {
-    const watchlisResults = await mediaService.addToWatchlist(req);
+    const watchlisResults = await mediaService.updateListModel(req, 'watchlist');
     return res.json(watchlisResults);
   } catch (err) {
     logger.error('Error attempting to add movie to watchlist');
+    logger.error(err);
+    return next(err);
+  }
+};
+
+exports.add_blocklist = async function(req, res, next) {
+  try {
+    const blocklistResult = await mediaService.updateListModel(req, 'blocklist');
+    return res.json(blocklistResult);
+  } catch (err) {
+    logger.error('Error attempting to add movie to blocklist');
     logger.error(err);
     return next(err);
   }

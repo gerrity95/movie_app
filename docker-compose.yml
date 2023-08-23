@@ -21,8 +21,9 @@ services:
       - /home/node/app/node_modules
         #    networks:
         #- app-network
-    command: /home/node/app/node_modules/.bin/pm2-runtime start ecosystem.config.js --env television 
-    
+    # movie / tv
+    command: /home/node/app/node_modules/.bin/pm2-runtime start ecosystem.config.js --env movie
+
 networks:
   default:
     external: true
