@@ -27,7 +27,22 @@ block content
   .container-fluid(style=`background-image:url(${header_src})`).movie_header_image
     .row.movie_darken#movie-desktop
       .col-10.col-sm-8.col-md-5.col-lg-3.col-xl-3.offset-lg-1.offset-xl-1.offset-md-1.offset-sm-2.offset-1.align-self-center.d-flex.justify-content-center
-        img(src=poster_src).movie_poster_image
+        figure.movie_figure
+          img(src=poster_src).movie_poster_image
+          if media_weight > 0
+            if media_weight >= 70
+              figcaption.text-success.movie_figure_caption
+                | Recommendation: 
+                strong #{media_weight}% 
+            else if mediaWeight < 70 && mediaWeight > 40
+              figcaption.text-info.movie_figure_caption
+                | Recommendation: 
+                strong #{media_weight}%
+            else
+              figcaption.text-warning.movie_figure_caption
+                | Recommendation: 
+                strong #{media_weight}%
+        
       .col-10.col-sm-8.col-md-5.col-lg-7.col-xl-7.offset-lg-0.offset-xl-0.offset-md-1.offset-sm-2.offset-1.align-self-center
         .c100.p0.blue
           span #{percent_rating}%
@@ -81,6 +96,19 @@ block content
             .bar
             .fill
       .col-12.col-sm-10.col-md-5.col-lg-7.col-xl-7.offset-lg-0.offset-xl-0.offset-md-1.offset-sm-1.offset-0.align-self-center
+        if media_weight > 0
+          if media_weight >= 70
+            h5.text-success
+              | Recommendation: 
+              strong #{media_weight}% 
+          else if mediaWeight < 70 && mediaWeight > 40
+            h5.text-info
+              | Recommendation: 
+              strong #{media_weight}%
+          else
+            h5.text-warning
+              | Recommendation: 
+              strong #{media_weight}%
         h2.movie_text
           | #{media_info.titleSection}
         for genre in media_info.genreSection

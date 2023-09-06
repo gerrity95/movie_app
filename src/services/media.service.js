@@ -12,24 +12,32 @@ const {
 } = process.env;
 
 if (NODE_ENV == 'tv') {
+  var recommendationsModel = require('../models/tv.reccs');
   var watchlistModel = require('../models/tv.watchlist');
   var blocklistModel = require('../models/tv.blocklist');
+  var watchlistType = 'watchlist_televisions';
+  var blocklistType = 'blocklist_televisions';
+  var id = 'tv_id';
 } else {
+  var recommendationsModel = require('../models/recommended_movies');
   var watchlistModel = require('../models/movie_watchlist');
   var blocklistModel = require('../models/movie.blocklist');
+  var watchlistType = 'watchlist_movies';
+  var blocklistType = 'blocklist_movies';
+  var id = 'movie_id';
 }
 const idKey = `${NODE_ENV}_id`;
 
 async function getMedia(req) {
   logger.info('Attempting to get media detail for ' + req.params.media_id);
+  const userAgg = userMediaAggregate(req.user.id, parseInt(req.params.media_id));
   const watchProvidersPath = `${req.params.media_id}/watch/providers`;
-  const [watchProvidersContent, watchProviderCountries, ipInfo, isWatchlist,
-    isBlocklist, mediaInfo] = await Promise.all([
+  const [watchProvidersContent, watchProviderCountries, ipInfo,
+    userInfo, mediaInfo] = await Promise.all([
     tmdbapiService.getMediaDetails(watchProvidersPath, false),
     watchProviders.find({}),
     helpers.get_ip_info(),
-    watchlistModel.find({user_id: req.user._id, [idKey]: req.params.media_id}),
-    blocklistModel.find({user_id: req.user._id, [idKey]: req.params.media_id}),
+    recommendationsModel.aggregate(userAgg),
     tmdbapiService.getMediaDetails(req.params.media_id, true),
   ]).catch((err) => setImmediate(() => {
     logger.error('Error attempting to get data for Media ' + req.params.media_id);
@@ -45,10 +53,10 @@ async function getMedia(req) {
   logger.info('Attempting to parse response for output');
   const mediaParsed = parseMediaOutput(mediaInfo);
   const recommendations = parseReccs(mediaInfo.body.recommendations);
-  const watchlistBool = isWatchlist.length == 1 ? true : false;
-  const blocklistBool = isBlocklist.length == 1 ? true : false;
+  const userParsed = parseUserInfo(userInfo[0], parseInt(req.params.media_id));
 
-  return {'media_info': mediaParsed, 'is_watchlist': watchlistBool, 'is_blocklist': blocklistBool,
+  return {'media_info': mediaParsed, 'media_weight': userParsed.mediaWeight,
+    'is_watchlist': userParsed.isWatchlist, 'is_blocklist': userParsed.isBlocklist,
     'ip_info': ipInfo, 'watch_provider_countries': watchProviderCountries,
     'watch_providers_content': watchProvidersContent,
     'recommendations': recommendations};
@@ -173,6 +181,73 @@ const updateListModel = async (req, modelType) => {
     logger.error(err);
     throw err;
   }
+};
+
+const userMediaAggregate = (userId, mediaId) => {
+  // A function that builds out an aggregate to get all user data related to a given movie
+  return [
+    {
+      '$match': {
+        'user_id': userId,
+      },
+    }, {
+      '$lookup': {
+        'from': watchlistType,
+        'let': {'userId': '$user_id', 'movieId': mediaId},
+        'pipeline': [
+          {
+            '$match': {
+              '$expr': {
+                '$and': [
+                  {
+                    '$eq': ['$user_id', '$$userId'],
+                  }, {
+                    '$eq': ['$movie_id', '$$movieId'],
+                  },
+                ],
+              },
+            },
+          },
+        ],
+        'as': 'watchlist',
+      },
+    }, {
+      '$lookup': {
+        'from': blocklistType,
+        'let': {'userId': '$user_id', 'movieId': mediaId},
+        'pipeline': [
+          {
+            '$match': {
+              '$expr': {
+                '$and': [
+                  {
+                    '$eq': ['$user_id', '$$userId'],
+                  }, {
+                    '$eq': ['$movie_id', '$$movieId'],
+                  },
+                ],
+              },
+            },
+          },
+        ],
+        'as': 'blocklist',
+      },
+    },
+  ];
+};
+
+const parseUserInfo = (userInfo, mediaId) => {
+  console.log(userInfo);
+  // This function will take the response from the aggregate to get the user and return only the relevant info
+  var mediaWeight = 0;
+
+  // Get user weight
+  userInfo.recommendations.forEach((recommendation) => {
+    if (recommendation[id] == mediaId) {mediaWeight = recommendation['weight'];}
+  });
+  const isWatchlist = (userInfo.watchlist.length > 0) ? true : false;
+  const isBlocklist = (userInfo.blocklist.length > 0) ? true : false;
+  return {mediaWeight, isWatchlist, isBlocklist};
 };
 
 
