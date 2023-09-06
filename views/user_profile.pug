@@ -42,8 +42,13 @@ block content
               h2
                 | #{media[infoKey][titleKey]}
                 br
-                span Rating: #{media[infoKey].vote_average} | 
-                span  Weight: #{mediaWeight}
+                span Rating: #{media[infoKey].vote_average} |
+                if mediaWeight >= 70 
+                  span.text-success  Weight: #{mediaWeight}%
+                else if mediaWeight < 70 && mediaWeight > 40
+                  span.text-info  Weight: #{mediaWeight}%
+                else
+                  span.text-warning  Weight: #{mediaWeight}%
               br
               ul
                 li

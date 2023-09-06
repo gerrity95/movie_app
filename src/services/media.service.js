@@ -55,7 +55,7 @@ async function getMedia(req) {
   const recommendations = parseReccs(mediaInfo.body.recommendations);
   const userParsed = parseUserInfo(userInfo[0], parseInt(req.params.media_id));
 
-  return {'media_info': mediaParsed, 'movie_weight': userParsed.movieWeight,
+  return {'media_info': mediaParsed, 'media_weight': userParsed.mediaWeight,
     'is_watchlist': userParsed.isWatchlist, 'is_blocklist': userParsed.isBlocklist,
     'ip_info': ipInfo, 'watch_provider_countries': watchProviderCountries,
     'watch_providers_content': watchProvidersContent,
@@ -239,15 +239,15 @@ const userMediaAggregate = (userId, mediaId) => {
 const parseUserInfo = (userInfo, mediaId) => {
   console.log(userInfo);
   // This function will take the response from the aggregate to get the user and return only the relevant info
-  var movieWeight = 0;
+  var mediaWeight = 0;
 
   // Get user weight
   userInfo.recommendations.forEach((recommendation) => {
-    if (recommendation[id] == mediaId) {movieWeight = recommendation['weight'];}
+    if (recommendation[id] == mediaId) {mediaWeight = recommendation['weight'];}
   });
   const isWatchlist = (userInfo.watchlist.length > 0) ? true : false;
   const isBlocklist = (userInfo.blocklist.length > 0) ? true : false;
-  return {movieWeight, isWatchlist, isBlocklist};
+  return {mediaWeight, isWatchlist, isBlocklist};
 };
 
 
