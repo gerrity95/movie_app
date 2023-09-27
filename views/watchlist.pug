@@ -15,14 +15,14 @@ block content
   .container-fluid
     .row
      .col-12.d-flex.justify-content-center
-        h2.title_style
+        h2.title_style_white
           | Watchlist
     .row(style="margin-top: 20px")#watchlist-desktop
       
       for media, index in watchlist
         - var img_src = `https://image.tmdb.org/t/p/w500/${media.backdrop_path}`
         .col-6.col-sm-6.col-md-6.col-lg-5.col-xl-4.offset-lg-1.offset-xl-0.offset-md-0.offset-sm-0.offset-0
-          .card(style='width: 100%;margin-bottom: 20px')
+          .card.watchlist_card(style='width: 100%;margin-bottom: 20px')
             if index < 7
               img.card-img-top(src=img_src alt='...')
             else

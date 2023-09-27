@@ -3,7 +3,7 @@ extends home_layout
 block content
   title What To Watch Movies - About
   - var logo = logo
-  .container-fluid(style="padding-top: 60px;background-image: url('/images/about_blank.webp')")
+  .container-fluid(style="padding-top: 60px;background-color: #030000")
     .row.curved-div(style="padding-top: 40px;")
       .col-10.col-sm-10.col-md-5.col-lg-4.col-xl-4.offset-xl-1.offset-lg-1.offset-md-1.offset-1.align-self-center.row_style.mobile_padding
         img(src='/images/movie_list_snippet1.webp', style="width:100%")
@@ -23,7 +23,7 @@ block content
                   
         
       svg(xmlns='http://www.w3.org/2000/svg' viewbox='0 0 1440 470' style="background-image: url('/images/top2.webp')").parallax
-        path(fill='#212531' fill-opacity='1' d='M0,160L48,133.3C96,107,192,53,288,58.7C384,64,480,128,576,144C672,160,768,128,864,138.7C960,149,1056,203,1152,192C1248,181,1344,107,1392,69.3L1440,32L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z')
+        path(fill='#030000' fill-opacity='1' d='M0,160L48,133.3C96,107,192,53,288,58.7C384,64,480,128,576,144C672,160,768,128,864,138.7C960,149,1056,203,1152,192C1248,181,1344,107,1392,69.3L1440,32L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z')
 
     .row.curved-div(style="margin-top: 0px;padding-top: 40px;padding-bottom:20px")
       .col-12.col-sm-10.col-md-5.col-lg-5.col-xl-5.offset-xl-1.offset-lg-1.offset-md-1.offset-0.align-self-center.row_style
@@ -44,17 +44,17 @@ block content
         img(src='/images/video2.webp', style="width:100%")
 
       svg(xmlns='http://www.w3.org/2000/svg' viewbox='0 0 1440 470' style="background-image: url('/images/bottom2.webp')").parallax
-        path(fill='#212531' fill-opacity='1' d='M0,160L48,133.3C96,107,192,53,288,58.7C384,64,480,128,576,144C672,160,768,128,864,138.7C960,149,1056,203,1152,192C1248,181,1344,107,1392,69.3L1440,32L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z')
+        path(fill='#030000' fill-opacity='1' d='M0,160L48,133.3C96,107,192,53,288,58.7C384,64,480,128,576,144C672,160,768,128,864,138.7C960,149,1056,203,1152,192C1248,181,1344,107,1392,69.3L1440,32L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z')
 
-    .row(style="margin-top: 0px;padding-top: 40px;padding-bottom:20px;background: #fff")
+    .row(style="margin-top: 0px;padding-top: 40px;padding-bottom:20px;background: #03000")
       .col-12.col-sm-10.col-md-5.col-lg-5.col-xl-5.offset-xl-1.offset-lg-1.offset-md-1.offset-0.align-self-center.row_style
-        h4.text-center
+        h4.title_style_white.text-center
           | Who am I? 👨‍💻
-        p
+        p.white_text
           | I started building this app due to the amount of time I spent searching through movie lists and not knowing what to watch. I built out a basic way to recommend movies that I would like and kept building up from there.
-        p
+        p.white_text
           | This app is a side project and so we always welcome feedback and contributions. If you have some features you'd like to see please <a href="/contact">contact us here.</a> 
-        p  
+        p.white_text
           | If you have any feedback such as bugs you've noticed we'd also like to hear from you. Of course, if this is something you'd like to contribute code to, then feel more than welcome to get in touch.
         
       .col-10.col-sm-10.col-md-5.col-lg-3.col-xl-3.offset-xl-2.offset-lg-2.offset-md-1.offset-1.align-self-center.row_style

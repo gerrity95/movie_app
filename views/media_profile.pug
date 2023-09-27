@@ -147,9 +147,9 @@ block content
 
   .container-fluid.movie_interact_container
     .row.movie_interact_box
-      .col-12.col-sm-8.col-md-6.col-lg-6.col-xl-4.offset-lg-0.offset-xl-0.offset-md-1.offset-sm-2.offset-0.align-self-center.rating_column
+      .col-12.col-sm-8.col-md-6.col-lg-6.col-xl-4.offset-lg-0.offset-xl-0.offset-md-1.offset-sm-2.offset-0.align-self-center.rating_column(style="background-color: #030000")
         .feedback
-          h5 Submit Rating
+          h5.white_text Submit Rating
           .rating
             input#rating-10(type='radio' name='rating' value="10")
             label(for='rating-10')
@@ -248,39 +248,39 @@ block content
           button#rating_button.submit.btn.custom_button(type="submit") Submit
     
       .col-12.col-sm-10.col-md-10.col-lg-6.col-xl-6.offset-lg-0.offset-xl-2.offset-md-1.offset-sm-2.align-self-center.rating_column
-        .additional_options
-          h3.title_style Overview
-          p
+        .additional_options(style="background-color: #030000")
+          h3.title_style_white Overview
+          p.white_text
             | #{media_info.overviewSection}
     .row.movie_interact_box
 
       .col-12.col-sm-8.col-md-6.col-lg-6.col-xl-6.offset-lg-0.offset-xl-0.offset-md-1.offset-sm-2.offset-0.rating_column
-        .additional_options
-          h3.title_style Keywords
-        .row(style="padding: 5%")
-          each keyword in media_info.keywordsSection
-            btn.btn.btn-outline-secondary(style="margin: 10px;")
-              | #{keyword.name}
-      .col-12.col-sm-10.col-md-10.col-lg-6.col-xl-6.offset-lg-0.offset-xl-0.offset-md-1.offset-sm-2.align-self-center.rating_column
-        .additional_options
-          h3.title_style Where To Watch
-          #missing_country
+        .additional_options(style="background-color: #030000")
+          h3.title_style_white Keywords
+          .row(style="padding: 5%;padding-top: 0%")
+            each keyword in media_info.keywordsSection
+              btn.btn.btn-secondary(style="margin: 10px;")
+                | #{keyword.name}
+      .col-12.col-sm-10.col-md-10.col-lg-6.col-xl-6.offset-lg-0.offset-xl-0.offset-md-1.offset-sm-2.rating_column
+        .additional_options(style="background-color: #030000")
+          h3.title_style_white Where To Watch
+          #missing_country.white_text
           select.selectpicker.form-control#watch_provider_country.f32(data-live-search="true" data-size="8")
-          h5(style="padding-top: 15px") Streaming
+          h5(style="padding-top: 15px").white_text Streaming
           .row#streaming_movies
-          h5(style="padding-top: 15px") Renting
+          h5(style="padding-top: 15px").white_text Renting
           .row#rent_movies
-          h5(style="padding-top: 15px") Purchase
+          h5(style="padding-top: 15px").white_text Purchase
           .row#buy_movies
   
     .row.movie_interact_box
       .container-fluid
-        h3.title_style Similar Titles
+        h3.title_style_white Similar Titles
         .scrolling-wrapper.row.flex-row.flex-nowrap.mt-4.pb-4.pt-2.no-gutters
           each media in recommendations.slice(0, 12)
             - var poster_src = `https://image.tmdb.org/t/p/w500/${media.poster_path}`
             - var percent_rating = Math.round(media.vote_average * 10)
-            a.col-xl-3.col-lg-3.col-md-4.col-sm-6.col-6(style=`background-image:url(${poster_src})` href=`/media/${media.id}`).rec_movies
+            a.col-xl-3.col-lg-3.col-md-4.col-sm-6.col-7(style=`background-image:url(${poster_src})` href=`/media/${media.id}`).rec_movies
               .dark_background.d-flex
                 .row(style='min-width: 100%')
                   .col-10.col-sm-8.col-md-5.col-lg-5.col-xl-5.offset-lg-1.offset-xl-1.offset-md-1.offset-sm-2.offset-1.align-self-center
@@ -292,12 +292,12 @@ block content
                   .col-10.col-sm-8.col-md-6.col-lg-6.col-xl-6.offset-lg-0.offset-xl-0.offset-md-1.offset-sm-2.offset-1.align-self-center
                     h4.movie_text
                       | #{media.title}
-                    p.movie_text(style="display: inline")
+                    p.movie_text.rec_movies_hide
                       |  #{media.release_date}
 
 
   #module.container-fluid
-    h3.title_style
+    h3.title_style_white
       | Top Billed Cast
     .row#collapseExample.collapse(aria-expanded='false')
       
@@ -309,7 +309,7 @@ block content
             - var profile_src = '/images/headshot.png'
           img.lazy.card-img-top(data-src=profile_src alt='Card image cap').profile_photo
           .details
-            p #{val.name}
+            p.white_text #{val.name}
               br
               b
                 | #{val.character}

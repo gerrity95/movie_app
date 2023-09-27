@@ -130,6 +130,9 @@ exports.login_post = async function(req, res, next) {
         logger.info('Error: ' + err + ' when attempting to login');
         return res.redirect(url + '?failed_login=True');
       }
+
+      console.log(user);
+
       if (!user) {
         logger.info('Authentication problem. Email/Password is incorrect');
         return res.redirect(url + '?failed_login=True');
@@ -160,7 +163,7 @@ exports.register_post = async function(req, res, next) {
     }
     await User.register(
         new User({
-          username: req.body.username,
+          username: req.body.email,
           email: req.body.email,
           first_name: req.body.first_name,
           last_name: req.body.last_name,
@@ -175,16 +178,22 @@ exports.register_post = async function(req, res, next) {
           logger.info('Successfully created user: ' + user.email);
           // helpers.generateEmailMessage(req);
           // await email.send_email(user.email, "Welcome To What To Watch 🍿", html_message);
-          passport.authenticate('local')(req, res, function() {
-            console.log('User successfully registered...');
-            req.logIn(user, function(err) {
-              if (err) {
-                throw err;
-              }
-              console.log('Successfully logged in for user: ' + req.user.email);
-              return res.redirect('/userprofile');
+          try {
+            passport.authenticate('local')(req, res, function() {
+              console.log('User successfully registered...');
+              req.logIn(user, function(err) {
+                if (err) {
+                  console.log(err);
+                  throw err;
+                }
+                console.log('Successfully logged in for user: ' + req.user.email);
+                return res.redirect('/userprofile');
+              });
             });
-          });
+          } catch (err) {
+            console.log(err);
+            throw err;
+          }
         },
     );
   } catch (err) {

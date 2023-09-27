@@ -18,7 +18,7 @@ block content
   .container-fluid
     .row.filter_genre_row
       .col-xl-3.col-lg-3.col-md-3.col-sm-6.col-6.offset-6.offset-sm-6.offset-md-9.offset.lg-9.offset-xl-9
-        h5 Filter By Genre
+        h5.white_text Filter By Genre
         select.form-control#genre_select
           option(value="all" selected="selected") All
           for genre in genres
@@ -39,7 +39,7 @@ block content
               .imgbox
                 img.lazy(data-src=img_src)
             .specifies
-              h2
+              h2.white_text
                 | #{media[infoKey][titleKey]}
                 br
                 span Rating: #{media[infoKey].vote_average} |
@@ -77,10 +77,15 @@ block content
                   | #{media[infoKey][titleKey]}
                   br
                   span Rating: #{media[infoKey].vote_average} | 
-                  span  Weight: #{media.weight}
+                  if mediaWeight >= 70 
+                    span.text-success  Weight: #{mediaWeight}%
+                  else if mediaWeight < 70 && mediaWeight > 40
+                    span.text-info  Weight: #{mediaWeight}%
+                  else
+                    span.text-warning  Weight: #{mediaWeight}%
 
   .social-icons.profile_scroll_button
-    a#scroll_button_profile.social-icon.social-icon--codepen.mx-auto(style="height: 50px;width:50px;background:#a178cf")
+    a#scroll_button_profile.social-icon.social-icon--codepen.mx-auto(style="height: 50px;width:50px;background:#423268")
       i.fas.fa-arrow-up.fa-stack-1x(style="color: white") 
 
 
@@ -143,7 +148,7 @@ block content
             product_desktop.appendChild(img_box);
             let specifies = document.createElement('div');
             specifies.classList.add("specifies");
-            specifies.innerHTML = `<h2>${selected_medias[i][infoKey][titleKey]}<br><b>
+            specifies.innerHTML = `<h2 class="white_text">${selected_medias[i][infoKey][titleKey]}<br><b>
                                   <span>Rating: ${selected_medias[i][infoKey].vote_average} | </span>
                                   <span>Weight: ${selected_medias[i].weight}</span>
                                   </b></h2><br><ul><li>

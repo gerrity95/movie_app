@@ -45,12 +45,10 @@ html(lang="en")
       nav#sidebar.desktop_show
         .sidebar-header
           a.home_click#logo_btn(style="cursor: pointer;")
-            img(src='/images/what_to_watch_black.png' alt="What To Watch Icon" style="width: 80%")
+            img(src='/images/what_to_watch_white1.png' alt="What To Watch Icon" style="width: 80%")
         ul.list-unstyled.components
           li
             a.home_click#home_btn(href='/userprofile') Home
-          li
-            a(href='/about') About
           li
             a(href='/contact') Contact
           li
@@ -63,7 +61,7 @@ html(lang="en")
 
       // Page Content
       #content
-        nav.navbar.navbar-expand-lg.navbar-light.bg-light
+        nav.navbar.navbar-expand-lg
           .container-fluid
             button#sidebarCollapse.sidebar_collapse.btn.custom_button.desktop_show(type='button')
               i.fas.fa-align-left(style="margin-right: 5px")
@@ -76,20 +74,18 @@ html(lang="en")
 
               ul.nav.navbar-nav.ml-auto
                 form.search_bar_alignment.my-2.my-lg-0(action='/media/search' method='POST')
-                  input.form-control.mr-sm-2(type='search' name="search" placeholder='Search For Titles...' aria-label='Search' required)
+                  input.form-control.mr-sm-2.search_bar_style(type='search' name="search" placeholder='Search For Titles...' aria-label='Search' required)
                   button.btn.btn-default(type='submit').search_button
                     i.fas.fa-search
 
-                li.nav-item.active
-                  a.home_click.nav-link#dash_btn(href="/userprofile") Dashboard
+                li.active
+                  a.home_click.nav-link#dash_btn.nav_color(href="/userprofile") Dashboard
                 li.nav-item.mobile_show
-                  a.nav-link(href="/media/user/watchlist") Watchlist
+                  a.nav-link.nav_color(href="/media/user/watchlist") Watchlist
                 li.nav-item.mobile_show
-                  a.nav-link(href="/about") About
-                li.nav-item.mobile_show
-                  a.nav-link(href="/contact") Contact
+                  a.nav-link.nav_color(href="/contact") Contact
                 li.nav-item
-                  a.nav-link(href="/logout") Logout
+                  a.nav-link.nav_color(href="/logout") Logout
 
         // We'll fill this with dummy content
         block content

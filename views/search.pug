@@ -9,18 +9,18 @@ block content
     .row
       if search_results.length == 0
         .col-10.col-sm-10.col-md-8.col-lg-8.col-xl-8.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0.shadow-lg.no_results
-          img(src="/images/search_icon_transp.png" alt="Search Icon")
-          h3
+          img(src="/images/search_icon_white.png" alt="Search Icon", style="max-width: 10%;padding-bottom: 20px")
+          h3.white_text
             | Hmm...
-          h5
+          h5.white_text
             | No results found for '#{query}'.
-          p
+          p.white_text
             | Please double check there are no spelling errors or typos - or even try a different search term.
-          p
+          p.white_text
             | We try our best to ensure our database is updated with all available movies. 
             strong Try another search?
           form.form-inline.my-2.my-lg-0(action='/media/search' method='POST')
-                  input.form-control.mr-sm-2(type='search' name="search" placeholder='Search' aria-label='Search' required)
+                  input.form-control.mr-sm-2.search_bar_style(type='search' name="search" placeholder='Search' aria-label='Search' required)
                   button.btn.btn-default(type='submit').search_button
                     i.fas.fa-search
 
@@ -28,9 +28,9 @@ block content
         if media.poster_path
           - var poster_src = `https://image.tmdb.org/t/p/w500/${media.poster_path}`
         else
-          - var poster_src = '/images/missing_image.png'
+          - var poster_src = '/images/image_placeholder_white.png'
         a(href=`/media/${media.id}` style="width: 100%")#search_link
-          .col-12.col-sm-10.col-md-10.col-lg-12.col-xl-12.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0.shadow-lg.search_box
+          .col-12.col-sm-10.col-md-10.col-lg-12.col-xl-12.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0.search_box
             .img_poster.my-auto
               img(src=poster_src).search_poster
             .search_text

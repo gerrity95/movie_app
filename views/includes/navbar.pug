@@ -1,6 +1,6 @@
 - var logo = '/images/ri_logo2.png'
 
-#swup.transition-fade.nav.navbar.navbar-expand-md.navbar-light.bg-light.mb-3.fixed-top.shadow
+#swup.transition-fade.nav.navbar.navbar-expand-md.mb-3.navbar_design(style="background: #030000")
   .container-fluid
     a.navbar-brand(href='/')
       img(src='/images/what_to_watch_logo_only.webp' alt='What To Watch Logo' height='36')
@@ -10,13 +10,13 @@
     #navbarSupportedContent.collapse.navbar-collapse
       .navbar-nav
         if !user_info
-          a.nav-item.nav-link(href='/') Home
-        a.nav-item.nav-link(href='/about') About
-        a.nav-item.nav-link(href='/contact') Contact
+          a.nav-item.nav-link.nav_color(href='/') Home
+        //- a.nav-item.nav-link.nav_color(href='/about') About
+        a.nav-item.nav-link.nav_color(href='/contact') Contact
       .navbar-nav.ml-auto
         if user_info
-          a.nav-item.nav-link(href="/userprofile") Dashboard
-          a.nav-item.nav-link(href="/logout") Logout
+          a.nav-item.nav-link.nav_color(href="/userprofile") Dashboard
+          a.nav-item.nav-link.nav_color(href="/logout") Logout
         else
-          a.nav-item.nav-link(href='/login') Login
-          a.nav-item.nav-link(href='/register') Register
+          a.nav-item.nav-link.nav_color(href='/login') Login
+          a.nav-item.nav-link.nav_color(href='/register') Register
