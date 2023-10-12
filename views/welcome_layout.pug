@@ -24,7 +24,7 @@ html(lang="en")
     include includes/loading_modal.pug
       
     // Page Content
-    nav.navbar.navbar-expand-lg.navbar-light.bg-light(style="margin-bottom:0px")
+    nav.navbar.navbar-expand-lg(style="margin-bottom:0px")
       .container-fluid
         a.navbar-brand(href='/')
           img(src='/images/what_to_watch_logo_only.webp' alt='What To Watch Logo' height='36')
@@ -47,7 +47,7 @@ html(lang="en")
             //- li.nav-item.mobile_show
             //-   a.nav-link(href="/contact") Contact
             li.nav-item
-              a.nav-link(href="/logout") Logout
+              a.nav-link.nav_color(href="/logout") Logout
 
       // We'll fill this with dummy content
     block content

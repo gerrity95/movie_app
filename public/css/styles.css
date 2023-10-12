@@ -4,7 +4,7 @@ html {
 }
 
 body {
-  background-color: #ffffff;
+  background-color: #030000;
   font-family: 'Lato', sans-serif;
   min-height: 100vh;
   height: 100%;
@@ -13,8 +13,22 @@ body {
   flex-direction: column;
 }
 
+a {
+  text-decoration: none;
+  color: #57A8FF;
+}
+
+.navbar_design {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 1030;
+}
+
 a:hover {
   text-decoration: none;
+  color: #57A8FF;
 }
 
 .title_colors {
@@ -23,6 +37,14 @@ a:hover {
 
 .text_colors {
   color: #505F98;
+}
+
+.nav_color {
+  color: #fff;
+}
+
+.nav_color:hover {
+  color: #c2bfbf;
 }
 
 .hidden_text {
@@ -41,6 +63,27 @@ a:hover {
   max-width: 80%;
 }
 
+.search_bar_style {
+  background-color: #423268;
+  color: white;
+  border-color: #211838;
+  border-radius: 3px;
+}
+
+.search_bar_style:focus {
+  background-color: #423268;
+  color: white;
+  /* Firefox */
+}
+
+
+
+.search_bar_style::placeholder {
+  color: #ededed;
+  opacity: 1;
+  /* Firefox */
+}
+
 /* Show/Hide Desktop vs Mobile */
 
 .desktop_show {
@@ -52,12 +95,25 @@ a:hover {
 }
 
 @media (max-width: 768px) {
+
+  .search_bar_style {
+    background-color: #423268;
+    color: white;
+    border-color: #211838;
+    border-radius: 3px;
+    margin-right: 15px;
+  }
+
   .desktop_show {
     display: none;
   }
 
   .mobile_show {
     display: flex;
+  }
+
+  .mobile_padding {
+    margin-top: 30px;
   }
 }
 
@@ -166,7 +222,7 @@ a:hover {
 
 .footer_style {
   /* background: rgba(231, 236, 255, .5); */
-  background: #fafafa;
+  background: #030000;
   padding-top: 20px;
 }
 
@@ -191,11 +247,11 @@ a:hover {
 }
 
 .footer_link a {
-  color: #000;
+  color: #c2bfbf;
 }
 
 .footer_link li:hover a {
-  text-decoration: underline;
+  color: #646464;
 }
 
 .sm_row::after {
@@ -218,7 +274,7 @@ a:hover {
 /* button style */
 
 .custom_button {
-  background-color: #A178CF;
+  background-color: #423268;
   color: #ffffff;
 }
 
@@ -464,10 +520,10 @@ a:hover {
 
 .navbar {
   padding: 15px 10px;
-  background: #fff;
+  background: #030000;
   border: none;
   border-radius: 0;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
   box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
 }
 
@@ -489,7 +545,9 @@ a:hover {
 ----------------------------------------------------- */
 
 .search_button {
-  border: 1px solid #c5c5c5
+  /* border: 1px solid #c5c5c5; */
+  background-color: #423268;
+  color: white
 }
 
 .search_button:hover {
@@ -507,8 +565,8 @@ a:hover {
 #sidebar {
   min-width: 250px;
   max-width: 250px;
-  background: #fafafa;
-  color: #111B47;
+  background: #030000;
+  color: #fff;
   transition: all 0.3s;
   box-shadow: 1px 0 5px -2px #888
 }
@@ -519,13 +577,13 @@ a:hover {
 
 #sidebar .sidebar-header {
   padding: 20px;
-  background: #fafafa;
-  border-bottom: 1px solid #47748b;
+  background: #030000;
+  border-bottom: 1px solid #423268;
 }
 
 #sidebar ul.components {
   padding: 20px 0;
-  border-bottom: 1px solid #47748b;
+  border-bottom: 1px solid #423268;
 }
 
 #sidebar ul p {
@@ -537,12 +595,12 @@ a:hover {
   padding: 10px;
   font-size: 1.1em;
   display: block;
-  color: rgba(0, 0, 0, 0.8);
+  color: #fff
 }
 
 #sidebar ul li a:hover {
-  color: #7386D5;
-  background: #fff;
+  background: #423268;
+  color: #fff;
 }
 
 #sidebar ul li.active>a,
@@ -677,7 +735,9 @@ a.article:hover {
   transform: translate(-0%, -0.1%);
   min-height: 250px;
   max-height: 400px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, .2);
+  box-shadow:
+    5px 3px 200px 30px rgba(255, 255, 255, 0.2),
+    2px 1px 10px 10px rgba(0, 0, 0, 0.4);
   border-radius: 5px;
   background: #0e0e0f;
   overflow: hidden
@@ -698,7 +758,7 @@ a.article:hover {
   position: absolute;
   width: 100%;
   bottom: -125px;
-  background: #fff;
+  background: #0e0e0f;
   padding: 10px;
   box-sizing: border-box;
   transition: .5s
@@ -713,7 +773,7 @@ a.article:hover {
 
 .specifies h2 span {
   font-size: 15px;
-  color: #111B47;
+  color: #fff;
   font-weight: bold
 }
 
@@ -806,16 +866,19 @@ a#product-mobile {
 
   .product {
     margin-bottom: 25px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, .2);
+
     border-radius: 5px;
     background: #0e0e0f;
+    box-shadow:
+      5px 3px 200px 30px rgba(255, 255, 255, 0.2),
+      2px 1px 10px 10px rgba(0, 0, 0, 0.4);
   }
 
   .specifies {
     position: absolute;
     width: 100%;
     bottom: 0px;
-    background: #fff;
+    background: #0e0e0f;
     padding: 10px;
     box-sizing: border-box;
   }
@@ -824,12 +887,13 @@ a#product-mobile {
     margin: 0;
     padding: 0;
     font-size: 16px;
-    width: 100%
+    width: 100%;
+    color: #fff;
   }
 
   .specifies h2 span {
     font-size: 13px;
-    color: #111B47;
+    color: #fff;
     font-weight: bold
   }
 }
@@ -844,7 +908,7 @@ a#product-mobile {
 .filter_genre_row {
   border-radius: 5px;
   padding: 10px;
-  background-color: #f8f9fa;
+  background-color: #030000;
 }
 
 /* MOVIE PAGE STYLING */
@@ -862,24 +926,6 @@ a#product-mobile {
   min-height: 600px;
   max-height: 60%;
   background-size: cover;
-}
-
-@media (max-width: 768px) {
-
-  #movie-desktop {
-    display: none;
-  }
-
-  #movie-mobile {
-    display: flex;
-  }
-
-  .movie_poster_image {
-    max-height: 75%;
-    max-width: 75%;
-    margin-top: 20px;
-    margin-bottom: 20px;
-  }
 }
 
 .movie_darken {
@@ -917,7 +963,12 @@ a#product-mobile {
 }
 
 .movie_interact_container {
-  background-image: url("https://www.toptal.com/designers/subtlepatterns/patterns/concrete-texture.png");
+  /* background-image: url("https://www.toptal.com/designers/subtlepatterns/patterns/concrete-texture.png"); */
+  background-color: #030000;
+}
+
+.emoji-wrapper::before {
+  background-color: #030000;
 }
 
 .movie_interact_box {
@@ -947,6 +998,46 @@ a#product-mobile {
 
 .icon-background {
   color: #111B47;
+}
+
+@media (max-width: 768px) {
+
+  #movie-desktop {
+    display: none;
+  }
+
+  #movie-mobile {
+    display: flex;
+  }
+
+  .movie_poster_image {
+    max-height: 75%;
+    max-width: 75%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+
+  .movie_interact_box {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    padding-top: 10px
+  }
+
+  .additional_options {
+
+    background-color: #fff;
+    width: 100%;
+    padding: 0px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, .05);
+  }
+
+
 }
 
 
@@ -1073,11 +1164,15 @@ a#product-mobile {
 .dark_background {
   border-radius: 10px;
   min-height: 100%;
-  background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8));
+  background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6));
 }
 
 .scrolling-wrapper {
   overflow-x: auto;
+}
+
+.rec_movies_hide {
+  display: inline;
 }
 
 @media (max-width: 768px) {
@@ -1087,11 +1182,45 @@ a#product-mobile {
     margin-left: 5px;
     margin-right: 5px;
   }
+
+  .rec_movies_hide {
+    display: none;
+  }
 }
 
 
 
 /* Style for animated titles */
+
+.title_style_white {
+  margin-left: auto;
+  margin-right: auto;
+  color: #fff;
+  text-transform: uppercase;
+  text-decoration: none;
+  letter-spacing: 0.15em;
+  display: block;
+  padding: 15px 20px;
+  position: relative;
+}
+
+.title_style_white:after {
+  background: none repeat scroll 0 0 transparent;
+  bottom: 0;
+  content: "";
+  display: block;
+  height: 2px;
+  left: 20%;
+  position: absolute;
+  background: #fff;
+  transition: width 0.3s ease 0s, left 0.3s ease 0s;
+  width: 0;
+}
+
+.title_style_white:hover:after {
+  width: 20%;
+  left: 40%;
+}
 
 
 .title_style {
@@ -1192,6 +1321,7 @@ a#product-mobile {
   flex-wrap: wrap;
   align-content: center;
   align-items: center;
+  color: #fff
 }
 
 a#search_link {
@@ -1220,6 +1350,8 @@ a#search_link {
   margin: 10px;
   padding: 20px;
   display: flex;
+  box-shadow:
+    5px 3px 200px 30px rgba(255, 255, 255, 0.2), 2px 1px 10px 10px rgba(0, 0, 0, 0.4)
 }
 
 .no_results {
@@ -1343,6 +1475,23 @@ a#search_link {
 
 .c_form_inputs {
   margin-top: 10px;
+  background-color: #161122;
+  color: white;
+  border-color: #211838;
+  border-radius: 3px;
+}
+
+.c_form_inputs:focus {
+  background-color: #161122;
+  /* Firefox */
+}
+
+
+
+.c_form_inputs::placeholder {
+  color: #ededed;
+  opacity: 1;
+  /* Firefox */
 }
 
 .row_style {
@@ -1370,6 +1519,15 @@ a#search_link {
 
 #watchlist-mobile {
   display: none;
+}
+
+.watchlist_card {
+  background-color: #030000;
+  box-shadow:
+    5px 3px 200px 30px rgba(255, 255, 255, 0.2),
+    2px 1px 10px 10px rgba(0, 0, 0, 0.4);
+  color: #fff;
+  border: 1px solid #333;
 }
 
 

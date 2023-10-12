@@ -15,7 +15,7 @@ block content
     - var titleKey = 'title'
     - var keyword = 'movie'
   
-  .container-fluid(style="padding-top: 10px;background-image: url('/images/about_blank.webp')")
+  .container-fluid(style="padding-top: 10px;background-color: #030000")
     .row.curved-div(style="padding-top: 10px;")
       .col-10.col-sm-10.col-md-5.col-lg-3.col-xl-3.offset-xl-2.offset-lg-2.offset-md-1.offset-1.align-self-center.row_style.mobile_padding
         if node_env == 'tv'
@@ -40,7 +40,7 @@ block content
             i.fas.fa-arrow-down.fa-stack-1x(style="color: white")
         
       svg(xmlns='http://www.w3.org/2000/svg' viewbox='0 0 1440 370' style="background-image: url('/images/welcome_back3.webp')").parallax
-        path(fill='#212531' fill-opacity='1' d='M0,160L48,133.3C96,107,192,53,288,58.7C384,64,480,128,576,144C672,160,768,128,864,138.7C960,149,1056,203,1152,192C1248,181,1344,107,1392,69.3L1440,32L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z')
+        path(fill='#030000' fill-opacity='1' d='M0,160L48,133.3C96,107,192,53,288,58.7C384,64,480,128,576,144C672,160,768,128,864,138.7C960,149,1056,203,1152,192C1248,181,1344,107,1392,69.3L1440,32L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z')
 
     .row.curved-div(style="margin-top: 0px;padding-top: 40px;margin-bottom: 20px")
       .col-12.col-sm-12.col-md-6.col-lg-6.col-xl-4.offset-xl-4.offset-lg-3.offset-md-3.offset-0.align-self-center.row_style
@@ -72,7 +72,7 @@ block content
           b #{remaining_medias} 
           | titles left to rate.
         .welcome-search.search_bar_alignment.my-2.my-lg-0
-                  input.form-control.mr-sm-2(type='search' id="welcome_search_submit" placeholder='Search' aria-label='Search' required)
+                  input.form-control.mr-sm-2.search_bar_style(type='search' id="welcome_search_submit" placeholder='Search' aria-label='Search' required)
                   button.btn.btn-default(type='submit').search_button#welcome_search(style="color: #fff")
                     i.fas.fa-search
         p.password_error#bad_welcome_search
@@ -83,9 +83,9 @@ block content
         else
           img(src='/images/movie_list_snippet1.webp', style="width:100%")
 
-    .row.align-items-center#movie_info_popup.welcome_message.shadow-lg(style="display: none; margin-top: 30px; background-color: #fff")
+    .row.align-items-center#movie_info_popup.welcome_message.shadow-lg(style="display: none; margin-top: 30px;s")
       .col-12.col-sm-12.col-md-12.col-lg-7.col-xl-7.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0.align-text-center
-        p(style="padding-bottom: 20px;font-size: 20px")
+        p(style="padding-bottom: 20px;font-size: 20px").white_text
           |  Click the #{keyword} you want to rate.
           span(style="margin-left: 10px;").far.fa-check-square
         .row.align-items-center.my-auto.welcome_list#welcome_movies
@@ -142,7 +142,7 @@ block content
 
       .col-12.col-sm-12.col-md-12.col-lg-5.col-xl-5.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0.my-auto.align-text-center
         .feedback
-          h5 Submit Rating
+          h5.white_text Submit Rating
           .rating
             input#input_media_id(style="display: none", name="input_media_name" value="")
             input#rating-10(type='radio' name='rating' value="10")

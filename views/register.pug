@@ -8,7 +8,7 @@ block content
   else
     - var fail_messages = []
   // Full Page Image Header with Vertically Centered Content
-  header.masthead(style="background-image: url('/images/register_back.jpg')")
+  header.masthead(style="background-image: url('/images/register_back_dark.jpg')")
     .container.h-100
       .row.h-100.align-items-center
         .col-10.col-sm-10.col-md-8.col-lg-5.col-xl-4.register_form.shadow-sm.bg-white.rounded.mx-auto
@@ -16,13 +16,7 @@ block content
           h5.title_colors(style="padding-top:20px").text-center
             | Create Your Account 
 
-          form(action='/register' method='POST')
-
-            div.form-registration
-              input.form-control.username(type="text", name="username", 
-                                            placeholder="Username", required)
-              p#bad_user.password_error
-            
+          form(action='/register' method='POST')            
             div.form-registration
               input.form-control.first_name(type="text", name="first_name", 
                                             placeholder="First Name", required)
