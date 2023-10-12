@@ -11,7 +11,12 @@ const ratedSchema = new Schema({
   genres: {type: Array, default: null},
   languages: {type: Array, default: null},
   tmdb_rating: {type: Number, default: null},
-  production_companies: {type: Array, default: null},
+  networks: {
+    id: Number,
+    logo_path: String,
+    name: String,
+    origin_country: String,
+  },
   director: {type: String, default: null},
   keywords: {type: Array, default: null},
 

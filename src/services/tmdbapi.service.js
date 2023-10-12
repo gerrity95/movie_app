@@ -105,6 +105,9 @@ async function ratedMediaDetails(req) {
       throw new Error('Unable to fulfill request to add media to DB. Cannot get media details');
     };
 
+    console.log("MEDIA DETAILS");
+    console.log(mediaDetails);
+
     let mediaKeywords = [];
     let directorId = '';
     if (NODE_ENV == 'tv') {
@@ -142,10 +145,16 @@ async function submitMediaRating(req, mediaDetails, directorId, mediaKeywords, n
       genres: mediaDetails.body.genres,
       languages: mediaDetails.body.original_language,
       tmdb_rating: mediaDetails.body.vote_average,
-      production_companies: mediaDetails.body.production_companies,
+      // production_companies: mediaDetails.body.production_companies,
       director: directorId,
       keywords: mediaKeywords,
     });
+
+    if (NODE_ENV == 'tv') {
+      newShow.networks = mediaDetails.body.networks[0];
+    } else {
+      newShow.production_companies = mediaDetails.body.production_companies;
+    }
 
     await mediaRateModel.create(newShow);
 

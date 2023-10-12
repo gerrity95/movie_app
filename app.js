@@ -19,6 +19,7 @@ const {
   MONGO_PORT,
   MONGO_DB,
   SESSION_SECRET,
+  NODE_ENV,
 } = process.env;
 
 const store = new MongoStore({
@@ -75,5 +76,5 @@ app.use(function(err, req, res, next) {
 });
 
 app.listen(PORT, function() {
-  console.log(`WhatToWatch Movies listening on ${PORT}!`);
+  console.log(`WhatToWatch ${NODE_ENV} listening on ${PORT}!`);
 });
