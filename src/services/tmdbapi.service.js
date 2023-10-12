@@ -105,9 +105,6 @@ async function ratedMediaDetails(req) {
       throw new Error('Unable to fulfill request to add media to DB. Cannot get media details');
     };
 
-    console.log("MEDIA DETAILS");
-    console.log(mediaDetails);
-
     let mediaKeywords = [];
     let directorId = '';
     if (NODE_ENV == 'tv') {

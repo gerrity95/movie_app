@@ -131,8 +131,6 @@ exports.login_post = async function(req, res, next) {
         return res.redirect(url + '?failed_login=True');
       }
 
-      console.log(user);
-
       if (!user) {
         logger.info('Authentication problem. Email/Password is incorrect');
         return res.redirect(url + '?failed_login=True');

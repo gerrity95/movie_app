@@ -75,8 +75,6 @@ async function loginPost(req) {
       return {failed_login: true};
     }
 
-    console.log(user);
-
     if (!user) {
       logger.info('Authentication problem. Email/Password is incorrect');
       return {failed_login: true};
