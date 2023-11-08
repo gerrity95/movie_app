@@ -34,6 +34,17 @@ function isLoggedIn(req, res, next) {
   }
 }
 
+function ajaxIsLoggedIn(req, res, next) {
+  logger.info('Checking if a user is logged in...');
+  if (req.isAuthenticated()) {
+    return next();
+  } else {
+    logger.info('No user is currently logged in.');
+    // throw new Error('User session has expired');
+    return res.status(401).send('User session has expired');
+  }
+}
+
 // Function to check if enough media was rated by the user before allowing them to certain sections of the app
 async function enoughMediaRated(req, res, next) {
   logger.info('Checking if a user has rated enough media');
@@ -120,6 +131,7 @@ function generateResetEmail(user, token) {
 
 module.exports = {
   isLoggedIn,
+  ajaxIsLoggedIn,
   is_valid_password: isValidPassword,
   random_number: randomIntFromInterval,
   get_ip_info: getIPInfo,

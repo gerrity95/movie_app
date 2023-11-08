@@ -55,6 +55,8 @@ async function getMedia(req) {
   const recommendations = parseReccs(mediaInfo.body.recommendations);
   const userParsed = parseUserInfo(userInfo[0], parseInt(req.params.media_id));
 
+  console.log(mediaParsed.statusWriterSection);
+
   return {'media_info': mediaParsed, 'media_weight': userParsed.mediaWeight,
     'is_watchlist': userParsed.isWatchlist, 'is_blocklist': userParsed.isBlocklist,
     'ip_info': ipInfo, 'watch_provider_countries': watchProviderCountries,

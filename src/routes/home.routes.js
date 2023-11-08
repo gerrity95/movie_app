@@ -14,7 +14,7 @@ router.get('/userprofile',
     [genericHelpers.isLoggedIn, genericHelpers.enoughMediaRated],
     indexController.user_profile);
 router.get('/user/userprofile',
-    [genericHelpers.isLoggedIn, genericHelpers.enoughMediaRated],
+    [genericHelpers.ajaxIsLoggedIn, genericHelpers.enoughMediaRated],
     indexController.user_profile_ajax);
 router.get('/welcome', genericHelpers.isLoggedIn, indexController.welcome);
 

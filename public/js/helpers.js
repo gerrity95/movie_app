@@ -30,7 +30,7 @@ function update_providers(streamParent, rentParent, buyParent, wpResults, countr
   // Function that updates the watch providers dynamically
   if (wpResults[countryCode] === undefined) {
     $( '#missing_country' ).append( `
-    <p>Unfortunately we aren\'t able to get provider information for your country. 
+    <p class="white_text">Unfortunately we aren\'t able to get provider information for your country. 
     If there is anywhere else you would like to try please select from the list below. 🙂</p>` );
     return;
   }
@@ -42,7 +42,7 @@ function update_providers(streamParent, rentParent, buyParent, wpResults, countr
   if (streamProviders === undefined) {
     const streamSlot = document.createElement('div');
     streamSlot.classList.add('col-10');
-    streamSlot.innerHTML = '<p>Unfortunately there is nowhere to stream this movie in ' + country + ' 😔';
+    streamSlot.innerHTML = '<p class="white_text">Unfortunately there is nowhere to stream this movie in ' + country + ' 😔';
     streamParent.appendChild(streamSlot);
   } else {
     for (let i=0; i < streamProviders.length; i++) {
@@ -59,7 +59,7 @@ function update_providers(streamParent, rentParent, buyParent, wpResults, countr
   if (rentProviders === undefined) {
     const rentSlot = document.createElement('div');
     rentSlot.classList.add('col-10');
-    rentSlot.innerHTML = '<p>Unfortunately there is nowhere to rent this movie in ' + country + ' 😔';
+    rentSlot.innerHTML = '<p class="white_text">Unfortunately there is nowhere to rent this movie in ' + country + ' 😔';
     rentParent.appendChild(rentSlot);
   } else {
     for (let i=0; i < rentProviders.length; i++) {
@@ -76,7 +76,7 @@ function update_providers(streamParent, rentParent, buyParent, wpResults, countr
   if (buyProviders === undefined) {
     const buySlot = document.createElement('div');
     buySlot.classList.add('col-10');
-    buySlot.innerHTML = '<p>Unfortunately there is nowhere to purchase this movie in ' + country + ' 😔';
+    buySlot.innerHTML = '<p class="white_text">Unfortunately there is nowhere to purchase this movie in ' + country + ' 😔';
     buyParent.appendChild(buySlot);
   } else {
     for (let i=0; i < buyProviders.length; i++) {
