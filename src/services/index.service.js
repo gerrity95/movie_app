@@ -23,9 +23,12 @@ async function getUserProfile(req) {
   const genres = await tmdbapiService.getGenres();
   logger.info('Getting shows...');
   const shows = await flaskApi.get_reccomendations(req.user._id);
+  logger.info('A');
   // showss = flaskApi.sample_movies()
   if (shows.status == 200) {
+    logger.info('B');
     const filteredShows = filterBlocklist(shows.body.result);
+    logger.info('C');
     return {data: {node_env: NODE_ENV,
       user_info: req.user, media_info: filteredShows, genres: genres.body.genres}};
   } else {

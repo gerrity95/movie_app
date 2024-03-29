@@ -85,7 +85,9 @@ exports.logout = async function(req, res, next) {
 
 exports.user_profile = async function(req, res, next) {
   try {
+    logger.info('ConA');
     const profileInfo = await indexService.getUserProfile(req);
+    logger.info('ConB');
     return res.render('user_profile', profileInfo.data);
   } catch (err) {
     logger.error('Error attempting to render user profile');
