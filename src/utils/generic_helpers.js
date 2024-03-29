@@ -30,7 +30,18 @@ function isLoggedIn(req, res, next) {
     return next();
   } else {
     logger.info('No user is currently logged in.');
-    return res.redirect('/login');
+    return res.redirect('/');
+  }
+}
+
+function ajaxIsLoggedIn(req, res, next) {
+  logger.info('Checking if a user is logged in...');
+  if (req.isAuthenticated()) {
+    return next();
+  } else {
+    logger.info('No user is currently logged in.');
+    // throw new Error('User session has expired');
+    return res.status(401).send('User session has expired');
   }
 }
 
@@ -120,6 +131,7 @@ function generateResetEmail(user, token) {
 
 module.exports = {
   isLoggedIn,
+  ajaxIsLoggedIn,
   is_valid_password: isValidPassword,
   random_number: randomIntFromInterval,
   get_ip_info: getIPInfo,

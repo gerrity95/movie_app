@@ -29,6 +29,10 @@ block content
       .col-10.col-sm-8.col-md-5.col-lg-3.col-xl-3.offset-lg-1.offset-xl-1.offset-md-1.offset-sm-2.offset-1.align-self-center.d-flex.justify-content-center
         figure.movie_figure
           img(src=poster_src).movie_poster_image
+          if is_rated
+           figcaption.text-success.movie_figure_caption
+            strong
+              | Already rated ✅
           if media_weight > 0
             if media_weight >= 70
               figcaption.text-success.movie_figure_caption

@@ -3,92 +3,94 @@ extends home_layout
 block content
   title - What To Watch Movies - Home
   include includes/loading_modal.pug
+  include includes/login_modal.pug
   // Full Page Image Header with Vertically Centered Content
   #loader(style="display:none")
   header.home_masthead#masthead_load(style="background-image: url('/images/movie_background_dark.png')")
     .container-fluid.h-100.align-items-center(style="display: flex")
-      .row.shadow-lg.mx-auto#form_background
-        .col-xl-5.col-lg-6.col-md-7.col-sm-10.col-12.offset-0.offset-sm-1.offset-md-0.offset-xl-1.offset-lg-0.text-center
-          img(src='/images/what_to_watch_white1.webp' alt="What To Watch Icon" style="width: 80%")
-          h2.home_title.fw-light.white_text Movie Recommendations For You. 🎞️
-          p.lead.home_title.white_text(style="margin-top: 20px") WhatToWatch is the best place for you to get recommendations for movies we know you will love.
-          p.lead.home_title.white_text(style="margin-top: 20px") Want to know what to watch on TV?&nbsp; #[a(href="https://whattowatchtv.mggert.com/" target="_blank") Check our TV recommendations app here.]  
-        .col-xl-5.col-lg-6.col-md-6.col-sm-10.offset-sm-1.offset-md-0.offset-xl-0.offset-lg-0(style="margin-top:5%")
-          h4.title_style_white.text-center
-            | Sign in
-          div.message.alert.alert-danger(style="display:none;")
-            | #{message}
-          form#home_login_form(action='/login' method='POST')
-            div.form-group.form-registration
-              label.white_text(for="username") Email
-              input.form-control.username(type="text", name="username", autocomplete="username" required)
-            div.form-group.form-registration
-              label.white_text(for="password") Password
-              input.form-control.password(type="password", name="password", autocomplete="current-password" required)
-            div.form-group.form-registration
-              button.submit.btn.custom_button(type="submit") Login
-            p#bad_login.password_error
-            div.form-group.form-registration
-              p.white_text
-                | Don't have an account? 
-                | &nbsp; #[a(href="/register") Sign up here.]
-            
-              span.forgot_password
-                a(href='/reset') Forgot Password?
+      .row.mx-auto
+        .col-xl-10.col-lg-8.col-md-10.col-sm-10.col-12.offset-0.offset-sm-1.offset-md-1.offset-xl-1.offset-lg-2.text-center
+          img(src='/images/what_to_watch_white1.webp' alt="What To Watch Icon" style="width: 60%")
+          h1.home_title.custom_heading.white_text Movie Recommendations for you. 
+          p.lead.white_text(style="margin-top: 10px") The only place to go for movie recommendations.
+          button.btn.custom_button#getStartedBtn Get Started
   
-  .container-fluid(style="padding-top: 30px;padding-bottom: 40px;background-color: #030000")
-    .row.curved-div(style="padding-top: 20px;")
-      .col-12.col-sm-10.col-md-5.col-lg-4.col-xl-4.offset-xl-1.offset-lg-1.offset-md-1.offset-0.align-self-center.row_style.mobile_padding
-        img(src='/images/movie_back_small.webp', alt="Cinema seat background" style="width:100%;border-radius:5px")
-      .col-12.col-sm-10.col-md-5.col-lg-5.col-xl-5.offset-xl-1.offset-lg-1.offset-md-1.offset-0.align-self-center.row_style
-        h1.title_style_white
-          | The Easiest Way To Find A Movie. 🍿
+  .container-fluid(style="margin-top: 40px;padding-top: 30px;padding-bottom: 40px;")
+    .row.curved-div.reveal(style="padding-top: 40px;background-color:#000")
+      .col-12.col-sm-10.col-md-5.col-lg-5.col-xl-3.offset-xl-2.offset-lg-1.offset-md-1.offset-0.row_style
+        h3.white_text.sub_heading
+          | Our Philosophy. 🍿
         p.white_text
           | Our aim is to provide a simple way to generate movie recommendations tailored to each individual user. Everyone has at spent at least an evening or two scrolling through movies on Netflix or Amazon Prime not knowing what to watch. We want to make this as easy as possible.   
-        p.white_text
-          | What we do is ask every user to rate five of their favorite movies. Once we get that many we can start generating recommendations. 
-        p.white_text
-          | As with anything, the more you rate, the more accurate we get. This works for movies you dont like as well. Not a fan of Marvel? If we can identify these kind of trends we'll try our best to avoid recommending similar movies.
+        //- p.white_text
+        //-   | As with anything, the more you rate, the more accurate we get. This works for movies you dont like as well. Not a fan of Marvel? If we can identify these kind of trends we'll try our best to avoid recommending similar movies.
+      .col-12.col-sm-10.col-md-5.col-lg-5.col-xl-3.offset-xl-2.offset-lg-1.offset-md-1.offset-0.row_style
+        h3.white_text.sub_heading
+          | How it works. 🍿
+        //- p.white_text
+        //-   | What we do is ask every user to rate five of their favorite movies. Once we get that many we can start generating recommendations. 
         p.white_text
           | All the recommended movies are assigned a weight. This weight indicates how much we think you'd enjoy the movie. The higher the weight, the more we think you'll like it. As you rate more movies the weight will change for each of the movies you haven't yet rated.
 
-      svg(xmlns='http://www.w3.org/2000/svg' viewbox='0 0 1440 400' style="background-image: url('/images/top2.webp')").parallax
-        path(fill='#030000' fill-opacity='1' d='M0,160L48,133.3C96,107,192,53,288,58.7C384,64,480,128,576,144C672,160,768,128,864,138.7C960,149,1056,203,1152,192C1248,181,1344,107,1392,69.3L1440,32L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z')
+    .row.curved-div.reveal(style="padding-top: 20px;background-color:#000;padding-bottom: 40px")
+      .col-12.col-sm-10.col-md-5.col-lg-3.col-xl-2.offset-xl-2.offset-lg-1.offset-md-1.offset-0.row_style
+        h5.white_text.sub_heading
+          | 908,378
+        p.white_text
+          | The total number of movies to choose from.   
+      .col-12.col-sm-10.col-md-5.col-lg-3.col-xl-2.offset-xl-1.offset-lg-1.offset-md-1.offset-0.row_style
+        h5.white_text.sub_heading
+          | 167,975
+        p.white_text
+          | The total number of television shows we can select for you. 
+      
+      .col-12.col-sm-10.col-md-5.col-lg-3.col-xl-2.offset-xl-1.offset-lg-1.offset-md-1.offset-0.row_style
+        h5.white_text.sub_heading
+          | 10+
+        p.white_text
+          | The number of calculations run by our algorithm for each recommendation.
 
+    svg(xmlns='http://www.w3.org/2000/svg' viewbox='0 0 1440 400' style="background-image: url('/images/top2.webp')").parallax
+      path(fill='#0e0e0e' fill-opacity='1' d='M0,160L48,133.3C96,107,192,53,288,58.7C384,64,480,128,576,144C672,160,768,128,864,138.7C960,149,1056,203,1152,192C1248,181,1344,107,1392,69.3L1440,32L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z')
+
+
+  .container-fluid(style="margin-top: 0px;padding-top: 30px;padding-bottom: 40px;")
     .row.curved-div(style="margin-top: 0px;padding-top: 40px;padding-bottom:20px")
-      .col-12.col-sm-10.col-md-5.col-lg-5.col-xl-5.offset-xl-1.offset-lg-1.offset-md-1.offset-0.align-self-center.row_style
-        h4.text-center.white_text
-          | Where do we get the data? 💾
-        p.white_text
-          | We use the&nbsp; #[a(href="https://developers.themoviedb.org/3/getting-started/introduction" target="_blank") TMDB API] to get our data on millions of movies. It's one of the worlds largest movie and TV databases that gives us access to an unreal amount of content.
-        p.white_text
+      .col-12.col-sm-10.col-md-6.col-lg-6.col-xl-4.offset-xl-1.offset-lg-1.offset-md-0.offset-sm-1.offset-0.row_style
+        h3.white_text.sub_heading.reveal(style="margin-bottom: 20px;text-align:center")
+          | Where do we get the data? 
+        p.white_text.reveal.desc_text
+          | 💾 We use the&nbsp; #[a(href="https://developers.themoviedb.org/3/getting-started/introduction" target="_blank") TMDB API] to get our data on millions of movies. It's one of the worlds largest movie and TV databases that gives us access to an unreal amount of content.
+        p.white_text.reveal.desc_text
           | We also use&nbsp; #[a(href="https://www.justwatch.com/" target="_blank") JustWatch] help us with our data around watch providers. They provide the ability, through TMDB, to get the watch providers for streaming, renting and buying for many many countries.
-        p.white_text
+        p.white_text.reveal.desc_text
           | Combining this API with information given from you we can calculate the movies we think you would like. The calculations used are constantly evolving and so we are always looking for feedback on how well it works.
-        p.white_text  
+        p.white_text.reveal.desc_text  
           | We are also conscious that when signing up no one wants to spend half their evening rating movies. This is why we start gives recommendations after only rating 5 movies.
-        p.white_text  
+        p.white_text.reveal.desc_text  
           | We have a lot of people to thank for some of the content we use, no more so than TMDB but also a lot of the content creators over on #[a(href="https://unsplash.com/" target="_blank") Unsplash]. 
 
-      .col-10.col-sm-10.col-md-5.col-lg-3.col-xl-3.offset-xl-2.offset-lg-2.offset-md-1.offset-1.align-self-center.row_style
-        img(src='/images/video2.webp', style="width:100%")
+      .col-10.col-sm-10.col-md-6.col-lg-5.col-xl-4.offset-xl-2.offset-lg-0.offset-md-0.offset-1.align-self-center.row_style.desktop_show
+        img(src='/images/samuel-regan-asante-wMkaMXTJjlQ-unsplash.jpg', style="width:100%").reveal
 
       svg(xmlns='http://www.w3.org/2000/svg' viewbox='0 0 1440 400' style="background-image: url('/images/bottom2.webp')").parallax
-        path(fill='#030000' fill-opacity='1' d='M0,160L48,133.3C96,107,192,53,288,58.7C384,64,480,128,576,144C672,160,768,128,864,138.7C960,149,1056,203,1152,192C1248,181,1344,107,1392,69.3L1440,32L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z')
+        path(fill='#0e0e0e' fill-opacity='1' d='M0,160L48,133.3C96,107,192,53,288,58.7C384,64,480,128,576,144C672,160,768,128,864,138.7C960,149,1056,203,1152,192C1248,181,1344,107,1392,69.3L1440,32L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z')
 
+
+  .container-fluid.reveal(style="margin-top: 40px;padding-top: 30px;padding-bottom: 40px;")
     .row(style="margin-top: 0px;padding-top: 40px;padding-bottom:20px;background: #03000")
-      .col-12.col-sm-10.col-md-5.col-lg-5.col-xl-5.offset-xl-1.offset-lg-1.offset-md-1.offset-0.align-self-center.row_style
-        h4.title_style_white.text-center
-          | Who am I? 👨‍💻
-        p.white_text
+      .col-12.col-sm-10.col-md-6.col-lg-6.col-xl-4.offset-xl-1.offset-lg-1.offset-md-0.offset-sm-1.offset-0.row_style
+        h3.white_text.sub_heading.reveal(style="margin-bottom: 20px;text-align:center")
+          | Who am I? 
+        p.white_text.reveal.desc_text
           | I started building this app due to the amount of time I spent searching through movie lists and not knowing what to watch. I built out a basic way to recommend movies that I would like and kept building up from there.
-        p.white_text
+        p.white_text.reveal.desc_text
           | This app is a side project and so we always welcome feedback and contributions. If you have some features you'd like to see please <a href="/contact">contact us here.</a> 
-        p.white_text
+        p.white_text.reveal.desc_text
           | If you have any feedback such as bugs you've noticed we'd also like to hear from you. Of course, if this is something you'd like to contribute code to, then feel more than welcome to get in touch.
         
-      .col-10.col-sm-10.col-md-5.col-lg-3.col-xl-3.offset-xl-2.offset-lg-2.offset-md-1.offset-1.align-self-center.row_style
-        img(src='/images/video1.webp', style="width:100%")
+      .col-10.col-sm-10.col-md-5.col-lg-3.col-xl-3.offset-xl-2.offset-lg-2.offset-md-1.offset-1.align-self-center.row_style.desktop_show
+        img(src='/images/headshot1-grey.webp', style="width:100%;border-radius:300px")
 
   // Page Content
   //section.py-5
@@ -102,4 +104,9 @@ block content
   script.
     if (getQueryVariable('failed_login')) {
       document.getElementById("bad_login").innerHTML = '*Username or password is incorrect.';
+      $("#loginModal").modal('show');
     }
+
+    $("#getStartedBtn").click(function () {
+      $("#loginModal").modal('show');
+    });

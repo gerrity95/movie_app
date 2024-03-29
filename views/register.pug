@@ -1,6 +1,7 @@
 extends home_layout
 
 block content
+  include includes/login_modal.pug
   title What To Watch - Register
   - var fail_messages = []
   if fail_message
@@ -8,60 +9,68 @@ block content
   else
     - var fail_messages = []
   // Full Page Image Header with Vertically Centered Content
-  header.masthead(style="background-image: url('/images/register_back_dark.jpg')")
-    .container.h-100
-      .row.h-100.align-items-center
-        .col-10.col-sm-10.col-md-8.col-lg-5.col-xl-4.register_form.shadow-sm.bg-white.rounded.mx-auto
-          img(src='/images/what_to_watch_black.png' alt="What To Watch Icon" style="width: 80%")
-          h5.title_colors(style="padding-top:20px").text-center
-            | Create Your Account 
+  
+  .container-fluid.h-100(style="background-color: #0e0e0e;margin-top: 60px;margin-bottom:40px;")
+    .row.h-100.align-items-center
+      .col-10.col-sm-10.col-md-8.col-lg-5.col-xl-3.offset-xl-1.offset-lg-1.offset-md-2.offset-sm-1.offset-1.register_form
+        img(src='/images/what_to_watch_white1.webp' alt="What To Watch Icon" style="width: 80%")
+        h5.white_text.minor_heading(style="padding-top:20px")
+          | Create Your Account 
 
-          form(action='/register' method='POST')            
-            div.form-registration
-              input.form-control.first_name(type="text", name="first_name", 
-                                            placeholder="First Name", required)
+        form(action='/register' method='POST')            
+          div.form-registration
+            input.registration_input.first_name(type="text", name="first_name", 
+                                          placeholder="First Name", required)
 
-            div.form-registration
-              input.form-control.first_name(type="text", name="last_name",
-                                            placeholder="Last Name", required)
+          div.form-registration
+            input.registration_input.first_name(type="text", name="last_name",
+                                          placeholder="Last Name", required)
 
-            div.form-group.form-registration
-              input.form-control.email(type="email", name="email", aria-describedby="emailHelp",
-                                      placeholder="Email Address", autocomplete="email" required)
-              
-              small#emailHelp.form-text.text-muted(style="margin-top:0px") We'll never share your email with anyone else.
-              
-            div.form-group.form-registration
-              input.form-control.password(type="password", id="password" name="password",
-                                          placeholder='Password',
-                                          aria-describedby="passwordHelp",
-                                          autocomplete="current-password" required)
+          div.form-group.form-registration
+            input.registration_input.email(type="email", name="email", aria-describedby="emailHelp",
+                                    placeholder="Email Address", autocomplete="email" required)
+            
+            small#emailHelp.form-text.sub_text(style="margin-top:0px") We'll never share your email with anyone else.
+            
+          div.form-group.form-registration
+            input.registration_input.password(type="password", id="password" name="password",
+                                        placeholder='Password',
+                                        aria-describedby="passwordHelp",
+                                        autocomplete="current-password" required)
 
-              small#passwordHelp.form-text.text-muted(style="margin-top:0px;margin-bottom: 0px") Password must contain at least one uppercase letter, one lowercase letter and one number.
-              
-              p#fail_messages.password_error(style="text-align: left;margin-top: 0px;padding-top: 0px;")
-                for message in fail_messages
-                  | #{message.message}
-                  br
+            small#passwordHelp.form-text.sub_text(style="margin-top:0px;margin-bottom: 0px") Password must contain at least one uppercase letter, one lowercase letter and one number.
+            
+            p#fail_messages.password_error(style="text-align: left;margin-top: 0px;padding-top: 0px;")
+              for message in fail_messages
+                | #{message.message}
+                br
 
-              p#bad_password.password_error
-              p#unknown_error.password_error
-                              
-            div.form-group.form-registration
-              button.submit.btn.alt_button(type="submit") Register
+            p#bad_password.password_error
+            p#unknown_error.password_error
+                            
+          div.form-group.form-registration
+            button.submit.btn.alt_button(type="submit") Register
 
-          div.col-md-12.col-lg-11.col-xl-11.mx-auto
-            p(style="padding-top:20px")
-              | Already a member? 
-              a(href='/login') Login here.
+        div.col-md-12.col-lg-11.col-xl-11
+          p.white_text(style="padding-top:20px")
+            | Already a member? 
+            a(href='/login') Login here.
+    
+      .col-10.col-sm-10.col-md-8.col-lg-6.col-xl-4.offset-xl-2.offset-lg-0.offset-md-2.offset-sm-1.offset-0.desktop_show
+        h5.white_text.sub_heading(style="padding-top:20px")
+          | Get Started with WhatToWatch
+        p.white_text
+          | Complete the form here to register with WhatToWatch. Once you register, all you'll need to do is rate 5 shows in the welcome screen and you're good to go!   
+        p.white_text
+          | We are always fine tuning our recommendations algorithm so feedback is always welcome. And remember, the more you rate, the more accurate the recommendations will be! We use 5 as our minimum as it gives us a small idea of what we think you would like. From there, once you start rating more shows, both good and bad, We'll be able to get a better idea.
+        div.text-center
+          img.mx-auto( src='/images/sample_movies.PNG' alt="What To Watch Icon" style="width: 90%; margin-top: 30px")
+          
+
 
   script.
     if (getQueryVariable('user_exists')) {
-      document.getElementById("bad_user").innerHTML = 'Username already exists. Please choose another.';
-    }
-
-    if (getQueryVariable('email_exists')) {
-      document.getElementById("bad_password").innerHTML = 'Email already exists. Please choose another.';
+      document.getElementById("bad_password").innerHTML = 'Username/Email already exists. Please choose another.';
     }
 
     if (getQueryVariable('error')) {

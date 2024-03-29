@@ -17,6 +17,7 @@ if (NODE_ENV == 'tv') {
   var blocklistModel = require('../models/tv.blocklist');
   var watchlistType = 'watchlist_televisions';
   var blocklistType = 'blocklist_televisions';
+  var ratedType = 'television_rateds';
   var id = 'tv_id';
 } else {
   var recommendationsModel = require('../models/recommended_movies');
@@ -24,6 +25,7 @@ if (NODE_ENV == 'tv') {
   var blocklistModel = require('../models/movie.blocklist');
   var watchlistType = 'watchlist_movies';
   var blocklistType = 'blocklist_movies';
+  var ratedType = 'rated_movies';
   var id = 'movie_id';
 }
 const idKey = `${NODE_ENV}_id`;
@@ -55,10 +57,12 @@ async function getMedia(req) {
   const recommendations = parseReccs(mediaInfo.body.recommendations);
   const userParsed = parseUserInfo(userInfo[0], parseInt(req.params.media_id));
 
+  console.log(mediaParsed.statusWriterSection);
+
   return {'media_info': mediaParsed, 'media_weight': userParsed.mediaWeight,
     'is_watchlist': userParsed.isWatchlist, 'is_blocklist': userParsed.isBlocklist,
     'ip_info': ipInfo, 'watch_provider_countries': watchProviderCountries,
-    'watch_providers_content': watchProvidersContent,
+    'watch_providers_content': watchProvidersContent, 'is_rated': userParsed.isRated,
     'recommendations': recommendations};
 }
 
@@ -193,7 +197,7 @@ const userMediaAggregate = (userId, mediaId) => {
     }, {
       '$lookup': {
         'from': watchlistType,
-        'let': {'userId': '$user_id', 'movieId': mediaId},
+        'let': {'userId': '$user_id', 'mediaId': mediaId},
         'pipeline': [
           {
             '$match': {
@@ -202,7 +206,7 @@ const userMediaAggregate = (userId, mediaId) => {
                   {
                     '$eq': ['$user_id', '$$userId'],
                   }, {
-                    '$eq': ['$movie_id', '$$movieId'],
+                    '$eq': [`$${id}`, '$$mediaId'],
                   },
                 ],
               },
@@ -214,7 +218,7 @@ const userMediaAggregate = (userId, mediaId) => {
     }, {
       '$lookup': {
         'from': blocklistType,
-        'let': {'userId': '$user_id', 'movieId': mediaId},
+        'let': {'userId': '$user_id', 'mediaId': mediaId},
         'pipeline': [
           {
             '$match': {
@@ -223,7 +227,7 @@ const userMediaAggregate = (userId, mediaId) => {
                   {
                     '$eq': ['$user_id', '$$userId'],
                   }, {
-                    '$eq': ['$movie_id', '$$movieId'],
+                    '$eq': [`$${id}`, '$$mediaId'],
                   },
                 ],
               },
@@ -231,6 +235,27 @@ const userMediaAggregate = (userId, mediaId) => {
           },
         ],
         'as': 'blocklist',
+      },
+    }, {
+      '$lookup': {
+        'from': ratedType,
+        'let': {'userId': '$user_id', 'mediaId': mediaId},
+        'pipeline': [
+          {
+            '$match': {
+              '$expr': {
+                '$and': [
+                  {
+                    '$eq': ['$user_id', '$$userId'],
+                  }, {
+                    '$eq': [`$${id}`, '$$mediaId'],
+                  },
+                ],
+              },
+            },
+          },
+        ],
+        'as': 'ratedMovie',
       },
     },
   ];
@@ -247,7 +272,8 @@ const parseUserInfo = (userInfo, mediaId) => {
   });
   const isWatchlist = (userInfo.watchlist.length > 0) ? true : false;
   const isBlocklist = (userInfo.blocklist.length > 0) ? true : false;
-  return {mediaWeight, isWatchlist, isBlocklist};
+  const isRated = (userInfo.ratedMovie.length > 0) ? true : false;
+  return {mediaWeight, isWatchlist, isBlocklist, isRated};
 };
 
 

@@ -177,19 +177,19 @@ exports.register_post = async function(req, res, next) {
           // helpers.generateEmailMessage(req);
           // await email.send_email(user.email, "Welcome To What To Watch 🍿", html_message);
           try {
-            passport.authenticate('local')(req, res, function() {
-              console.log('User successfully registered...');
+            logger.info('User successfully registered... Attempting to login');
+            passport.authenticate('local'), (req, res, function() {
               req.logIn(user, function(err) {
                 if (err) {
-                  console.log(err);
                   throw err;
                 }
-                console.log('Successfully logged in for user: ' + req.user.email);
+                logger.info('Successfully logged in for user: ' + req.user.email);
                 return res.redirect('/userprofile');
               });
-            });
+            })(req, res, next);
           } catch (err) {
-            console.log(err);
+            logger.error('Error attempting to login');
+            logger.error(err);
             throw err;
           }
         },

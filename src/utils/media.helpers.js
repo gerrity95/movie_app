@@ -62,6 +62,9 @@ const parseMediaOutput = (mediaInfo) => {
         formattedObject.statusWriterSection = {title: 'Writer', value: value.name};
       }
     });
+    if (typeof formattedObject.statusWriterSection === 'undefined') {
+      formattedObject.statusWriterSection = {title: 'Writer', value: 'Unknown'};
+    }
   }
 
   return formattedObject;

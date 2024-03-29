@@ -119,7 +119,9 @@ html(lang="en")
                 },
                 error: function(jqXHR, textStatus, errorThrown){
                   console.log("FAILURE")
-                  console.log(errorThrown);
+                  if (errorThrown == "Unauthorized") {
+                    window.location.href = "/";
+                  }
                 }              
             });
         });
