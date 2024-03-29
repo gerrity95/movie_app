@@ -11,12 +11,12 @@
       .navbar-nav
         if !user_info
           a.nav-item.nav-link.nav_color(href='/') Home
-        //- a.nav-item.nav-link.nav_color(href='/about') About
-        a.nav-item.nav-link.nav_color(href='/contact') Contact
+        a.nav-item.nav-link.nav_color(target="_blank" href='https://whattowatchtv.mggert.com/') Television
+        a.nav-item.nav-link.nav_color(target="_blank" href='https://whattowatch.mggert.com/') Movies
       .navbar-nav.ml-auto
         if user_info
           a.nav-item.nav-link.nav_color(href="/userprofile") Dashboard
           a.nav-item.nav-link.nav_color(href="/logout") Logout
         else
-          a.nav-item.nav-link.nav_color(href='/login') Login
           a.nav-item.nav-link.nav_color(href='/register') Register
+          button.btn.custom_button#login_btn Login

@@ -1,0 +1,38 @@
+// The Modal
+#loginModal.modal.fade
+  .modal-dialog
+    .modal-content
+      // Modal Header
+      .modal-header
+        h5.modal-title.mx-auto#watchlist_message
+        button.close(type='button' data-dismiss='modal') &times;
+      // Modal body
+      .modal-body.text-align-center
+        h4.title_style.text-center
+          | Sign in
+        div.message.alert.alert-danger(style="display:none;")
+          | #{message}
+        form#home_login_form(action='/login' method='POST')
+          div.form-group.form-registration
+            label(for="email") Email
+            input.form-control.username(type="text", name="username", autocomplete="true" required)
+          div.form-group.form-registration
+            label(for="password") Password
+            input.form-control.password(type="password", name="password", autocomplete="true" required)
+          div.form-group.form-registration 
+            button.submit.btn.custom_button(type="submit") Login
+          p#bad_login.password_error
+          div.form-group
+            p
+              | Don't have an account?
+              | &nbsp; #[a(href="/register") Sign up here.]
+            
+            p
+              a(href='/reset') Forgot Password?
+
+  script.
+
+    //- const login_btn = document.querySelector('#login_btn')
+    $("#login_btn").click(function () {
+      $("#loginModal").modal('show');
+    });

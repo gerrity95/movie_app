@@ -30,7 +30,7 @@ function isLoggedIn(req, res, next) {
     return next();
   } else {
     logger.info('No user is currently logged in.');
-    return res.redirect('/login');
+    return res.redirect('/');
   }
 }
 

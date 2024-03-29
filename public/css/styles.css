@@ -4,13 +4,25 @@ html {
 }
 
 body {
-  background-color: #030000;
-  font-family: 'Lato', sans-serif;
+  background-color: #0e0e0e;
+  font-family: 'Montserrat', sans-serif;
   min-height: 100vh;
   height: 100%;
   /* Margin bottom by footer height */
   display: flex;
   flex-direction: column;
+}
+
+.reveal {
+  position: relative;
+  transform: translateY(150px);
+  opacity: 0;
+  transition: 1s all ease;
+}
+
+.reveal.active {
+  transform: translateY(0);
+  opacity: 1;
 }
 
 a {
@@ -84,6 +96,8 @@ a:hover {
   /* Firefox */
 }
 
+/* Custom Modal Styles */
+
 /* Show/Hide Desktop vs Mobile */
 
 .desktop_show {
@@ -141,15 +155,15 @@ a:hover {
 .masthead {
   height: 100vh;
   min-height: 500px;
-  background-image: url('/images/movie_background.png');
+  /* background-image: url('/images/movie_background.png'); */
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
 }
 
 .home_masthead {
-  height: 80vh;
-  min-height: 80vh;
+  height: 100vh;
+  min-height: 100vh;
   background-image: url('/images/movie_background.png');
   background-size: cover;
   background-position: center;
@@ -167,7 +181,44 @@ a:hover {
   margin-top: 40px
 }
 
+.desc_text {
+  /* margin-left: 10%;
+  margin-right: 10%; */
+  margin-bottom: 30px
+}
+
+.custom_heading {
+  font-weight: bold;
+  font-size: 60px;
+}
+
+.sub_heading {
+  font-weight: bold;
+  font-size: 35px;
+  letter-spacing: 2px;
+  margin-bottom: 10px;
+}
+
+.minor_heading {
+  font-weight: bold;
+  font-size: 20px;
+  letter-spacing: 2px;
+  margin-bottom: 10px;
+}
+
 @media screen and (max-width: 768px) {
+
+  .custom_heading {
+    font-weight: bold;
+    font-size: 50px;
+  }
+
+  .sub_heading {
+    font-weight: bold;
+    font-size: 25px;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+  }
 
   .masthead {
     min-height: 100vh;
@@ -315,11 +366,11 @@ a:hover {
   border-radius: 5px;
 }
 
-.register_form img {
+/* .register_form img {
   display: block;
   margin-left: auto;
   margin-right: auto;
-}
+} */
 
 @media screen and (max-width: 768px) {
 
@@ -340,7 +391,7 @@ a:hover {
 /* css for registration form and errors*/
 
 .form-registration {
-  max-width: 330px;
+  /* max-width: 330px; */
   padding-top: 5px;
   margin: 0 auto;
 }
@@ -357,6 +408,20 @@ a:hover {
 
 .form-registration .btn {
   flex: 1 0 100%;
+}
+
+.registration_input {
+  background-color: #333333;
+  padding: 10px;
+  border-radius: 5px;
+  color: #fff;
+  border-color: #333;
+}
+
+.sub_text {
+  color: #dbdbdb;
+  padding-top: 0px;
+  padding-bottom: 5px;
 }
 
 .my-errors {
