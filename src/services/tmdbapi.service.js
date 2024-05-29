@@ -159,8 +159,8 @@ async function submitMediaRating(req, mediaDetails, directorId, mediaKeywords, n
     logger.info('Number of medias rated so far: ' + numRated);
     if (url.includes('welcome')) {
       // If coming from welcome screen the user will get redirected to their profile once they've rated 5 medias.
-      if (numRated >= 5) {
-        logger.info('Enough medias rated to start getting recommendations...');
+      if (numRated > 5) {
+        logger.info('Enough medias rated to start getting recommendations without affecting welcome redirect...');
         return {'success': true, 'meet_requirements': true};
       } else {
         logger.info('Not enough medias rated to start generating recommendations.');
