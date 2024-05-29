@@ -364,7 +364,7 @@ block content
                 data: {rating: selectedValue, media_id: media_id},
                 success: function(data){
                   console.log(data);
-                  if (data.meet_requirements) {
+                  if (data.num_rated == 5) {
                     $('#generatingReccs').modal({
                         backdrop: 'static',
                         keyboard: false
