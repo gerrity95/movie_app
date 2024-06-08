@@ -89,6 +89,7 @@ const filterBlocklist = (reccObject) => {
   // Function that will remove movies in the blocklist from the recommendations
   // eslint-disable-next-line prefer-const
   let filteredReccs =[];
+  // console.log(reccObject);
   const mediaRecommendations = reccObject.reccomendations.recommendations;
   for (let i = 0; i < mediaRecommendations.length; i++) {
     if (!mediaRecommendations[i]['blocklist'] || !mediaRecommendations[i]['blocklist'] === undefined) {
