@@ -14,7 +14,7 @@ router.get('/user/watchlist',
 
 // POST method routes
 router.post('/search', genericHelpers.isLoggedIn, mediaController.search);
-router.post('/welcome/search', genericHelpers.isLoggedIn, mediaController.welcome_search);
+router.post('/welcome/search', mediaController.welcome_search);
 router.post('/user/addwatchlist', genericHelpers.isLoggedIn, mediaController.add_watchlist);
 router.post('/user/addblocklist', genericHelpers.isLoggedIn, mediaController.add_blocklist);
 

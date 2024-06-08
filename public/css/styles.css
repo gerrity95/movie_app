@@ -1,3 +1,66 @@
+.m-progress-bar {
+  min-height: 1em;
+  background: #c12d2d;
+  width: 5%;
+}
+
+#project-label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 1em;
+}
+
+#project-icon {
+  float: left;
+  height: 32px;
+  width: 32px;
+}
+
+#project-description {
+  margin: 0;
+  padding: 0;
+}
+
+.clear-input-container {
+  position: relative;
+  display: inline-block;
+  width: 90%
+}
+
+.clear-input-button {
+  /* button position */
+  position: absolute;
+  right: 6px;
+  top: 15px;
+  bottom: 0;
+  /* button appearane */
+  justify-content: center;
+  align-items: center;
+  width: 20px;
+  height: 20px;
+  appearance: none;
+  border: none;
+  border-radius: 50%;
+  background: gray;
+  margin: 0;
+  padding: 2px;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  /* hide the button initially */
+  display: none;
+}
+
+.clear-input-button:hover {
+  background: darkgray;
+}
+
+.clear-input--touched:focus+.clear-input-button,
+.clear-input--touched:hover+.clear-input-button,
+.clear-input--touched+.clear-input-button:hover {
+  display: inline-flex;
+}
+
 html {
   position: relative;
   min-height: 100%;

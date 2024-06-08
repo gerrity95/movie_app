@@ -1,61 +1,138 @@
-extends home_layout
+extends welcome_layout
 
 block content
-  title What To Watch TV - About
-  - var logo = logo
-  .container-fluid(style="padding-top: 60px;background-image: url('/images/about_blank.webp')")
-    .row.curved-div(style="padding-top: 40px;")
-      .col-10.col-sm-10.col-md-5.col-lg-4.col-xl-4.offset-xl-1.offset-lg-1.offset-md-1.offset-1.align-self-center.row_style.mobile_padding
-        img(src='/images/tv_show_snippet.webp', style="width:100%")
-      .col-12.col-sm-10.col-md-5.col-lg-5.col-xl-5.offset-xl-1.offset-lg-1.offset-md-1.offset-0.align-self-center.row_style
+
+  .container-fluid(style="padding-top: 10px;background-color: #1a1a1a")
+    .row.curved-div(style="margin-top: 0px;padding-top: 40px;margin-bottom: 20px")
+      .col-10.col-sm-10.col-md-5.col-lg-5.col-xl-5.offset-xl-1.offset-lg-1.offset-md-1.offset-1.align-self-center.row_style
         h4.text-center.white_text
-          | What do we do? 🎬
+          | Let's Get Started
+        p.white_text 
+          | In order to start generating recommendations you must rate at least 5 titles. But the more you review,
+          b
+            |  the better the suggestions!
         p.white_text
-          | Our aim is to provide a simple way to generate TV recommendations tailored to each individual user. Everyone has at spent at least an evening or two scrolling through Netflix or Amazon Prime not knowing what to watch. We want to make this as easy as possible.   
-        p.white_text
-          | What we do is ask every user to rate five of their favorite TV shows. Once we get that many we can start generating recommendations. 
-        p.white_text
-          | As with anything, the more you rate, the more accurate we get. This works for movies you dont like as well. Not a fan of Marvel? If we can identify these kind of trends we'll try our best to avoid recommending similar movies.
-        p.white_text
-          | All the recommended shows are assigned a weight. This weight indicates how much we think you'd enjoy the movie. The higher the weight, the more we think you'll like it. As you rate more movies the weight will change for each of the movies you haven't yet rated. 
-        p.white_text.text-center
-          img(src='/images/what_to_watchtv_white.webp' alt="What To Watch Icon" style="width: 70%")
-                  
+          | To get started search for one of your favorites titles here to rate it.
+        p#remaining_media_num.white_text
+          | You currently have 
+          b #{remaining_medias} 
+          | titles left to rate.
+        //- .welcome-search.search_bar_alignment.my-2.my-lg-0
+        //-           input.form-control.mr-sm-2.search_bar_style(type='search' id="welcome_search_submit" placeholder='Search' aria-label='Search' required)
+        //-           button.btn.btn-default(type='submit').search_button#welcome_search(style="color: #fff")
+        //-             i.fas.fa-search
+        //- p.password_error#bad_welcome_search
         
-      svg(xmlns='http://www.w3.org/2000/svg' viewbox='0 0 1440 470' style="background-image: url('/images/top2.webp')").parallax
-        path(fill='#212531' fill-opacity='1' d='M0,160L48,133.3C96,107,192,53,288,58.7C384,64,480,128,576,144C672,160,768,128,864,138.7C960,149,1056,203,1152,192C1248,181,1344,107,1392,69.3L1440,32L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z')
-
-    .row.curved-div(style="margin-top: 0px;padding-top: 40px;padding-bottom:20px")
-      .col-12.col-sm-10.col-md-5.col-lg-5.col-xl-5.offset-xl-1.offset-lg-1.offset-md-1.offset-0.align-self-center.row_style
-        h4.text-center.white_text
-          | Where do we get the data? 💾
-        p.white_text
-          | We use the&nbsp; #[a(href="https://developers.themoviedb.org/3/getting-started/introduction" target="_blank") TMDB API] to get our data on millions of different shows. It's one of the worlds largest movie and TV databases that gives us access to an unreal amount of content.
-        p.white_text
-          | We also use&nbsp; #[a(href="https://www.justwatch.com/" target="_blank") JustWatch] help us with our data around watch providers. They provide the ability, through TMDB, to get the watch providers for streaming, renting and buying for many many countries.
-        p.white_text
-          | Combining this API with information given from you we can calculate the TV shows we think you would like. The calculations used are constantly evolving and so we are always looking for feedback on how well it works.
-        p.white_text  
-          | We are also conscious that when signing up no one wants to spend half their evening rating different shows. This is why we start gives recommendations after only rating 5 shows.
-        p.white_text  
-          | We have a lot of people to thank for some of the content we use, no more so than TMDB but also a lot of the content creators over on #[a(href="https://unsplash.com/" target="_blank") Unsplash]. 
-
-      .col-10.col-sm-10.col-md-5.col-lg-3.col-xl-3.offset-xl-2.offset-lg-2.offset-md-1.offset-1.align-self-center.row_style
-        img(src='/images/video2.webp', style="width:100%")
-
-      svg(xmlns='http://www.w3.org/2000/svg' viewbox='0 0 1440 470' style="background-image: url('/images/bottom2.webp')").parallax
-        path(fill='#212531' fill-opacity='1' d='M0,160L48,133.3C96,107,192,53,288,58.7C384,64,480,128,576,144C672,160,768,128,864,138.7C960,149,1056,203,1152,192C1248,181,1344,107,1392,69.3L1440,32L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z')
-
-    .row(style="margin-top: 0px;padding-top: 40px;padding-bottom:20px;background: #fff")
-      .col-12.col-sm-10.col-md-5.col-lg-5.col-xl-5.offset-xl-1.offset-lg-1.offset-md-1.offset-0.align-self-center.row_style
-        h4.text-center
-          | Who am I? 👨‍💻
-        p
-          | I started building this app due to the amount of time I spent searching through movie and TV lists and not knowing what to watch. I built out a basic way to recommend shows that I would like and kept building up from there.
-        p
-          | This app is a side project and so we always welcome feedback and contributions. If you have some features you'd like to see please <a href="/contact">contact us here.</a> 
-        p  
-          | If you have any feedback such as bugs you've noticed we'd also like to hear from you. Of course, if this is something you'd like to contribute code to, then feel more than welcome to get in touch.
+        .clear-input-container
+          input#project-id(type='hidden')
+          input#project.clear-input(type='text', style="width: 100%").registration_input
+          button.clear-input-button(aria-label='Clear input' title='Clear input') &times;
+        br
+        br
+        .row
+          .col-3.col-sm-2.col-md-2.col-lg-3.col-xl-2.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0
+            .img_poster(style="padding-right: 10px;padding-left: 10px")
+              img.search_poster#search_poster0.d-block
+          .col-9.col-sm-10.col-md-10.col-lg-9.col-xl-10.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0
+            .search_text
+              h3#movie_title0
+              p#media_id0(style="display: none")
+              p#movie_date0
+              p#movie_overview0.hidden_text
         
-      .col-10.col-sm-10.col-md-5.col-lg-3.col-xl-3.offset-xl-2.offset-lg-2.offset-md-1.offset-1.align-self-center.row_style
-        img(src='/images/video1.webp', style="width:100%")
+      .col-10.col-sm-10.col-md-5.col-lg-3.col-xl-3.offset-xl-2.offset-lg-2.offset-md-1.offset-1.row_style.align-self-center
+        .feedback2
+          h3.minor_heading.white_text Submit Rating
+          .rating
+            input#input_media_id(style="display: none", name="input_media_name" value="")
+            input#rating-10(type='radio' name='rating' value="10")
+            label(for='rating-10')
+            input#rating-9(type='radio' name='rating' value="9")
+            label(for='rating-9')
+            input#rating-8(type='radio' name='rating' value="8")
+            label(for='rating-8')
+            input#rating-7(type='radio' name='rating' value="7")
+            label(for='rating-7')
+            input#rating-6(type='radio' name='rating' value="6")
+            label(for='rating-6')
+            input#rating-5(type='radio' name='rating' value="5")
+            label(for='rating-5')
+            input#rating-4(type='radio' name='rating' value="4")
+            label(for='rating-4')
+            input#rating-3(type='radio' name='rating' value="3")
+            label(for='rating-3')
+            input#rating-2(type='radio' name='rating' value="2")
+            label(for='rating-2')
+            input#rating-1(type='radio' name='rating' value="1")
+            label(for='rating-1')
+          
+          button#rating_button.submit.btn.custom_button(type="submit") Submit
+
+  
+
+
+
+
+
+
+
+
+  script.
+    $( function() {
+      $( "#project" ).autocomplete({
+        minLength: 3,
+        source: function( request, response ) {
+          $.ajax({
+            type: "POST",
+            url: '/media/welcome/search',
+            dataType: "json",
+            data: {search: request.term},
+            success: function( data ) {
+              console.log(data.results);
+              response( data.results.slice(0, 10) );
+            }
+          });
+        },
+        focus: function( event, ui ) {
+          $( "#project" ).val( ui.item.name );
+          return false;
+        },
+        select: function( event, ui ) {
+          let dateOnly = ui.item.first_air_date.slice(0, 4);
+          $( "#project" ).val( ui.item.name );
+          $( "#project-id" ).val( ui.item.first_air_date );
+          $( "#movie_title0" ).html( ui.item.name );
+          $( "#movie_date0" ).html( dateOnly );
+          $( "#media_id0" ).html( ui.item.id );
+          $( "#movie_overview0" ).html( ui.item.overview );
+          $( "#search_poster0" ).attr( "src", "https://image.tmdb.org/t/p/w500" + ui.item.poster_path );
+        return false;
+        }
+      })
+      .autocomplete( "instance" )._renderItem = function( ul, item ) {
+        let dateOnly = item.first_air_date.slice(0, 4);
+        return $( "<li>" )
+        .append( "<div style='padding-top:5px;padding-bottom:5px;padding-left:5px'>" + item.name + " | <i>" + dateOnly + "</i></div>" )
+        .appendTo( ul );
+      };
+    });
+
+    const input = document.querySelector(".clear-input")
+    const clearButton = document.querySelector(".clear-input-button")
+
+    const handleInputChange = (e) => {
+      if (e.target.value && !input.classList.contains("clear-input--touched")) {
+        input.classList.add("clear-input--touched")
+      } else if (!e.target.value && input.classList.contains("clear-input--touched")) {
+        input.classList.remove("clear-input--touched")
+      }
+    }
+
+    const handleButtonClick = (e) => {
+      input.value = ''
+      input.focus()
+      input.classList.remove("clear-input--touched")
+    }
+
+    clearButton.addEventListener("click", handleButtonClick)
+    input.addEventListener("input", handleInputChange)

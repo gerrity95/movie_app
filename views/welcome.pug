@@ -7,6 +7,7 @@ block content
   - var inspired_medias = inspire_medias
   include includes/success_review_modal.pug
   include includes/failed_review_modal.pug
+  include includes/multi_welcome_modal.pug
   include includes/generating_reccs_modal.pug
   if node_env == 'tv'
     - var titleKey = 'name'
@@ -16,6 +17,12 @@ block content
     - var keyword = 'movie'
   
   .container-fluid(style="padding-top: 10px;background-color: #030000")
+
+    .row
+      h1
+        | Progress bar with back buttons
+      button.btn.custom_buton#welcomeModal Show
+
     .row.curved-div(style="padding-top: 10px;")
       .col-10.col-sm-10.col-md-5.col-lg-3.col-xl-3.offset-xl-2.offset-lg-2.offset-md-1.offset-1.align-self-center.row_style.mobile_padding
         if node_env == 'tv'
@@ -57,33 +64,33 @@ block content
               img(src=img_src).inspire_poster
               .tooltip #{media[titleKey]}
 
-    .row.curved-div(style="margin-top: 0px;padding-top: 40px;margin-bottom: 20px")
-      .col-10.col-sm-10.col-md-5.col-lg-5.col-xl-5.offset-xl-1.offset-lg-1.offset-md-1.offset-1.align-self-center.row_style
-        h4.text-center.white_text
-          | Let's Get Started
-        p.white_text 
-          | In order to start generating recommendations you must rate at least 5 titles. But the more you review,
-          b
-            |  the better the suggestions!
-        p.white_text
-          | To get started search for one of your favorites titles here to rate it.
-        p#remaining_media_num.white_text
-          | You currently have 
-          b #{remaining_medias} 
-          | titles left to rate.
-        .welcome-search.search_bar_alignment.my-2.my-lg-0
-                  input.form-control.mr-sm-2.search_bar_style(type='search' id="welcome_search_submit" placeholder='Search' aria-label='Search' required)
-                  button.btn.btn-default(type='submit').search_button#welcome_search(style="color: #fff")
-                    i.fas.fa-search
-        p.password_error#bad_welcome_search
+    //- .row.curved-div(style="margin-top: 0px;padding-top: 40px;margin-bottom: 20px")
+    //-   .col-10.col-sm-10.col-md-5.col-lg-5.col-xl-5.offset-xl-1.offset-lg-1.offset-md-1.offset-1.align-self-center.row_style
+    //-     h4.text-center.white_text
+    //-       | Let's Get Started
+    //-     p.white_text 
+    //-       | In order to start generating recommendations you must rate at least 5 titles. But the more you review,
+    //-       b
+    //-         |  the better the suggestions!
+    //-     p.white_text
+    //-       | To get started search for one of your favorites titles here to rate it.
+    //-     p#remaining_media_num.white_text
+    //-       | You currently have 
+    //-       b #{remaining_medias} 
+    //-       | titles left to rate.
+    //-     .welcome-search.search_bar_alignment.my-2.my-lg-0
+    //-               input.form-control.mr-sm-2.search_bar_style(type='search' id="welcome_search_submit" placeholder='Search' aria-label='Search' required)
+    //-               button.btn.btn-default(type='submit').search_button#welcome_search(style="color: #fff")
+    //-                 i.fas.fa-search
+    //-     p.password_error#bad_welcome_search
         
-      .col-10.col-sm-10.col-md-5.col-lg-3.col-xl-3.offset-xl-2.offset-lg-2.offset-md-1.offset-1.align-self-center.row_style
-        if node_env == 'tv'
-          img(src='/images/tv_show_snippet.webp', style="width:100%")
-        else
-          img(src='/images/movie_list_snippet1.webp', style="width:100%")
+    //-   .col-10.col-sm-10.col-md-5.col-lg-3.col-xl-3.offset-xl-2.offset-lg-2.offset-md-1.offset-1.align-self-center.row_style
+    //-     if node_env == 'tv'
+    //-       img(src='/images/tv_show_snippet.webp', style="width:100%")
+    //-     else
+    //-       img(src='/images/movie_list_snippet1.webp', style="width:100%")
 
-    .row.align-items-center#movie_info_popup.welcome_message.shadow-lg(style="display: none; margin-top: 30px;s")
+    //- .row.align-items-center#movie_info_popup.welcome_message.shadow-lg(style="display: none; margin-top: 30px;s")
       .col-12.col-sm-12.col-md-12.col-lg-7.col-xl-7.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0.align-text-center
         p(style="padding-bottom: 20px;font-size: 20px").white_text
           |  Click the #{keyword} you want to rate.
@@ -241,204 +248,339 @@ block content
 
           button#rating_button.submit.btn.custom_button(type="submit") Submit
 
+    .row.curved-div(style="margin-top: 0px;padding-top: 40px;margin-bottom: 60px")
+      .col-10.col-sm-10.col-md-5.col-lg-5.col-xl-5.offset-xl-1.offset-lg-1.offset-md-1.offset-1.align-self-center.row_style
+        h4.text-center.white_text
+          | Let's Get Started
+        p.white_text 
+          | In order to start generating recommendations you must rate at least 5 titles. But the more you review,
+          b
+            |  the better the suggestions!
+        p.white_text
+          | To get started search for one of your favorites titles here to rate it.
+        p#remaining_media_num.white_text
+          | You currently have 
+          b #{remaining_medias} 
+          | titles left to rate.
+        //- .welcome-search.search_bar_alignment.my-2.my-lg-0
+        //-           input.form-control.mr-sm-2.search_bar_style(type='search' id="welcome_search_submit" placeholder='Search' aria-label='Search' required)
+        //-           button.btn.btn-default(type='submit').search_button#welcome_search(style="color: #fff")
+        //-             i.fas.fa-search
+        //- p.password_error#bad_welcome_search
+        
+        .clear-input-container
+          input#project-id(type='hidden')
+          input#project.clear-input(type='text', style="width: 100%").registration_input
+          button.clear-input-button(aria-label='Clear input' title='Clear input') &times;
+        br
+        br
+        .row
+          .col-3.col-sm-2.col-md-2.col-lg-3.col-xl-2.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0
+            .img_poster(style="padding-right: 10px;padding-left: 10px")
+              img.search_poster#search_poster0.d-block
+          .col-9.col-sm-10.col-md-10.col-lg-9.col-xl-10.offset-lg-0.offset-xl-0.offset-md-0.offset-sm-0.offset-0
+            .search_text
+              h3#movie_title0
+              p#media_id0(style="display: none")
+              p#movie_date0
+              p#movie_overview0.hidden_text
+        
+      .col-10.col-sm-10.col-md-5.col-lg-3.col-xl-3.offset-xl-1.offset-lg-2.offset-md-1.offset-1.row_style.align-self-center
+        .feedback2
+          h3.minor_heading.white_text Submit Rating
+          .rating
+            input#input_media_id(style="display: none", name="input_media_name" value="")
+            input#rating-10(type='radio' name='rating' value="10")
+            label(for='rating-10')
+            input#rating-9(type='radio' name='rating' value="9")
+            label(for='rating-9')
+            input#rating-8(type='radio' name='rating' value="8")
+            label(for='rating-8')
+            input#rating-7(type='radio' name='rating' value="7")
+            label(for='rating-7')
+            input#rating-6(type='radio' name='rating' value="6")
+            label(for='rating-6')
+            input#rating-5(type='radio' name='rating' value="5")
+            label(for='rating-5')
+            input#rating-4(type='radio' name='rating' value="4")
+            label(for='rating-4')
+            input#rating-3(type='radio' name='rating' value="3")
+            label(for='rating-3')
+            input#rating-2(type='radio' name='rating' value="2")
+            label(for='rating-2')
+            input#rating-1(type='radio' name='rating' value="1")
+            label(for='rating-1')
+          
+          button#rating_button.submit.btn.custom_button(type="submit") Submit
+
+      svg(xmlns='http://www.w3.org/2000/svg' viewbox='0 0 1440 370' style="background-image: url('/images/welcome_back3.webp')").parallax
+        path(fill='#030000' fill-opacity='1' d='M0,160L48,133.3C96,107,192,53,288,58.7C384,64,480,128,576,144C672,160,768,128,864,138.7C960,149,1056,203,1152,192C1248,181,1344,107,1392,69.3L1440,32L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z')
 
 
   script.
 
-    var keyword = !{JSON.stringify(keyword)};
-
-    $(".header_search").prop('disabled', true);
-    $('input[name="search"]').prop("disabled", true);
-
-    const btn = document.querySelector('#welcome_search');
-          // handle button click
-          btn.onclick = function () {
-            if($('#welcome_search_submit').val()) {
-              $(".movie_list").removeClass('movie_select');
-              //$('input[name="rating"]').val("0");
-              $('#bad_welcome_search').html('');
-              var search = $('#welcome_search_submit').val();
-              console.log(search);
-              $.ajax({
-                  type: "POST",
-                  url: '/media/welcome/search',
-                  dataType: "json",
-                  data: {search: search},
-                  success: function(data){
-                    console.log(data);
-                    if (data.results) {
-                      $('#movie_info_popup').show();
-                      if (data.results.length > 0) {
-                        // Removes any rating that might have been added before selecting a different movie
-                        for (var i = 1; i <= 10; i++) {
-                          $("#rating-" + i).prop('checked', false);
-                        } 
-                        // Limit results to first 5 movies
-                        var movie_loop = 5
-                        if (data.results.length < 5) {
-                          var movie_loop = data.results.length
-                        }
-                        for (var i = 0; i < movie_loop; i++) {
-                          const title = typeof data.results[i].title != 'undefined' ? data.results[i].title : data.results[i].name;
-                          const airDate = typeof data.results[i].release_date != 'undefined' ? data.results[i].release_date : data.results[i].first_air_date; 
-                          var poster_src = 'https://image.tmdb.org/t/p/w500/' + data.results[i].poster_path
-                          $('#movie' + i).css({"display": ""});
-                          $('#media_id' + i).html(data.results[i].id);
-                          $('#movie_title' + i).html(title);
-                          $('#movie_date' + i).html(airDate);
-                          $('#movie_overview' + i).addClass('hidden_text')
-                          $('#movie_overview' + i).html(data.results[i].overview);
-                          $('#input_media_id').val(data.results[i].id);
-                          $("#search_poster" + i).attr("src", poster_src);
-                          $('.feedback').show();
-                        }
-                        // If less than 5 movies returned, make the other entries in the list blank
-                        if (movie_loop < 5) {
-                          for (var i = movie_loop; i < 5; i++) {
-                            $('#movie' + i).css({"display": "none"});
-                          }
-                        }
-                        $('input[name="rating"]').prop("disabled", true);
-                        $('button[id="rating_button"]').prop("disabled", true);
-                      }
-                      else {
-                        $('input[name="rating"]').prop("disabled", true);
-                        $('.feedback').hide();
-                        $('#movie_date0').html("");
-                        $('#input_media_id').val("");
-                        $("#search_poster0").removeAttr('src');
-                        $('#movie_title0').html("Hmm... No results found for " + search + ".");
-                        $('#movie_overview0').removeClass('hidden_text')
-                        $('#movie_overview0').html("Please double check there are no spelling errors or typos - or even try a different search term.")
-                      
-                        for (var i = 1; i < 5; i++) {
-                            $('#movie' + i).css({"display": "none"});
-                          }
-                      }
-                       $('html,body').animate({
-                          scrollTop: $("#welcome_movies").offset().top},
-                          'slow');
-                    }
-                    else if (!data.results) {
-                      $("#failedReview").modal('show');                        
-                      }
-                  },
-                  error: function(jqXHR, textStatus, errorThrown){
-                    $("#failedReview").modal('show');
-                  }              
-              });
-
-            }
-            else {
-              $('#bad_welcome_search').html("Please input a value when searching.");
-            }
-          };
-    $('input[name="rating"]').prop("disabled", true);
-    $('button[id="rating_button"]').prop("disabled", true);
-    $('input[name="rating"]').on("click", function() {
-      if($('input[name="rating"]:checked').length){
-        $('button[id="rating_button"]').prop("disabled", false);
-      }
-    }); 
-    const rating_btn = document.querySelector('#rating_button');
-        // handle button click
-        rating_btn.onclick = function () {
-            console.log("CHecking for data....");
-            const media_id = $('#input_media_id').val();
-            console.log(media_id);
-            const rbs = document.querySelectorAll('input[name="rating"]');
-            let selectedValue;
-            console.log(rbs);
-            for (const rb of rbs) {
-                if (rb.checked) {
-                    selectedValue = rb.value;
-                    console.log(rb.id);
-                    break;
-                }
-            }
-            console.log(selectedValue);
-            $.ajax({
-                type: "POST",
-                url: '/tmdbapi/submit_rating',
-                dataType: "json",
-                data: {rating: selectedValue, media_id: media_id},
-                success: function(data){
-                  console.log(data);
-                  if (data.meet_requirements) {
-                    $('#generatingReccs').modal({
-                        backdrop: 'static',
-                        keyboard: false
-                    })
-                    $("#generatingReccs").modal('show');
-                    window.location.href = '/userprofile'
-                  }
-                  else if (data.success) {
-                    $("#successReview").modal('show');
-                    $('#movie_info_popup').hide();
-                    var left_to_rate = 5 - data.num_rated
-                    $("#remaining_media_num").html("You currently have <b>" + left_to_rate + "</b> titles left to rate")
-                  }
-                  else if (!data.success) {
-                    $("#failedReview").modal('show');
-                    if (data.is_rated) {
-                      $("#failed_review").html("This title has already been rated. Please try another.")
-                    }
-                    $('#movie_info_popup').hide();                        
-                    }
-                },
-                error: function(jqXHR, textStatus, errorThrown){
-                  $("#failedReview").modal('show');
-                  $('#movie_info_popup').hide();
-                }              
-            });
-        };
-
-    $(document).on("click",".movie_list", function () {
-      var clickedBtnID = $(this).attr('id'); // or var clickedBtnID = this.id
-      $(this).removeClass('movie_item');
-
-      if ($(this).hasClass('movie_select')) {
-        // Removes highlight from a movie card if it is already selected
-        $(this).removeClass('movie_select')
-        $(this).addClass('movie_item')
-
-        // Disallows the user from trying to submit a rating without having a movie selected
-        $('input[name="rating"]').prop("disabled", true);
-        $('button[id="rating_button"]').prop("disabled", true);
-
-        // Removes any rating that might have been added before selecting a different movie
-        for (var i = 1; i <= 10; i++) {
-          $("#rating-" + i).prop('checked', false);
-        } 
-      }
-      else {
-        // Removes highlight from previously selected movie and adds it to the newly selected
-        $(".movie_list").removeClass('movie_select');
-        $(this).addClass('movie_select')
-
-        // Allows user to make rating but unable to submit until a rating has been clicked
-        $('input[name="rating"]').prop("disabled", false);
-        $('button[id="rating_button"]').prop("disabled", true);
-        
-        // Assigns the media_id for the selected movie to a var that is passed into the AJAX Request
-        var lastChar = clickedBtnID[clickedBtnID.length -1];
-        var media_id_div = "media_id" + lastChar;
-        var media_id_val = $('#' + media_id_div).text();
-        $('#input_media_id').val(media_id_val)
-
-        // Removes any rating that might have been added before selecting a different movie
-        for (var i = 1; i <= 10; i++) {
-          $("#rating-" + i).prop('checked', false);
-        } 
-      }
-
-      // Add highlight to selected box
+    $("#welcomeModal").click(function () {
+      console.log('hello')
+      //- $('#demo-modal-3').modal({
+      //-   backdrop: 'static',
+      //-   keyboard: false
+      //-   })
+      $("#demo-modal-3").modal('show');
     });
 
-    const scroll_btn = document.querySelector('#scroll_button_welcome');
-        // handle button click
-        scroll_btn.onclick = function () {
-          $('html,body').animate({
-            scrollTop: $("#welcome_search_submit").offset().top},
-            'slow');
-        };
+    //- var keyword = !{JSON.stringify(keyword)};
+
+    //- $(".header_search").prop('disabled', true);
+    //- $('input[name="search"]').prop("disabled", true);
+
+    //- const btn = document.querySelector('#welcome_search');
+    //-       // handle button click
+    //-       btn.onclick = function () {
+    //-         if($('#welcome_search_submit').val()) {
+    //-           $(".movie_list").removeClass('movie_select');
+    //-           //$('input[name="rating"]').val("0");
+    //-           $('#bad_welcome_search').html('');
+    //-           var search = $('#welcome_search_submit').val();
+    //-           console.log(search);
+    //-           $.ajax({
+    //-               type: "POST",
+    //-               url: '/media/welcome/search',
+    //-               dataType: "json",
+    //-               data: {search: search},
+    //-               success: function(data){
+    //-                 console.log(data);
+    //-                 if (data.results) {
+    //-                   $('#movie_info_popup').show();
+    //-                   if (data.results.length > 0) {
+    //-                     // Removes any rating that might have been added before selecting a different movie
+    //-                     for (var i = 1; i <= 10; i++) {
+    //-                       $("#rating-" + i).prop('checked', false);
+    //-                     } 
+    //-                     // Limit results to first 5 movies
+    //-                     var movie_loop = 5
+    //-                     if (data.results.length < 5) {
+    //-                       var movie_loop = data.results.length
+    //-                     }
+    //-                     for (var i = 0; i < movie_loop; i++) {
+    //-                       const title = typeof data.results[i].title != 'undefined' ? data.results[i].title : data.results[i].name;
+    //-                       const airDate = typeof data.results[i].release_date != 'undefined' ? data.results[i].release_date : data.results[i].first_air_date; 
+    //-                       var poster_src = 'https://image.tmdb.org/t/p/w500/' + data.results[i].poster_path
+    //-                       $('#movie' + i).css({"display": ""});
+    //-                       $('#media_id' + i).html(data.results[i].id);
+    //-                       $('#movie_title' + i).html(title);
+    //-                       $('#movie_date' + i).html(airDate);
+    //-                       $('#movie_overview' + i).addClass('hidden_text')
+    //-                       $('#movie_overview' + i).html(data.results[i].overview);
+    //-                       $('#input_media_id').val(data.results[i].id);
+    //-                       $("#search_poster" + i).attr("src", poster_src);
+    //-                       $('.feedback').show();
+    //-                     }
+    //-                     // If less than 5 movies returned, make the other entries in the list blank
+    //-                     if (movie_loop < 5) {
+    //-                       for (var i = movie_loop; i < 5; i++) {
+    //-                         $('#movie' + i).css({"display": "none"});
+    //-                       }
+    //-                     }
+    //-                     $('input[name="rating"]').prop("disabled", true);
+    //-                     $('button[id="rating_button"]').prop("disabled", true);
+    //-                   }
+    //-                   else {
+    //-                     $('input[name="rating"]').prop("disabled", true);
+    //-                     $('.feedback').hide();
+    //-                     $('#movie_date0').html("");
+    //-                     $('#input_media_id').val("");
+    //-                     $("#search_poster0").removeAttr('src');
+    //-                     $('#movie_title0').html("Hmm... No results found for " + search + ".");
+    //-                     $('#movie_overview0').removeClass('hidden_text')
+    //-                     $('#movie_overview0').html("Please double check there are no spelling errors or typos - or even try a different search term.")
+                      
+    //-                     for (var i = 1; i < 5; i++) {
+    //-                         $('#movie' + i).css({"display": "none"});
+    //-                       }
+    //-                   }
+    //-                    $('html,body').animate({
+    //-                       scrollTop: $("#welcome_movies").offset().top},
+    //-                       'slow');
+    //-                 }
+    //-                 else if (!data.results) {
+    //-                   $("#failedReview").modal('show');                        
+    //-                   }
+    //-               },
+    //-               error: function(jqXHR, textStatus, errorThrown){
+    //-                 $("#failedReview").modal('show');
+    //-               }              
+    //-           });
+
+    //-         }
+    //-         else {
+    //-           $('#bad_welcome_search').html("Please input a value when searching.");
+    //-         }
+    //-       };
+    //- $('input[name="rating"]').prop("disabled", true);
+    //- $('button[id="rating_button"]').prop("disabled", true);
+    //- $('input[name="rating"]').on("click", function() {
+    //-   if($('input[name="rating"]:checked').length){
+    //-     $('button[id="rating_button"]').prop("disabled", false);
+    //-   }
+    //- }); 
+    //- const rating_btn = document.querySelector('#rating_button');
+    //-     // handle button click
+    //-     rating_btn.onclick = function () {
+    //-         console.log("CHecking for data....");
+    //-         const media_id = $('#input_media_id').val();
+    //-         console.log(media_id);
+    //-         const rbs = document.querySelectorAll('input[name="rating"]');
+    //-         let selectedValue;
+    //-         console.log(rbs);
+    //-         for (const rb of rbs) {
+    //-             if (rb.checked) {
+    //-                 selectedValue = rb.value;
+    //-                 console.log(rb.id);
+    //-                 break;
+    //-             }
+    //-         }
+    //-         console.log(selectedValue);
+    //-         $.ajax({
+    //-             type: "POST",
+    //-             url: '/tmdbapi/submit_rating',
+    //-             dataType: "json",
+    //-             data: {rating: selectedValue, media_id: media_id},
+    //-             success: function(data){
+    //-               console.log(data);
+    //-               if (data.meet_requirements) {
+    //-                 $('#generatingReccs').modal({
+    //-                     backdrop: 'static',
+    //-                     keyboard: false
+    //-                 })
+    //-                 $("#generatingReccs").modal('show');
+    //-                 window.location.href = '/userprofile'
+    //-               }
+    //-               else if (data.success) {
+    //-                 $("#successReview").modal('show');
+    //-                 $('#movie_info_popup').hide();
+    //-                 var left_to_rate = 5 - data.num_rated
+    //-                 $("#remaining_media_num").html("You currently have <b>" + left_to_rate + "</b> titles left to rate")
+    //-               }
+    //-               else if (!data.success) {
+    //-                 $("#failedReview").modal('show');
+    //-                 if (data.is_rated) {
+    //-                   $("#failed_review").html("This title has already been rated. Please try another.")
+    //-                 }
+    //-                 $('#movie_info_popup').hide();                        
+    //-                 }
+    //-             },
+    //-             error: function(jqXHR, textStatus, errorThrown){
+    //-               $("#failedReview").modal('show');
+    //-               $('#movie_info_popup').hide();
+    //-             }              
+    //-         });
+    //-     };
+
+    //- $(document).on("click",".movie_list", function () {
+    //-   var clickedBtnID = $(this).attr('id'); // or var clickedBtnID = this.id
+    //-   $(this).removeClass('movie_item');
+
+    //-   if ($(this).hasClass('movie_select')) {
+    //-     // Removes highlight from a movie card if it is already selected
+    //-     $(this).removeClass('movie_select')
+    //-     $(this).addClass('movie_item')
+
+    //-     // Disallows the user from trying to submit a rating without having a movie selected
+    //-     $('input[name="rating"]').prop("disabled", true);
+    //-     $('button[id="rating_button"]').prop("disabled", true);
+
+    //-     // Removes any rating that might have been added before selecting a different movie
+    //-     for (var i = 1; i <= 10; i++) {
+    //-       $("#rating-" + i).prop('checked', false);
+    //-     } 
+    //-   }
+    //-   else {
+    //-     // Removes highlight from previously selected movie and adds it to the newly selected
+    //-     $(".movie_list").removeClass('movie_select');
+    //-     $(this).addClass('movie_select')
+
+    //-     // Allows user to make rating but unable to submit until a rating has been clicked
+    //-     $('input[name="rating"]').prop("disabled", false);
+    //-     $('button[id="rating_button"]').prop("disabled", true);
+        
+    //-     // Assigns the media_id for the selected movie to a var that is passed into the AJAX Request
+    //-     var lastChar = clickedBtnID[clickedBtnID.length -1];
+    //-     var media_id_div = "media_id" + lastChar;
+    //-     var media_id_val = $('#' + media_id_div).text();
+    //-     $('#input_media_id').val(media_id_val)
+
+    //-     // Removes any rating that might have been added before selecting a different movie
+    //-     for (var i = 1; i <= 10; i++) {
+    //-       $("#rating-" + i).prop('checked', false);
+    //-     } 
+    //-   }
+
+    //-   // Add highlight to selected box
+    //- });
+
+    //- const scroll_btn = document.querySelector('#scroll_button_welcome');
+    //-     // handle button click
+    //-     scroll_btn.onclick = function () {
+    //-       $('html,body').animate({
+    //-         scrollTop: $("#welcome_search_submit").offset().top},
+    //-         'slow');
+    //-     };
+    
+    $( function() {
+      $( "#project" ).autocomplete({
+        minLength: 3,
+        source: function( request, response ) {
+          $.ajax({
+            type: "POST",
+            url: '/media/welcome/search',
+            dataType: "json",
+            data: {search: request.term},
+            success: function( data ) {
+              console.log(data.results);
+              response( data.results.slice(0, 10) );
+            }
+          });
+        },
+        focus: function( event, ui ) {
+          $( "#project" ).val( ui.item.name );
+          return false;
+        },
+        select: function( event, ui ) {
+          let dateOnly = ui.item.first_air_date.slice(0, 4);
+          $( "#project" ).val( ui.item.name );
+          $( "#project-id" ).val( ui.item.first_air_date );
+          $( "#movie_title0" ).html( ui.item.name );
+          $( "#movie_date0" ).html( dateOnly );
+          $( "#media_id0" ).html( ui.item.id );
+          $( "#movie_overview0" ).html( ui.item.overview );
+          $( "#search_poster0" ).attr( "src", "https://image.tmdb.org/t/p/w500" + ui.item.poster_path );
+        return false;
+        }
+      })
+      .autocomplete( "instance" )._renderItem = function( ul, item ) {
+        let dateOnly = item.first_air_date.slice(0, 4);
+        return $( "<li>" )
+        .append( "<div style='padding-top:5px;padding-bottom:5px;padding-left:5px'>" + item.name + " | <i>" + dateOnly + "</i></div>" )
+        .appendTo( ul );
+      };
+    });
+
+    const input = document.querySelector(".clear-input")
+    const clearButton = document.querySelector(".clear-input-button")
+
+    const handleInputChange = (e) => {
+      if (e.target.value && !input.classList.contains("clear-input--touched")) {
+        input.classList.add("clear-input--touched")
+      } else if (!e.target.value && input.classList.contains("clear-input--touched")) {
+        input.classList.remove("clear-input--touched")
+      }
+    }
+
+    const handleButtonClick = (e) => {
+      input.value = ''
+      input.focus()
+      input.classList.remove("clear-input--touched")
+    }
+
+    clearButton.addEventListener("click", handleButtonClick)
+    input.addEventListener("input", handleInputChange)
